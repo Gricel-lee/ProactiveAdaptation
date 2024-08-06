@@ -108,49 +108,10 @@ vMap <- function(minM1, maxM1, M, minM2, maxM2, N, minM3, maxM3, L, R1, R2, R3){
 
 
 
-vMap = violationMap(0.5, 1.0, 20, 0.25, 0.5, 20, 0.5, 1.0, 20, R1, R2, R3)
+# vMap = vMap(0.5, 1.0, 20, 0.25, 0.5, 20, 0.5, 1.0, 20, R1, R2, R3)
 
-colnames(vMap) = c("M1", "M2", "M3", "SBV")
-write.csv(vMap, "safezone.csv", row.names = F)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# colnames(vMap) = c("M1", "M2", "M3", "SBV")
+# write.csv(vMap, "violationMap.csv", row.names = F)
 
 
 
@@ -160,21 +121,21 @@ write.csv(vMap, "safezone.csv", row.names = F)
 
 #PLOTTING: 
 
-install.packages("rgl")
-no
-library("rgl")
+# install.packages("rgl")
+# no
+# library("rgl")
 
 
-# safe, border and violation colours
-c = safezone[,4]+2
-open3d()
-points3d(safezone[,1], safezone[,2], safezone[,3], color = c)
+# # safe, border and violation colours
+# c = safezone[,4]+2
+# open3d()
+# points3d(safezone[,1], safezone[,2], safezone[,3], color = c)
 
-# just safe vs violation
-c2  = c
-c2[which(c2 == 3)] = 2
-open3d()
-points3d(safezone[,1], safezone[,2], safezone[,3], color = c2)
+# # just safe vs violation
+# c2  = c
+# c2[which(c2 == 3)] = 2
+# open3d()
+# points3d(safezone[,1], safezone[,2], safezone[,3], color = c2)
 
 
 
