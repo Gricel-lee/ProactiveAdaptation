@@ -1,7 +1,4 @@
-R1 = 0.6
-R2 = 100
-R3 = 0.35
-PR = 0.8
+
 
 nayborsafe3D<- function(v, i, j, k, M, N, L){
      n = 1
@@ -44,6 +41,7 @@ vMap <- function(minM1, maxM1, M, minM2, maxM2, N, minM3, maxM3, L, R1, R2, R3){
        P2 =  0.414 + (0.4612 * M1) 
        P3 = 0.1
        P4 =  -0.1618+ (1.2523 * M3)
+       PR = 0.8
        T1 = 0  
        T2 = 19.765 + (15.627 * M1)
        T3 = 63.15

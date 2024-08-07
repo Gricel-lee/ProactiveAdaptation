@@ -1,3 +1,4 @@
+
 # ---- Import functions ----
 source("/Users/grisv/GitHub/Manifest/R code/violation_map.r")
 source("/Users/grisv/GitHub/Manifest/R code/aux_functions.r")
@@ -23,11 +24,10 @@ vmap <- read.csv("violationMap.csv", header = TRUE)
 
 
 # ---- Section: Data Preparation ---- #
-day <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv") # used to get column names across all data # nolint
-day <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv", col.names = seq_len(ncol(day))) # nolint
-light <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_filtered.csv", col.names = seq_len(ncol(day))) # nolint
-grip <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/degrading_grip_filtered.csv", col.names = 1:ncol(day))	 # nolint
-lg <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_degrading_grip_filtered.csv", col.names = 1:ncol(day)) # nolint
+day <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv", header = TRUE) # nolint
+light <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_filtered.csv", header = TRUE) # nolint
+grip <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/degrading_grip_filtered.csv", header = TRUE)	 # nolint
+lg <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_degrading_grip_filtered.csv", header = TRUE) # nolint
 
 # Plot data
 this <- day  # select data to plot, e.g. day, light, grip, lg
@@ -43,7 +43,7 @@ plot(this[, 1], this[, 4], xlab = "Time", ylab = "Gripper", type = "l") # grippe
 historicmeans <- colMeans(day)[2:4]  #day = normal environmental conditions
 
 # Limits for expected env. values: (4*sigma1,4*sigma2,4*sigma3)
-mlim1 <- 4.0 * sqrt(var(abs(day[, 2] - historicmeans[1])))
+mlim1 <- 4.0 * sqrt(var(abs(day[, 2] - historicmeans[1]))) 
 mlim2 <- 4.0 * sqrt(var(abs(day[, 3] - historicmeans[2])))
 mlim3 <- 4.0 * sqrt(var(abs(day[, 4] - historicmeans[3])))
 lims <- c(mlim1, mlim2, mlim3)
@@ -65,7 +65,6 @@ plot(day[, 1], day[, 4], xlab = "Time", ylab = "Gripper", type = "l", ylim = c(h
 abline(h = historicmeans[3] + mlim3, col = "purple")
 abline(h = historicmeans[3] - mlim3,  col = "purple")
 abline(h = historicmeans[3], col = "green")
-
 
 # ---- Section: Expected trend changes and design their limits ---- #
 
@@ -101,6 +100,7 @@ abline(h = -clim3, col = "purple")
 abline(h = 0, col = "green")
 
 
+
 # ---- Section: Generate synthetic failure data ---- #
 d <- lg     # select failuring data to augment, e.g. light, grip, lg
 
@@ -129,29 +129,3 @@ plot(dataplus[, 1], dataplus[, 4], xlab = "Time", ylab = "Gripper ", type = "l")
 abline(h = historicmeans[3] - mlim3, col = "purple")
 abline(h = historicmeans[3] + mlim3, col = "purple")
 abline(h = 0, col = "green")
-
-
-
-
-
-#####################################
-#          Runtime time              #
-#####################################
-
-# monitoring timestep is currently the same for all measurements
-timestep <- 60
-# maximum time possible
-maxtime <- 6000000
-# get msteps from violation map calculation
-msteps <- c(0.0250, 0.0125, 0.0250)
-# minimum time allowed to predicted violation
-mintime <- 600
-
-
-# ---- Section: Predict violations and check trends ---- #
-out <- checktrends(dataplus, vmap, timestep, historicmeans, lims,
-                   changelims, len, maxtime, mintime, msteps)
-write.csv(out, "outputlg.csv", row.names = FALSE)
-
-#sbv <- checkSBV(dataplus, safezone)
-sbv <- checkSBV(dataplus, vmap)
