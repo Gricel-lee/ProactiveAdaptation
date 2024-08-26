@@ -159,13 +159,13 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims,
         || (abs(data[i, 4] - hmeans[3]) > hlims[3])) {
         change <- rep("none",3) #tracks what environmental variables change, e.g., if all: ['lighting', 'floor friction', 'gripper']
         # which trend(s) change
-        if (abs(data[i, 2] - hmeans[1]) > hlims[1]) change[1] <- "lighting " 
-        if (abs(data[i, 3] - hmeans[2]) > hlims[2])  change[2] <- "floor friction "
-        if (abs(data[i, 4] - hmeans[3]) > hlims[3])  change[3] <- "gripper "
+        if (abs(data[i, 2] - hmeans[1]) > hlims[1]) change[1] <- "lighting "
+        if (abs(data[i, 3] - hmeans[2]) > hlims[2]) change[2] <- "floor friction "
+        if (abs(data[i, 4] - hmeans[3]) > hlims[3]) change[3] <- "gripper "
         # a.1) check whether this is a continuing trend
         if ((trendchanges[1] < changelims[1])
             && (abs(trendchanges[2]) < changelims[2])
-            && (abs(trendchanges[3]) < changelims[3]))  {
+            && (abs(trendchanges[3]) < changelims[3])) {
         keept <- keept - tstep
         print(c(time[i], "same trends", "predicted violation in ", keept, "seconds." ))
         output <- rbind(output, c(data[i,1:4], "same trend", keept, change, " "))
@@ -174,9 +174,9 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims,
           # need to respond now, so check neighbours
           nay <- checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
           if (nrow(nay) > 0) {
-            for (j in 1:nrow(nay)) { print(nay[j,]) }
+            for (j in 1:nrow(nay)) {print(nay[j,])}
           }
-          else { print("no adaptation possible.") }
+          else {print("no adaptation possible.")}
         }
       }
       # a.2) if any environmental measurement has a new trend
@@ -209,10 +209,16 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims,
     else {
       # otherwise all ok
       print(c(time[i], "No problem"))
+      output <- rbind(output, c(data[i,1:4], "no problem", -1111, -1111, -1111, -1111, -1111))
     }
-  
   }
-  return(output[-1, ])
+
+# Assign the column names to the data frame
+colnames(output) <- c("time", "m1", "m2", "m3", "trend",
+                    "time2problem", "changeLight", "changeFloor",
+                    "changeGripper", "edgeORboundary")
+
+return(output[-1, ])
 }
 
 

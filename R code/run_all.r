@@ -26,8 +26,8 @@ vmap <- read.csv("violationMap.csv", header = TRUE)
 
 # ---- Section: Data Preparation ---- #
 #import data
-day <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv") # used to get column names across all data # nolint
-day <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv", col.names = seq_len(ncol(day))) # nolint
+daycol <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv") # used to get column names across all data # nolint
+day <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv", col.names = seq_len(ncol(daycol))) # nolint
 light <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_filtered.csv", col.names = seq_len(ncol(day))) # nolint
 grip <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/degrading_grip_filtered.csv", col.names = 1:ncol(day))	 # nolint
 lg <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_degrading_grip_filtered.csv", col.names = 1:ncol(day)) # nolint
@@ -154,9 +154,6 @@ mintime <- 600
 # ---- Section: Predict violations and check trends ---- #
 out <- checktrends(dataplus, vmap, timestep, historicmeans, lims,
                    changelims, len, maxtime, mintime, msteps)
-
-                   print("Output:")
-                   print(out)
 write.csv(out, "outputlg.csv", row.names = FALSE)
 
 #sbv <- checkSBV(dataplus, safezone)
