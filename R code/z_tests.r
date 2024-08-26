@@ -129,3 +129,141 @@ plot(dataplus[, 1], dataplus[, 4], xlab = "Time", ylab = "Gripper ", type = "l")
 abline(h = historicmeans[3] - mlim3, col = "purple")
 abline(h = historicmeans[3] + mlim3, col = "purple")
 abline(h = 0, col = "green")
+
+
+
+
+assume vmap:
+env1 env2 env3 problem 
+0.02 0.03 0.04 e/b
+
+vmap2: only some columns of vmap
+
+dist2: (-1 columns compared to vmap)
+0.01 0.02 0.03
+____________________
+
+violationtime(cp, vmap, trends, tstep, maxtime)
+
+vmap = define it as only the points that are edge or boundary
+_v = cp
+Input
+\overline{v} <- cp
+trends = current trends at time t
+tstep = 60 sec
+maxtime = 6000000
+
+
+# get distance to every problem (edge or boundary) point
+
+# leave points that are close or in same direction
+for i in vmap:
+    # get distance
+    dist = i[1,colnum(vmap)-1] - cp
+    # leave points that are close or in same direction
+    if (dist < 0.00001) or (sign(dist) == sign(trends)): # 0.00001 hyperparameter # nolint
+      vmap2.append(i)
+      dist2.append(dist)
+
+if len(vmap2) < 0:
+    return (0,'none')
+# if more than one point in same direction & close, save as new x,y,z
+
+if len(vmap2) == 1:
+    closest = vmap2[0]
+
+if len(vmap2) > 1:
+    norm_problem = (vmap2[1]* trends[1] + vmap2[2]*trends[2] + ...)/(R*lenVector)
+    norm_trends = sqrt(trends[1]^2 + trends[2]^2 + ...)
+    # angle between trends and possible problem points
+    angles = acos( trends . vmap2[:-1] / (norm_problem*norm_trends) )
+    # sort
+    sorted_angles = sort(angle)
+    # get points have shortest angle
+    shortest_angle_index = sorted_angles[sorted_angles== min(sorted_angles)].index 
+    # and shortest distance
+    dist = norm_problem[shortest_angle_index]
+    shortest_dist_index = ...
+    # save point
+    closest = vmap2[shortest_dist_index]
+
+
+# get displacement
+displacement = DISPLACEMENT(closest, cp)
+velocity = sqr(trend^2)/tstep
+
+
+
+
+
+    shortest_dist_index = norm_problem[shortest_angle_index] == min(norm_problem[shortest_angle_index])
+    index(shortest_dist)
+
+    for i in sorted_angles:
+        if vmap2[i]-env[i] > 0:
+            possible_vmap.append(vmap2[i])
+        else:
+            possible_vmap.append(vmap2[i] + 0.1)
+  
+
+
+
+
+  x = vmap2[0] - cp
+  y = vmap2[1] - cp
+  z = vmap2[2] - cp
+  keep = vmap2
+  betype = "0"
+  timepred = 0
+  if len(vmap2) > 1:
+    B = sqrt(x^2 + y^2 + z^2)
+    C = (x* trends[1] + y*trends[2] + z*trends[3])/(R*B)
+    # deal with precision problems
+    C[C > 1] = 1
+    C[C < -1] = -1
+    angle = acos(C) 
+    angle = (angle + 2*pi) % (2*pi)
+    sorted =  sort.int(angle, index.return = TRUE)
+    # could be multiple points with the same angle
+    allsame = sorted$ix[sorted$x == sorted$x[1]]
+    # find the point with the shortest distance in direction of change
+    ix = allsame[B[allsame] == min(B[allsame])]
+    keepx = keep[ix, 1]
+    keepy = keep[ix, 2]
+    keepz = keep[ix, 3]
+    betype = betype[ix]
+    timepred = B[ix]/R
+    if timepred > maxtime:
+      timepred = maxtime
+    type = betype[ix]
+    t_pred = timepred
+    problem = type
+  else:
+    t_pred = 0
+    problem = 0
+else:
+  t_pred = 0
+  problem = 0
+
+
+
+
+
+vmapClose = vmap[dist < 0.00001]  # hyperparameter
+# leave points in same direction
+vmapSameDir = vmap[sign(dist) == sign(trends)]
+vmap = concat(vmapClose, vmapSameDir)
+
+
+for i in vmap:
+  if any vmap[i]-env[i] > 0:
+    possible_vmap.append(vmap[i])
+  else:
+    possible_vmap.append(vmap[i] + 0.1)
+possible_vmap = 
+for i in env_i:
+
+
+
+
+return (t_pred,problem)

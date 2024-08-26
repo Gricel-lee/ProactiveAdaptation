@@ -17,7 +17,10 @@ nayborsafe3D<- function(v, i, j, k, M, N, L){
 
 
 
-# function for3 measurements, M1, M2 and M3, between min and max 
+# function fto get violation map
+# return the number of safe, border, edge and violations  in 4th column
+# 1 is safe, 0 is border, 2 is edge, -1 is violation
+
 vMap <- function(minM1, maxM1, M, minM2, maxM2, N, minM3, maxM3, L, R1, R2, R3){
      mat <- matrix(1, ncol = 4, nrow = M*N*L)
      numsafe = 0

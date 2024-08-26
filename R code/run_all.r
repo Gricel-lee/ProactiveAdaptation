@@ -2,10 +2,12 @@
 source("/Users/grisv/GitHub/Manifest/R code/violation_map.r")
 source("/Users/grisv/GitHub/Manifest/R code/aux_functions.r")
 
+
 #####################################
 #          Design time              #
 #####################################
-len <- 10 # time window to obtain trend
+# time window to obtain trend
+len <- 10 
 # requirement bounds
 R1 <- 0.6
 R2 <- 100
@@ -23,6 +25,7 @@ vmap <- read.csv("violationMap.csv", header = TRUE)
 
 
 # ---- Section: Data Preparation ---- #
+#import data
 day <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv") # used to get column names across all data # nolint
 day <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv", col.names = seq_len(ncol(day))) # nolint
 light <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_filtered.csv", col.names = seq_len(ncol(day))) # nolint
@@ -151,6 +154,9 @@ mintime <- 600
 # ---- Section: Predict violations and check trends ---- #
 out <- checktrends(dataplus, vmap, timestep, historicmeans, lims,
                    changelims, len, maxtime, mintime, msteps)
+
+                   print("Output:")
+                   print(out)
 write.csv(out, "outputlg.csv", row.names = FALSE)
 
 #sbv <- checkSBV(dataplus, safezone)
