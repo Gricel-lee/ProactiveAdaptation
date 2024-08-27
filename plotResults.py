@@ -119,9 +119,9 @@ for i in range(1,len(df['time'])):
         if fail==1:
             aax4.axvline(x=df['time'][i], color='b', linestyle='-', linewidth=2.5)
         if fail==2:
-            aax4.axvline(x=df['time'][i], color='g', linestyle='-', linewidth=2.5)
+            aax4.axvline(x=df['time'][i], color='k', linestyle='-', linewidth=2.5)
         if fail==3:
-            aax4.axvline(x=df['time'][i], color='r', linestyle='-', linewidth=2.5)
+            aax4.axvline(x=df['time'][i], color='#ADD8E6', linestyle='-', linewidth=2.5)
         
     
 
