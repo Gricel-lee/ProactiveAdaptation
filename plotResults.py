@@ -44,9 +44,9 @@ def in_violation(time,M1, M2, M3):
             violation = -1
             Rfail = 3
     
-    if violation == -1:
+    #if violation == -1:
         #input("Press Enter to continue...")
-        print(time,M1,M2,M3, r1, r2, r3, Rfail)
+        #print(time,M1,M2,M3, r1, r2, r3, Rfail)
     return violation, Rfail
 
 
@@ -55,7 +55,7 @@ def in_violation(time,M1, M2, M3):
 
 
 # Create a 3x1 grid of subplots
-fig, (aax1, aax2, aax3, aax4) = plt.subplots(4, 1, figsize=(10, 4), gridspec_kw={'height_ratios': [4, 1, 1, 1]}, layout='constrained')  # (width, height) in inches
+fig, (aax1, aax3, aax4) = plt.subplots(3, 1, figsize=(10, 4), gridspec_kw={'height_ratios': [4, 1, 1]}, layout='constrained')  # (width, height) in inches
 
 
 # --------- First subplot
@@ -91,24 +91,18 @@ x_ticks = df['time'][::10]  # Set x-ticks at intervals of 10
 host.set_xticks(x_ticks)
 host.set_xticklabels(x_ticks, rotation=45)
 
-# plot time of violations
+# plot adaptation needed
 tv= 600 # 10 min
 for i in range(1,len(df['time'])):
-    if df['time2problem'][i-1] > tv and df['time2problem'][i] <= tv:
-        host.axvline(x=df['time'][i], color='g', linestyle=':', linewidth=1.5)
+    if df['edgeORboundary'][i-1]!='-9999999': # problem detected
+        if df['time2problem'][i-1] > tv and df['time2problem'][i] <= tv and df['time2problem'][i] >= 0:
+            host.axvline(x=df['time'][i], color='g', linestyle=':', linewidth=1.5)
+
 
 # --------- Second subplot
 for i in range(1,len(df['time'])):
-    if df['time2problem'][i-1] > 0 and df['time2problem'][i] <= 0:
-        aax2.axvline(x=df['time'][i], color='r', linestyle='-', linewidth=1)
-
-aax2.set_ylabel("problem\nocurrs", rotation=45)#, ha='right')
-
-
-# --------- Third subplot
-for i in range(1,len(df['time'])):
-    if df['time2problem'][i] <= 0:
-        print("time ", df['time2problem'][i])
+    if df['time2problem'][i] <= 0 and df['time2problem'][i]!=-9999999:
+        print("time ", df['time'][i])
         if df['edgeORboundary'][i]=='b':
             aax3.axvline(x=df['time'][i], color='r', linestyle='-', linewidth=2.5)
         if df['edgeORboundary'][i]=='e':
@@ -133,12 +127,11 @@ for i in range(1,len(df['time'])):
 
 # Set x limits
 host.set_xlim([min(df['time']), max(df['time'])])
-aax2.set_xlim([min(df['time']), max(df['time'])])
 aax3.set_xlim([min(df['time']), max(df['time'])])
 aax4.set_xlim([min(df['time']), max(df['time'])])
 
 # Set y labels
-aax3.set_ylabel("type of\nproblem", rotation=45)#, ha='right')
+aax3.set_ylabel("predict. \nproblem", rotation=45)#, ha='right')
 aax4.set_ylabel("\nreq.\nviolated", rotation=45)#, ha='right')
 
 
@@ -146,7 +139,7 @@ aax4.set_ylabel("\nreq.\nviolated", rotation=45)#, ha='right')
 
 # --------- Next subplots
 # no x-ticks                 
-aax2.xaxis.set_ticks([]); aax2.yaxis.set_ticks([])
+#aax2.xaxis.set_ticks([]); aax2.yaxis.set_ticks([])
 aax3.xaxis.set_ticks([]); aax3.yaxis.set_ticks([])
 #aax4.xaxis.set_ticks([]);
 aax4.yaxis.set_ticks([])
@@ -155,10 +148,6 @@ aax4.yaxis.set_ticks([])
 # ax2.yaxis.label.set_color(p2[0].get_color())
 # ax3.yaxis.label.set_color(p3[0].get_color())
 
-
-# --------- Second subplot
-# plot predicted edge or boundary
-aax2
 
 
 # For professional typesetting, e.g. LaTeX, use .pgf or .pdf

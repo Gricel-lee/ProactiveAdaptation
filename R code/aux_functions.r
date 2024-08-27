@@ -143,7 +143,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims,
   x <- c(1:len)            # x values for trend calculation
   problem <- 0            # flag for problem
   output <- rep(0, 10)    # output matrix
-  edge_bound <- -1111       # edge or boundary, 'e' or 'b'
+  edge_bound <- -9999999       # edge or boundary, 'e' or 'b'
 
   # ---- Monitoring loop
   for (i in (len + 1):full_length){ # for each monitoring point
@@ -213,7 +213,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims,
     else {
       # otherwise all ok
       print(c(time[i], "No problem"))
-      output <- rbind(output, c(data[i,1:4], "no problem", -1111, -1111, -1111, -1111, edge_bound))
+      output <- rbind(output, c(data[i,1:4], "no problem", -9999999, -9999999, -9999999, -9999999, edge_bound))
     }
   }
 
