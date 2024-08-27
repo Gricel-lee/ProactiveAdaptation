@@ -143,7 +143,8 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims,
   x <- c(1:len)            # x values for trend calculation
   problem <- 0            # flag for problem
   output <- rep(0, 10)    # output matrix
-  
+  edge_bound <- -1111       # edge or boundary, 'e' or 'b'
+
   # ---- Monitoring loop
   for (i in (len + 1):full_length){ # for each monitoring point
 
@@ -168,7 +169,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims,
             && (abs(trendchanges[3]) < changelims[3])) {
         keept <- keept - tstep
         print(c(time[i], "same trends", "predicted violation in ", keept, "seconds." ))
-        output <- rbind(output, c(data[i,1:4], "same trend", keept, change, " "))
+        output <- rbind(output, c(data[i,1:4], "same trend", keept, change, edge_bound))
         # adapt
         if ((keept - timestep) < mintime){
           # need to respond now, so check neighbours
@@ -185,12 +186,15 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims,
         cp <- c(data[i, 2], data[i, 3], data[i, 4])
         # check time to violation
         t <- violationtime(cp, vmap, trends, tstep, maxtime)
+        
+        edge_bound <- t[[2]] # "e" or "b"
+
         if (t[[1]] < maxtime) {
           keept <- t[[1]]
           phrase <- "predicted violation in "
-          if (t[[2]] == "e") { phrase = "Could reach unknown parameter space in "} # nolint
+          if (edge_bound == "e") { phrase = "Could reach unknown parameter space in "} # nolint
           print(c(time[i], " new trend", phrase, keept, "seconds." ))
-          output <- rbind(output, c(data[i,1:4], "new trend", keept, change, t[[2]]))
+          output <- rbind(output, c(data[i,1:4], "new trend", keept, change, edge_bound))
           keeptrends <- trends
           # adapt
           if ((keept - timestep) < mintime){
@@ -209,14 +213,21 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims,
     else {
       # otherwise all ok
       print(c(time[i], "No problem"))
-      output <- rbind(output, c(data[i,1:4], "no problem", -1111, -1111, -1111, -1111, -1111))
+      output <- rbind(output, c(data[i,1:4], "no problem", -1111, -1111, -1111, -1111, edge_bound))
     }
   }
+
+
+# Add a new column with 0 if the 6th column is smaller than 700
+# tv <- 700
+# output$new_column <- ifelse(output[, 6] < tv, 0, NA)
 
 # Assign the column names to the data frame
 colnames(output) <- c("time", "m1", "m2", "m3", "trend",
                     "time2problem", "changeLight", "changeFloor",
                     "changeGripper", "edgeORboundary")
+
+
 
 return(output[-1, ])
 }

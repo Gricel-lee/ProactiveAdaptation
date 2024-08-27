@@ -105,7 +105,8 @@ abline(h = 0, col = "green")
 
 
 # ---- Section: Generate synthetic failure data ---- #
-d <- lg     # select failuring data to augment, e.g. light, grip, lg
+#### SELECT HERE ###########
+d <- light     # select failuring data to augment, e.g. light, grip, lg
 
 # Generate synthetic failure data
 # a) get last "len" datapoints to beginning of normal day data

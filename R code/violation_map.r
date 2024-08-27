@@ -16,6 +16,49 @@ nayborsafe3D<- function(v, i, j, k, M, N, L){
 }
 
 
+# New function to get if in violation
+in_violation <- function(M1,M2,M3){
+    P1 =  0.2018 +  (0.8191 * M1)
+    P2 =  0.414 + (0.4612 * M1)
+    P3 = 0.1
+    P4 =  -0.1618 + (1.2523 * M3)
+    PR = 0.8
+    T1 = 0
+    T2 = 19.765 + (15.627 * M1)
+    T3 = 63.15
+    T1F = 0
+    T2F = 7.343 + ( 72.234 * M1) + (161.485 * M2) - (231.337 * M1 * M2)
+    TR = 6.498 - (5.482 * M1) - (6.855 * M3) + (8.301 * M1 * M3)
+    # start safe
+    violation <- 1
+    r1 = (P1*P2*P4) / (1 - PR*P3)
+    r2 = (P1*(P3*T2 - P2*T3 - P3*T2F - T1 - T2 + T1F) + PR*P3*(T1F - P1*TR - P1*T1F) - T1F) / (PR*P3 -  1)
+    r3 = (P1*P2*(1 - P4)) / (1 - PR*P3)
+    if ((1 - PR*P3) == 0) {
+      violation <- -1
+    }
+    else {
+        if (r1 < R1){
+          violation <- -1
+          R1fail = R1fail+1
+        }
+        if (r2 > R2) {
+        violation <- -1
+                R2fail = R2fail+1
+        }
+        if (r3 > R3) {
+    violation <- -1
+                R3fail = R3fail+1
+        }
+        if (mat[ind,4] != -1){
+        numsafe <- numsafe + 1
+        }
+    }
+    return(violation)
+}
+
+
+
 
 # function fto get violation map
 # return the number of safe, border, edge and violations  in 4th column
