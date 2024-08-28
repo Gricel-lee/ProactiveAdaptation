@@ -7,7 +7,7 @@ source("/Users/grisv/GitHub/Manifest/R code/aux_functions.r")
 #          Design time              #
 #####################################
 # time window to obtain trend
-len <- 10 
+len <- 10
 # requirement bounds
 R1 <- 0.6
 R2 <- 100
@@ -43,7 +43,7 @@ plot(this[, 1], this[, 4], xlab = "Time", ylab = "Gripper", type = "l") # grippe
 # ---- Section: Expected environmental values and design their limits ---- #
 
 # Expected environmental values (means)
-historicmeans <- colMeans(day)[2:4]  #day = normal environmental conditions
+historicmeans <- colMeans(day)[2:4]  # day = normal environmental conditions
 
 # Limits for expected env. values: (4*sigma1,4*sigma2,4*sigma3)
 mlim1 <- 4.0 * sqrt(var(abs(day[, 2] - historicmeans[1])))
@@ -105,38 +105,50 @@ abline(h = 0, col = "green")
 
 
 # ---- Section: Generate synthetic failure data ---- #
-#### SELECT HERE ###########
+######## SELECT DATA HERE ###########
+# Select one day data
 d <- grip     # select failuring data to augment, e.g. light, grip, lg
+
+# Select if augment with normal day data
+augment <- TRUE
+
+# Plot
+plot <- FALSE
+#################################
 
 # Generate synthetic failure data
 # a) get last "len" datapoints to beginning of normal day data
 start <- dim(day)[1] - len + 1
 end <- dim(day)[1]
 extra <-  day[start:end, ] # last rows of normal day
-
 # b) augment failing data
 dataplus <- rbind(extra, d)
 dataplus[, 1] <- 60 * c(0:(nrow(dataplus) - 1)) # adjust time
 
-# Plot synthetic data + limits
-plot(dataplus[, 1], dataplus[, 2], xlab = "Time", ylab = "Lighting ", type = "l") # nolint
-abline(h = historicmeans[1] - mlim1, col = "purple")
-abline(h = historicmeans[1] + mlim1, col = "purple")
-abline(h = 0, col = "green")
 
-plot(dataplus[, 1], dataplus[, 3], xlab = "Time", ylab = "Floor friction ", type = "l") # nolint
-abline(h = historicmeans[2] - mlim2, col = "purple")
-abline(h = historicmeans[2] + mlim2, col = "purple")
-abline(h = 0, col = "green")
+if (plot){
+    # Plot synthetic data + limits
+    plot(dataplus[, 1], dataplus[, 2], xlab = "Time", ylab = "Lighting ", type = "l") # nolint
+    abline(h = historicmeans[1] - mlim1, col = "purple")
+    abline(h = historicmeans[1] + mlim1, col = "purple")
+    abline(h = 0, col = "green")
 
-plot(dataplus[, 1], dataplus[, 4], xlab = "Time", ylab = "Gripper ", type = "l")
-abline(h = historicmeans[3] - mlim3, col = "purple")
-abline(h = historicmeans[3] + mlim3, col = "purple")
-abline(h = 0, col = "green")
+    plot(dataplus[, 1], dataplus[, 3], xlab = "Time", ylab = "Floor friction ", type = "l") # nolint
+    abline(h = historicmeans[2] - mlim2, col = "purple")
+    abline(h = historicmeans[2] + mlim2, col = "purple")
+    abline(h = 0, col = "green")
+
+    plot(dataplus[, 1], dataplus[, 4], xlab = "Time", ylab = "Gripper ", type = "l")
+    abline(h = historicmeans[3] - mlim3, col = "purple")
+    abline(h = historicmeans[3] + mlim3, col = "purple")
+    abline(h = 0, col = "green")
+}
 
 
 
-
+######## Replace day data if given
+# or comment out
+dataplus <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/Julie-dayData/outputScenario1.csv", col.names = 1:ncol(daycol)) # nolint
 
 #####################################
 #          Runtime time              #

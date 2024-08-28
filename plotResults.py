@@ -57,6 +57,12 @@ def in_violation(time,M1, M2, M3):
 # Create a 3x1 grid of subplots
 fig, (aax1, aax3, aax4) = plt.subplots(3, 1, figsize=(10, 4), gridspec_kw={'height_ratios': [4, 1, 1]}, layout='constrained')  # (width, height) in inches
 
+# Set background color to grey
+#fig.patch.set_facecolor('grey')
+grey = '#C5C9C7'
+aax1.set_facecolor(grey)
+aax3.set_facecolor(grey)
+aax4.set_facecolor(grey)
 
 # --------- First subplot
 host = aax1
@@ -78,8 +84,10 @@ color1, color2, color3 = plt.cm.viridis([0, .6, .3])
 df = pd.read_csv('/Users/grisv/GitHub/Manifest/outputlg.csv')
 
 p1 = host.plot(df['time'], df['m1'],      color='k', label="Light")#linestyle='--',
-p2 = ax2.plot(df['time'], df['m2'],  color='red', label="Floor friction")
-p3 = ax3.plot(df['time'], df['m3'], color='green', linestyle='-', label="Gripper friction")
+cyan = '#00FFFF'
+p2 = ax2.plot(df['time'], df['m2'],  color='r', label="Floor friction")
+purple = '#800080'
+p3 = ax3.plot(df['time'], df['m3'], color='g', linestyle='-', label="Gripper friction")
 
 
 host.legend(handles=p1+p2+p3, loc='lower left')#loc='best')
@@ -96,7 +104,7 @@ tv= 600 # 10 min
 for i in range(1,len(df['time'])):
     if df['edgeORboundary'][i-1]!='-9999999': # problem detected
         if df['time2problem'][i-1] > tv and df['time2problem'][i] <= tv and df['time2problem'][i] >= 0:
-            host.axvline(x=df['time'][i], color='g', linestyle=':', linewidth=1.5)
+            host.axvline(x=df['time'][i], color='b', linestyle=':', linewidth=1.5)
 
 
 # --------- Second subplot
@@ -104,9 +112,10 @@ for i in range(1,len(df['time'])):
     if df['time2problem'][i] <= 0 and df['time2problem'][i]!=-9999999:
         print("time ", df['time'][i])
         if df['edgeORboundary'][i]=='b':
-            aax3.axvline(x=df['time'][i], color='r', linestyle='-', linewidth=2.5)
+            aax3.axvline(x=df['time'][i], color='#E50000', linestyle='-', linewidth=2.5)
         if df['edgeORboundary'][i]=='e':
-            aax3.axvline(x=df['time'][i], color='g', linestyle='-', linewidth=2.5)
+            gold = '#FFD700'
+            aax3.axvline(x=df['time'][i], color=gold, linestyle='-', linewidth=2.5)
 
 
 # --------- Fourth subplot
@@ -138,7 +147,7 @@ aax4.set_ylabel("\nreq.\nviolated", rotation=45)#, ha='right')
 
 
 # --------- Next subplots
-# no x-ticks                 
+# no x-ticks
 #aax2.xaxis.set_ticks([]); aax2.yaxis.set_ticks([])
 aax3.xaxis.set_ticks([]); aax3.yaxis.set_ticks([])
 #aax4.xaxis.set_ticks([]);
