@@ -3,6 +3,16 @@ source("/Users/grisv/GitHub/Manifest/R code/violation_map.r")
 source("/Users/grisv/GitHub/Manifest/R code/aux_functions.r")
 
 
+get_vmap <- function(R1,R2,R3){
+  vmap <- vMap(0.5, 1.0, 20, 0.25, 0.5, 20, 0.5, 1.0, 20, R1, R2, R3)
+  # save
+  colnames(vmap) <- c("M1", "M2", "M3", "SBV")
+  write.csv(vmap, "violationMap.csv", row.names = FALSE)
+  # read  (if generated on separate file)
+  vmap <- read.csv("violationMap.csv", header = TRUE)
+  return(vmap)
+}
+
 #####################################
 #          Design time              #
 #####################################
@@ -148,7 +158,10 @@ if (plot){
 
 ######## Replace day data if given
 # or comment out
-dataplus <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/Julie-dayData/outputScenario1.csv", col.names = 1:ncol(daycol)) # nolint
+#dataplus <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/Julie-dayData/outputScenario3.csv", col.names = 1:ncol(daycol)) # nolint
+#dataplus <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/Julie-dayData/faulty_light_filtered.csv", col.names = 1:ncol(daycol)) # nolint
+#dataplus <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/Julie-dayData/degrading_grip_filtered.csv", col.names = 1:ncol(daycol)) # nolint
+dataplus <- read.csv("/Users/grisv/GitHub/Manifest/R code/data/Julie-dayData/faulty_light_degrading_grip_filtered.csv", col.names = 1:ncol(daycol)) # nolint
 
 #####################################
 #          Runtime time              #

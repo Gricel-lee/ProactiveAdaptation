@@ -13,8 +13,24 @@ gettrends <- function(data, len){ # nolint
     return(trends)
 }
 
+
+checkviolation <- function(){
+  return(TRUE)
+}
+checkbounds <- function(){
+  return(TRUE)
+}
+
 # ---- Calculate time to violation
 violationtime <- function(cp, vmap, trends, tstep, maxtime){
+
+  # #check if already in violation
+  # if checkviolation(cp, vmap){
+  #   return(list(0, "v"))
+  # }
+  # #check if out of bounds
+  # checkbounds = checkbounds(cp, vmap)
+
   # get border and edge points from violation map
   border <- vmap[which(vmap[, 4] == 0), 1:3]
   edge <- vmap[which(vmap[, 4] == 2), 1:3]
@@ -32,7 +48,7 @@ violationtime <- function(cp, vmap, trends, tstep, maxtime){
   indsz <- which((abs(z) <  0.00001) | (sign(z) == sign(trends[3])))
   inds <- intersect(indsx, intersect(indsy, indsz))
   # initialise vars
-  type <- "e"
+  type <- "0" # ERROR <---- "e"
   timepred <- 0
 
   # if more than one point in same direction & close, save as new x,y,z
@@ -144,6 +160,11 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims,
   problem <- 0            # flag for problem
   output <- rep(0, 10)    # output matrix
   edge_bound <- -9999999       # edge or boundary, 'e' or 'b'
+
+  # --- Add first len rows to output
+  for (i in 1:len){
+    output <- rbind(output, c(data[i,1:4], "no problem", -9999999, -9999999, -9999999, -9999999, edge_bound))
+  }
 
   # ---- Monitoring loop
   for (i in (len + 1):full_length){ # for each monitoring point
