@@ -25,11 +25,13 @@ checkbounds <- function(){
 violationtime <- function(cp, vmap, trends, tstep, maxtime){
 
   # #check if already in violation
-  # if checkviolation(cp, vmap){
-  #   return(list(0, "v"))
-  # }
-  # #check if out of bounds
-  # checkbounds = checkbounds(cp, vmap)
+  if checkviolation(cp, vmap){
+     return(list(0, "v"))
+  }
+  #check if out of bounds
+  if checkbounds(cp, vmap){
+    return (list(0, "b"))
+  }
 
   # get border and edge points from violation map
   border <- vmap[which(vmap[, 4] == 0), 1:3]
@@ -112,7 +114,6 @@ violationtime <- function(cp, vmap, trends, tstep, maxtime){
 
     # if not changing speed, set to maxtime
     if (speed == 0) timepred <- maxtime
-
   }
   return(list(timepred, type))
 }

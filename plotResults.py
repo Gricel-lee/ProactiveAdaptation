@@ -91,13 +91,13 @@ host_ax2.set_ylabel("Gripper friction")
 color1, color2, color3 = plt.cm.viridis([0, .6, .3])
 
 # Read the CSV file
-#df = pd.read_csv('/Users/grisv/GitHub/Manifest/outputlg.csv')
+df = pd.read_csv('/Users/grisv/GitHub/Manifest/outputlg.csv')
 #df = pd.read_csv('/Users/grisv/GitHub/Manifest/output1-lightDrop.csv')
 #df = pd.read_csv('/Users/grisv/GitHub/Manifest/outputlg3-gripper.csv')
-df = pd.read_csv('/Users/grisv/GitHub/Manifest/outputlg4-lightGripper.csv')
+#df = pd.read_csv('/Users/grisv/GitHub/Manifest/outputlg4-lightGripper.csv')
 
 p1 = host.plot(df['time'], df['m1'],      color='k', label="Light", linewidth=.9)
-p2 = host_ax1.plot(df['time'], df['m2'],  color=brown, label="Floor friction", linewidth=.7,linestyle='--')
+p2 = host_ax1.plot(df['time'], df['m2'],  color=brown, label="Floor friction", linewidth=.9,linestyle='--')
 p3 = host_ax2.plot(df['time'], df['m3'], color='g', linestyle=':', label="Gripper friction", linewidth=.8)
 
 
