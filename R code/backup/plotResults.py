@@ -90,15 +90,26 @@ host_ax1.set_ylabel("Floor friction")
 host_ax2.set_ylabel("Gripper friction")
 color1, color2, color3 = plt.cm.viridis([0, .6, .3])
 
+
+
+
+
 # Read the CSV file
 df = pd.read_csv('/Users/grisv/GitHub/Manifest/outputlg.csv')
+df_time_data = pd.read_csv('/Users/grisv/GitHub/Manifest/dataplus.csv') 
+
 #df = pd.read_csv('/Users/grisv/GitHub/Manifest/output1-lightDrop.csv')
 #df = pd.read_csv('/Users/grisv/GitHub/Manifest/outputlg3-gripper.csv')
 #df = pd.read_csv('/Users/grisv/GitHub/Manifest/outputlg4-lightGripper.csv')
 
-p1 = host.plot(df['time'], df['m1'],      color='k', label="Light", linewidth=.9)
-p2 = host_ax1.plot(df['time'], df['m2'],  color=brown, label="Floor friction", linewidth=.9,linestyle='--')
-p3 = host_ax2.plot(df['time'], df['m3'], color='g', linestyle=':', label="Gripper friction", linewidth=.8)
+df.columns = ['time', 'm1', 'm2', 'm3', 'trend', 'time2problem','light','floor','gripper', 'edgeORboundary']
+df_time_data.columns = ['time', 'm1', 'm2', 'm3', 'state', 'NA','d']
+
+print(df.head())
+
+p1 = host.plot(df_time_data['time'], df_time_data['m1'],      color='k', label="Light", linewidth=.9)
+p2 = host_ax1.plot(df_time_data['time'], df_time_data['m2'],  color=brown, label="Floor friction", linewidth=.9,linestyle='--')
+p3 = host_ax2.plot(df_time_data['time'], df_time_data['m3'], color='g', linestyle=':', label="Gripper friction", linewidth=.8)
 
 
 host.legend(handles=p1+p2+p3, loc='lower left')#loc='best')
@@ -106,7 +117,7 @@ host.legend(handles=p1+p2+p3, loc='lower left')#loc='best')
 host_ax2.spines['right'].set_position(('outward', 50))
 
 # Set x-ticks and x-tick labels
-x_ticks = df['time'][::10]  # Set x-ticks at intervals of 10
+x_ticks = df_time_data['time'][::10]  # Set x-ticks at intervals of 10
 host.set_xticks(x_ticks)
 host.set_xticklabels(x_ticks, rotation=45)
 

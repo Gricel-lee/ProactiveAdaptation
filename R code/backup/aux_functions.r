@@ -1,6 +1,8 @@
 # ---- Calculate trends from data
-gettrends <- function(data, len){ # nolint
-    full = dim(data)[1]
+
+# function to calculate trends from data
+gettrends <- function(data, len){
+    full = dim(data)[1]    
     trends = matrix(nrow = (full-len), ncol = 4)
     x = c(1:len)
     for (i in (len+1):full){
@@ -9,9 +11,10 @@ gettrends <- function(data, len){ # nolint
              model = lm(data[(i-len):(i-1), (j+1)] ~ x)
              trends[(i-len),(j+1)] =  model$coefficients[2]
          }
-    } # nolint
+    }
     return(trends)
 }
+
 
 
 checkviolation <- function(){
@@ -23,15 +26,6 @@ checkbounds <- function(){
 
 # ---- Calculate time to violation
 violationtime <- function(cp, vmap, trends, tstep, maxtime){
-
-  # #check if already in violation
-  if checkviolation(cp, vmap){
-     return(list(0, "v"))
-  }
-  #check if out of bounds
-  if checkbounds(cp, vmap){
-    return (list(0, "b"))
-  }
 
   # get border and edge points from violation map
   border <- vmap[which(vmap[, 4] == 0), 1:3]

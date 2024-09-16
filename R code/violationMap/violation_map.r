@@ -1,5 +1,4 @@
 
-
 nayborsafe3D<- function(v, i, j, k, M, N, L){
      n = 1
      ind = i + (M*((j-1) + N*(k-1)))
@@ -22,7 +21,8 @@ nayborsafe3D<- function(v, i, j, k, M, N, L){
 # return the number of safe, border, edge and violations  in 4th column
 # 1 is safe, 0 is border, 2 is edge, -1 is violation
 
-vMap <- function(minM1, maxM1, M, minM2, maxM2, N, minM3, maxM3, L, R1, R2, R3){
+# function for3 measurements, M1, M2 and M3, between min and max 
+violationMap <- function(minM1, maxM1, M, minM2, maxM2, N, minM3, maxM3, L, R1, R2, R3){
      mat <- matrix(1, ncol = 4, nrow = M*N*L)
      numsafe = 0
      R1fail = 0
@@ -31,6 +31,7 @@ vMap <- function(minM1, maxM1, M, minM2, maxM2, N, minM3, maxM3, L, R1, R2, R3){
      m1step = (maxM1 - minM1)/M
      m2step = (maxM2 - minM2)/N
      m3step = (maxM3 - minM3)/L
+    print(c("msteps:", m1step, m2step, m3step))
      for (i in 1:M){
          for (j in 1:N){
              for (k in 1:L){
@@ -45,7 +46,6 @@ vMap <- function(minM1, maxM1, M, minM2, maxM2, N, minM3, maxM3, L, R1, R2, R3){
        P2 =  0.414 + (0.4612 * M1) 
        P3 = 0.1
        P4 =  -0.1618+ (1.2523 * M3)
-       PR = 0.8
        T1 = 0  
        T2 = 19.765 + (15.627 * M1)
        T3 = 63.15
