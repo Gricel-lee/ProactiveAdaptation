@@ -16,6 +16,7 @@ out_of_edge <- function(s,printnum){
      return(type)
 }
 
+
 # function to calculate time to violation 
 violationtime <- function(s, vmap, trends, tstep, maxtime, msteps, printnum){
 
@@ -25,77 +26,87 @@ violationtime <- function(s, vmap, trends, tstep, maxtime, msteps, printnum){
      }
      else{
 
-	border = vmap[which(vmap[,4] == 0),1:3]
-	edge = vmap[which(vmap[,4] == 2),1:3]
-            borderedge = rbind(border, edge)
-	R = sqrt(trends[1]^2 + trends[2]^2 + trends[3]^2)
-            x = borderedge[,1]-s[1]
-            y = borderedge[,2]-s[2]
-            z = borderedge[,3]-s[3]
-            betype = c(rep("b", dim(border)[1]), rep("e", dim(edge)[1]))
-            type = "v"     
-            timepred = 0  
-            # before considering a move, check whether already on a border/edge point
-            ind0 = which((abs(x) < (msteps[1]/2)) & (abs(y) < (msteps[2]/2))  & (abs(z) < (msteps[3]/2)))
-            if (length(ind0) > 0) {
-               type = betype[ind0]
-               if (printnum == 1) print(c(type, "this is a boundary/edge point"))
-            }
-            else {
-                # don't consider border/edge points in wrong direction
-                indsx = which( (abs(x) <  0.00001) | (sign(x) == sign(trends[1])))
-                indsy = which( (abs(y) <  0.00001) |(sign(y) == sign(trends[2])))
-                indsz = which( (abs(z) <  0.00001) |(sign(z) == sign(trends[3])))
-                inds = intersect(indsx, intersect(indsy, indsz)) 
-                if (length(inds) > 0) {
-                      x = x[inds]
-                      y = y[inds]
-                      z = z[inds]
-                      keep = borderedge[inds,]
-                      betype = betype[inds]
-                      if (length(inds) > 1) {
-                            B = sqrt(x^2 + y^2 + z^2)
-	                C = (x* trends[1] + y*trends[2] + z*trends[3])/(R*B)
-	                # deal with precision problems
-                           C[which(C > 1)] = 1
-                           C[which(C < -1)] = -1
- 	                angle = acos(C) 
-                           angle = (angle + 2*pi) %% (2*pi)          
-                           sorted =  sort.int(angle, index.return = T)
-                           # could be multiple points with the same angle 
-                           allsame = sorted$ix[which(sorted$x == sorted$x[1])]
-                           # find the point with the shortest distance in direction of change
-                           ix = allsame[which(B[allsame] == min(B[allsame]))]
-                           keepx = keep[ix,1]
-                           keepy = keep[ix,2]
-                           keepz = keep[ix,3]
-                           type = betype[ix]
-                      } else {
-                           keepx = keep[1]
-                           keepy = keep[2]
-                           keepz = keep[3]    
-                           type = betype[inds]       
-                     }
-                     displacement = sqrt((keepx-s[1])*(keepx-s[1])+ (keepy-s[2])*(keepy-s[2])+ (keepz-s[3])*(keepz-s[3]))
-                      velocity = sqrt(trends[1]*trends[1] + trends[2]*trends[2] +  trends[3]* trends[3])/tstep        
-                     timepred = maxtime                  
-                     if (velocity > 0) timepred = displacement/velocity              
-                     timepred = floor(timepred + 0.5)
+          print("time now")
+          print(t)
+
+          border = vmap[which(vmap[,4] == 0),1:3]
+          edge = vmap[which(vmap[,4] == 2),1:3]
+          borderedge = rbind(border, edge)
+          R = sqrt(trends[1]^2 + trends[2]^2 + trends[3]^2)
+               x = borderedge[,1]-s[1]
+               y = borderedge[,2]-s[2]
+               z = borderedge[,3]-s[3]
+               betype = c(rep("b", dim(border)[1]), rep("e", dim(edge)[1]))
+               type = "v"     
+               timepred = 0  
+               # before considering a move, check whether already on a border/edge point
+               ind0 = which((abs(x) < (msteps[1]/2)) & (abs(y) < (msteps[2]/2))  & (abs(z) < (msteps[3]/2)))
+
+               
+
+               if (length(ind0) > 0) {
+                    type = betype[ind0]
+                    if (printnum == 1) print(c(type, "this is a boundary/edge point"))
                }
-                else {
-                     if (printnum == 1) print(c(type, "this is a violation point"))
+               else {
+                    # don't consider border/edge points in wrong direction
+                    indsx = which( (abs(x) <  0.00001) | (sign(x) == sign(trends[1])))
+                    indsy = which( (abs(y) <  0.00001) |(sign(y) == sign(trends[2])))
+                    indsz = which( (abs(z) <  0.00001) |(sign(z) == sign(trends[3])))
+                    inds = intersect(indsx, intersect(indsy, indsz)) 
+                    if (length(inds) > 0) {
+                         x = x[inds]
+                         y = y[inds]
+                         z = z[inds]
+                         keep = borderedge[inds,]
+                         betype = betype[inds]
+                         if (length(inds) > 1) {
+                              B = sqrt(x^2 + y^2 + z^2)
+                         C = (x* trends[1] + y*trends[2] + z*trends[3])/(R*B)
+                         # deal with precision problems
+                              C[which(C > 1)] = 1
+                              C[which(C < -1)] = -1
+                         angle = acos(C) 
+                              angle = (angle + 2*pi) %% (2*pi)          
+                              sorted =  sort.int(angle, index.return = T)
+                              # could be multiple points with the same angle 
+                              allsame = sorted$ix[which(sorted$x == sorted$x[1])]
+                              # find the point with the shortest distance in direction of change
+                              ix = allsame[which(B[allsame] == min(B[allsame]))]
+                              keepx = keep[ix,1]
+                              keepy = keep[ix,2]
+                              keepz = keep[ix,3]
+                              type = betype[ix]
+                         } else {
+                              keepx = keep[1]
+                              keepy = keep[2]
+                              keepz = keep[3]    
+                              type = betype[inds]       
+                         }
+                         displacement = sqrt((keepx-s[1])*(keepx-s[1])+ (keepy-s[2])*(keepy-s[2])+ (keepz-s[3])*(keepz-s[3]))
+                         velocity = sqrt(trends[1]*trends[1] + trends[2]*trends[2] +  trends[3]* trends[3])/tstep        
+                         timepred = maxtime                  
+                         if (velocity > 0) timepred = displacement/velocity              
+                         timepred = floor(timepred + 0.5)
+                    }
+                    else {
+                         if (printnum == 1) print(c(type, "this is a violation point"))
+                    }
                }
-            }
-            
-            # if time to violation is zero and was not an edge point, this is a violation point
-            if(timepred == 0 && type == "v") {
-                 type = "b"
-                 if (printnum == 1) print(c(type, "this is an violation point (by default)"))
-            }
+
+               
+
+          if (type=='v'){
+          # Wait for user input
+          print(s)
+          print("v")
+               #readline(prompt = "Press [Enter] to continue...")
+
+          }
 
             return(list(timepred, type))
      }
-}
+ }
 
 plot_initial_data <- function(data) {
   # Plot data
@@ -133,7 +144,7 @@ checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps){
                            nt[ind, 2] = k
                            nt[ind, 3] = l
                            np = c((cp[1] + j*msteps[1]), (cp[2] + k*msteps[2]), (cp[3] + l*msteps[3]))
-                           nt[ind, 4] = violationtime(np, vmap, trends, tstep, maxtime, msteps, 2)[[1]]
+                           nt[ind, 4] = violationtime('accessed in checknay', np, vmap, trends, tstep, maxtime, msteps, 2)[[1]]
                            ind = ind + 1
                     }  
             }  
@@ -152,10 +163,20 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
     trendchanges = rep(0, 3)
     keept = maxtime
     time = data[,1]
+    
+    print("all time")
+    print(time)
+    readline(prompt = "Press [Enter] to continue.dd..")
+
+
     x = c(1:len)
     problem = 0
     output = rep(0,10)
     for (i in (len+1):full_length){
+     print("---time beginning---")
+     print(data[i,1])
+
+     
         # check whether absolute difference between actual and expected values exceed limits
         if ((abs(data[i, 2] - hmeans[1]) > hlims[1]) | (abs(data[i, 3] - hmeans[2]) > hlims[2]) 
                  |(abs(data[i, 4] - hmeans[3]) > hlims[3]))  { 
@@ -171,9 +192,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                   if (abs(data[i, 3] - hmeans[2]) > hlims[2])  change[2] = "floor friction "
                   if (abs(data[i, 4] - hmeans[3]) > hlims[3])  change[3] = "gripper "
                   # check whether this is a continuing trend
-                  if ((abs(trendchanges[1]) < changelims[1]) & (abs(trendchanges[2]) < changelims[2]) &(abs(trendchanges[3]) < changelims[3]))  {
-
-
+                  if ((trendchanges[1] < changelims[1]) & (abs(trendchanges[2]) < changelims[2]) &(abs(trendchanges[3]) < changelims[3]))  {
                            keept = keept-tstep
                            print(c(time[i], "same trends", "predicted violation in ", keept, "seconds." ))
                            output = rbind(output, c(data[i,1:4], "same trend", keept, change, " "))
@@ -190,31 +209,16 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                          # calculate time to violation/edge of parameter space from current point
                          cp = c(data[i, 2], data[i, 3], data[i, 4])
                          # print(c(cp, trends))
-                         t = violationtime(cp, vmap, trends, tstep, maxtime, msteps, 1)
+                         print("check:")
+                         print(time[i])
+                         t = violationtime(time[i],cp, vmap, trends, tstep, maxtime, msteps, 1)
                          if (t[[1]] < maxtime) {
-
-                              ## Check which one changed in trends
-                              # if (abs(trendchanges[1]) >=changelims[1]) {
-                              #      change[1] = "lighting "
-                              # }
-                              
-                              # if (abs(trendchanges[2]) <=changelims[2]) {
-                              #      change[1] = "floor friction "
-                              # }
-                                   
-                              # if (abs(trendchanges[3]) <=changelims[3]) {
-                              #      change[1] = "gripper "
-                              # }
-
                                keept = t[[1]]
                                phrase = "predicted violation in "
                                if (t[[2]] == "e") { phrase = "Could reach unknown parameter space in "}
                                print(c(time[i], " new trend", phrase, keept, "seconds." ))
                                output = rbind(output, c(data[i,1:4], "new trend", keept, change, t[[2]]))
-                               #keeptrends = trends
-                               for (i in 1:3){
-                                   if (change[i] != "none") { keeptrends[i] = trends[i] }
-                               }
+                               keeptrends = trends
                                if ((keept - timestep) < mintime){
                                      # need to respond now, so check neighbours
                                      nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
@@ -226,7 +230,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                          }
                          else { print(c(time[i], "new trend providing maximum time" , keept)) }
                   }
-         }
+         }             
          else {
                        # otherwise all ok
                        print(c(time[i], "No problem" )) 
@@ -248,7 +252,7 @@ grip = read.csv("/Users/grisv/GitHub/Manifest/R code/data/degrading_grip_filtere
 lg = read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_degrading_grip_filtered.csv", header = FALSE)
 
 # plot 
-plot_initial_data(day)
+#plot_initial_data(day)
 
 
 
@@ -259,32 +263,21 @@ len = 10
 
 # get means and trends from historic data
 historicmeans = colMeans(day)[2:4]
+historictrends = gettrends (day, len)
 # get limits on values
 mlim1 = 5.0*sqrt(var(abs(day[,2] - historicmeans[1])))
 mlim2 = 5.0*sqrt(var(abs(day[,3] - historicmeans[2])))
 mlim3 = 5.0*sqrt(var(abs(day[,4] - historicmeans[3])))
 lims = c(mlim1, mlim2, mlim3)
 
-#save means and lims -- python will read these files
-write.csv(historicmeans, "1historicmeans.csv", row.names = F)
-write.csv(lims, "1lims.csv", row.names = F)
-
-
-# get trends
-historictrends = gettrends (day, len)
-l = dim(historictrends)[1]
-
 # get change on trends and limits on change from historic data
+l = dim(historictrends)[1]
 change = historictrends[2:l,2:4]- historictrends[1:(l-1),2:4]
-# get limits
+
 clim1 = 3.0*sqrt(var(change[,1]))
 clim2 = 3.0*sqrt(var(change[,2]))	
 clim3 = 3.0*sqrt(var(change[,3]))
 changelims = c(clim1, clim2, clim3)
-
-#save changes/trends and lims -- python will read these files
-write.csv(change, "2change.csv", row.names = F)
-write.csv(changelims, "2lims.csv", row.names = F)
 
 
 # get violation map
@@ -303,7 +296,7 @@ lightnew[72:240,2] = lightnew[72:240,2]+0.08
 
 
 ###### ==== change data file here, can be light, lightnew, grip or lg ====
-data <- grip #grip #light #lg #light #lightnew
+data <- lg #light #lightnew
 ###### ==== ###############
 dataplus = rbind(extra, data)
 dataplus$Time = 60*c(0:(nrow(dataplus)-1))
@@ -374,4 +367,4 @@ violationCheck<- function(data, R1, R2, R3){
                         }
                  }
      }
-}
+} 
