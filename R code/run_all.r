@@ -254,7 +254,7 @@ plot_initial_data(day)
 
 
 
-
+#>>> Hyperparameters <<<
 len = 10
 
 # get means and trends from historic data
@@ -302,21 +302,21 @@ lightnew = light
 lightnew[72:240,2] = lightnew[72:240,2]+0.08
 
 
-###### ==== change data file here, can be light, lightnew, grip or lg ====
-data <- grip #grip #light #lg #light #lightnew
-###### ==== ###############
+#############################
+# ---- Section: SELECT env. data ---- #
+#>>> change data file here, can be light, lightnew, grip or lg <<<
+data <- lightnew #grip #light #lg #light #lightnew
+# add "len" normal datapoints to beginning of new data
 dataplus = rbind(extra, data)
-dataplus$Time = 60*c(0:(nrow(dataplus)-1))
-dataplus$V1 = 60*c(0:(nrow(dataplus)-1)) #to avoid confusion, replace previous time column
-# to round 
-# Round the second to fourth columns to 9 decimal places
+dataplus$Time = 60*c(0:(nrow(dataplus)-1)) #generates sequence of integers starting from 0 and multiplies by 60
+dataplus$V1 = 60*c(0:(nrow(dataplus)-1)) #to avoid confusion, replace previous time column (named V1)
+# Round the second to fourth columns to 9 decimal places (this is to match Julie's answer)
 dataplus[, 2:4] = round(dataplus[, 2:4], 9)
+#############################
 
-#write.csv(dataplus, "dataplus.csv", row.names = F)
-
-#dataplus = lightnew[1:(nrow(lightnew) - 1), ] ######## <- ADDED THIS LINE
-
+#############################
 # ---- Check trends ---- 
+#>>> Hyperparameters <<<
 # monitoring timestep is currently the same for all measurements
 timestep = 60
 # maximum time possible 
@@ -328,13 +328,24 @@ mintime = 600
 
 # Compute trends
 out = checktrends(dataplus, vmap, timestep, historicmeans, lims, changelims, len, maxtime, mintime, msteps)
+#############################
 
-# Save files
+#############################
+# ---- Section: Python Export Preparation ---- #
+# change column names -- python will read these files
 colnames(dataplus) = c("time", "m1", "m2", "m3", "-", "--")
 colnames(out) = c("time", "m1", "m2", "m3", "trend", "time2problem","light","floor","gripper","edgeORboundary")
-write.csv(out, "outputlg.csv", row.names = F)
-write.csv(dataplus, "dataplus.csv", row.names = F)
+# save data -- python will read these files
+write.csv(out, "outputlg.csv", row.names = FALSE)
+write.csv(dataplus, "dataplus.csv", row.names = FALSE)
+# ---- End of Python Section ---- #
+#############################
 
+
+
+#############################
+# ---- Section: Violation Check ---- #
+#>>> Hyperparameters: requirement bounds <<<
 R1 = 0.6
 R2 = 100
 R3 = 0.35
@@ -375,3 +386,4 @@ violationCheck<- function(data, R1, R2, R3){
                  }
      }
 }
+#############################
