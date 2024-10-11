@@ -177,6 +177,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                            keept = keept-tstep
                            print(c(time[i], "same trends", "predicted violation in ", keept, "seconds." ))
                            output = rbind(output, c(data[i,1:4], "same trend", keept, change, " "))
+                           # ========== Adaptation if necessary/possible
                            if ((keept - timestep) < mintime){
                                # need to respond now, so check neighbours
                                nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
@@ -185,6 +186,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                }
                                      else { print("no adaptation possible.") }
                          }
+                         # ==========
                   }
                   else {
                          # calculate time to violation/edge of parameter space from current point
@@ -215,6 +217,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                for (i in 1:3){
                                    if (change[i] != "none") { keeptrends[i] = trends[i] }
                                }
+                               # ========== Adaptation if necessary/possible
                                if ((keept - timestep) < mintime){
                                      # need to respond now, so check neighbours
                                      nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
@@ -223,6 +226,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                      }
                                      else { print("no adaptation possible.") }
                                }
+                               # ==========
                          }
                          else { print(c(time[i], "new trend providing maximum time" , keept)) }
                   }
