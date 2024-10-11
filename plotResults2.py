@@ -13,6 +13,9 @@ brown = '#A52A2A'
 grey = '#C5C9C7'
 gainsboro='#DCDCDC' #lightGrey
 
+# Hyperparameters
+tv= 60 # 10 minutes time window for prediction > previous 600
+
 '''-1 in violation, 1 safe'''
 def in_violation(time,M1, M2, M3):
     R1 = 0.5
@@ -142,11 +145,15 @@ p1 = ax1.plot(df_Day['time'], df_Day['m1'],      color='g', label="Light", linew
 p2 = host_ax1.plot(df_Day['time'], df_Day['m2'],  color='r', label="Floor", linewidth=1,linestyle='-')
 p3 = host_ax2.plot(df_Day['time'], df_Day['m3'], color='b', label="Gripper", linewidth=1, linestyle='-')
 # plot adaptation line
-tv= 600 # 10 min
+
+adaptTime = -1
 for i in range(1,len(df)):
     if df['edgeORboundary'][i-1]!='-9999999': # problem detected
         if df['time2problem'][i-1] > tv and df['time2problem'][i] <= tv and df['time2problem'][i] >= 0:
             ax1.axvline(x=df['time'][i], color='k', linestyle=':', linewidth=1)
+            # save first adaptation time
+            if adaptTime == -1:
+                adaptTime = df['time'][i]
 
 # Legends
 # new legend line for adaptation
@@ -169,7 +176,7 @@ legend_dots = [
     Line2D([0], [0], color='red', marker='o', linestyle='None', markersize=3, label='in violation'),
     Line2D([0], [0], color='yellow', marker='o', linestyle='None', markersize=3, label='out of edge')
 ]
-ax2.legend(handles=legend_dots, loc='upper left', ncol=1, handletextpad=0.5, labelspacing=0.2)  # Adjust spacing
+ax2.legend(handles=legend_dots, loc='upper right', ncol=1, handletextpad=0.5, labelspacing=0.2)  # Adjust spacing
 
 
 # --------- Second subplot: in problem colour coded e or b
@@ -196,6 +203,8 @@ for i in range(1,len(df['time'])):
 
 
 # --------- Third subplot
+requirementViolationTime = -1;
+
 color123,color23,color13,color12,color3,color2,color1 = colors['darkslateblue'], colors['blueviolet'], colors['mediumorchid'],colors['purple'], colors['magenta'], colors['hotpink'], colors['pink']
 
 for i in range(1,len(df['time'])):
@@ -204,6 +213,11 @@ for i in range(1,len(df['time'])):
     M2 = df['m2'][i]
     M3 = df['m3'][i]
     Rfail = in_violation(df['time'][i],M1, M2, M3)
+
+    # save first violation time
+    if requirementViolationTime == -1 and Rfail != []:
+        requirementViolationTime = df['time'][i]
+
     Rfail = set(Rfail)
     # print lines
     # Rfail={1,2,3} # for tests
@@ -239,8 +253,10 @@ for i in range(0,len(df['time'])):
             ax4.add_line(l)
         
 # # --------- ------------- --------------
-    
 
 
+print("First adaptation time:", adaptTime)
+print("First requirement violation time:", requirementViolationTime)
+print("Difference (violation-adaptation time):", requirementViolationTime-adaptTime)
 
 plt.show()

@@ -241,28 +241,32 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
 
 
 # ---- Section: Import Preparation ---- #
-#import data
+#>>>import data<<<
 day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
+# SPIKY gripper
+#day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/spiky_gripper_day.csv",header = FALSE)
+
 light = read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_filtered.csv", header = FALSE)
 grip = read.csv("/Users/grisv/GitHub/Manifest/R code/data/degrading_grip_filtered.csv", header = FALSE)
 lg = read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_degrading_grip_filtered.csv", header = FALSE)
-
 # plot 
-plot_initial_data(day)
+#plot_initial_data(day)
 
 
-
-
-
+#>>> change data file here, can be light, lightnew, grip or lg <<<
+data <- grip #light  #lightnew #grip  #lg
 #>>> Hyperparameters <<<
-len = 10
+len = 30 #####<<<< CHANGE from original len = 10
+sigma1 = 5.0 #####<<<< CHANGE from original = 5.0
+sigma2 = 5.0 #####<<<< CHANGE from original  = 3.0
 
+sigma11 = 3.0
 # get means and trends from historic data
 historicmeans = colMeans(day)[2:4]
 # get limits on values
-mlim1 = 5.0*sqrt(var(abs(day[,2] - historicmeans[1])))
-mlim2 = 5.0*sqrt(var(abs(day[,3] - historicmeans[2])))
-mlim3 = 5.0*sqrt(var(abs(day[,4] - historicmeans[3])))
+mlim1 = sigma11*sqrt(var(abs(day[,2] - historicmeans[1])))
+mlim2 = sigma11*sqrt(var(abs(day[,3] - historicmeans[2])))
+mlim3 = sigma1*sqrt(var(abs(day[,4] - historicmeans[3])))
 lims = c(mlim1, mlim2, mlim3)
 
 #save means and lims -- python will read these files
@@ -277,9 +281,9 @@ l = dim(historictrends)[1]
 # get change on trends and limits on change from historic data
 change = historictrends[2:l,2:4]- historictrends[1:(l-1),2:4]
 # get limits
-clim1 = 3.0*sqrt(var(change[,1]))
-clim2 = 3.0*sqrt(var(change[,2]))	
-clim3 = 3.0*sqrt(var(change[,3]))
+clim1 = sigma2*sqrt(var(change[,1]))
+clim2 = sigma2*sqrt(var(change[,2]))	
+clim3 = sigma2*sqrt(var(change[,3]))
 changelims = c(clim1, clim2, clim3)
 
 #save changes/trends and lims -- python will read these files
@@ -293,9 +297,10 @@ vmap = read.csv("/Users/grisv/GitHub/Manifest/violationMap.csv", header = T)
 
 # ---- Make synthetic data ----
 # add "len" normal datapoints to beginning of new data
-start = dim(day)[1] - len+1
-end = dim(day)[1]
-extra = day[start:end,]
+day1 = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
+start = dim(day1)[1] - len+1
+end = dim(day1)[1]
+extra = day1[start:end,]
 
 # lose jump in faulty light data
 lightnew = light
@@ -303,9 +308,7 @@ lightnew[72:240,2] = lightnew[72:240,2]+0.08
 
 
 #############################
-# ---- Section: SELECT env. data ---- #
-#>>> change data file here, can be light, lightnew, grip or lg <<<
-data <- lightnew #grip #light #lg #light #lightnew
+# ---- Section: Set env. data ---- #
 # add "len" normal datapoints to beginning of new data
 dataplus = rbind(extra, data)
 dataplus$Time = 60*c(0:(nrow(dataplus)-1)) #generates sequence of integers starting from 0 and multiplies by 60
