@@ -143,6 +143,30 @@ checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps){
      return(ntsorted[which(ntsorted[,4] >= (keept + timestep)),])
 }
 
+
+adapt_for_i_onwards <- function(data, output,adaptation,t_adapt,i) {
+     #stop if current time + t_adapt exceeds the time in data file
+     if (i+t_adapt>dim(data)[1]){
+          stop("i+t_adapt exceeds the number of rows in data")
+     }
+
+     # get last saved time data row (by looking at last time saved in output)
+     row <- which(data[1] == tail(output, n = 1)[1] )
+
+     t_when_adapted = row[1]
+     # adapt from row+t_adapt onwards
+     keept = 99999 # time to problem
+     change = rep("none",3) # no change
+     for (j in row:dim(data)[1]){
+          if (data[j,1]>=t_when_adapted+t_adapt){
+          # adapt data
+           output = rbind(output, c(data[j,1:4], "same trend", keept, change, " "))
+          }
+     }
+  return(output)
+}
+
+
 # function to predict violations 
 checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxtime, mintime, msteps){
     full_length = dim(data)[1]    
@@ -173,19 +197,28 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                   # check whether this is a continuing trend
                   if ((abs(trendchanges[1]) < changelims[1]) & (abs(trendchanges[2]) < changelims[2]) &(abs(trendchanges[3]) < changelims[3]))  {
 
+                    
 
                            keept = keept-tstep
                            print(c(time[i], "same trends", "predicted violation in ", keept, "seconds." ))
                            output = rbind(output, c(data[i,1:4], "same trend", keept, change, " "))
                            # ========== Adaptation if necessary/possible
-                           if ((keept - timestep) < mintime){
-                               # need to respond now, so check neighbours
-                               nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
-                               if (nrow(nay) > 0) {
-                                     for (j in 1:nrow(nay)) { print(nay[j,]) }
-                               }
+                               if ((keept - timestep) < mintime){
+                                     # need to respond now, so check neighbours
+                                     nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
+                                     if (nrow(nay) > 0) {
+                                        # print all possible adaptations
+                                        for (j in 1:nrow(nay)) { 
+                                             print(nay[j,])
+                                        }
+                                        # adapt to the first one
+                                        adaptation = nay[1,]
+                                        output <- adapt_for_i_onwards(data,output,adaptation,len,i)
+                                        break() # stop when adaptation is done (assuming system recovered for the rest of the time)
+                                             
+                                     }
                                      else { print("no adaptation possible.") }
-                         }
+                               }
                          # ==========
                   }
                   else {
@@ -222,7 +255,15 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                      # need to respond now, so check neighbours
                                      nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
                                      if (nrow(nay) > 0) {
-                                              for (j in 1:nrow(nay)) { print(nay[j,]) }
+                                        # print all possible adaptations
+                                        for (j in 1:nrow(nay)) { 
+                                             print(nay[j,])
+                                        }
+                                        # adapt to the first one
+                                        adaptation = nay[1,]
+                                        output <- adapt_for_i_onwards(data,output,adaptation,len,i)
+                                        break() # stop when adaptation is done (assuming system recovered for the rest of the time)
+                                             
                                      }
                                      else { print("no adaptation possible.") }
                                }

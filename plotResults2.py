@@ -66,6 +66,16 @@ def in_violation(time,M1, M2, M3):
 df = pd.read_csv('/Users/grisv/GitHub/Manifest/outputlg.csv')
 df_Day = pd.read_csv('/Users/grisv/GitHub/Manifest/dataplus.csv')
 
+#Replace data when adaptation happens
+for i in df['time']:
+    print("i",i)
+    df_row = df.loc[df['time'] == i]
+    if not df_row.iloc[0, 1:3].equals(df_Day.loc[df_Day['time'] == i].iloc[0, 1:3]):
+        df_Day.loc[df_Day['time'] == i, 'm1'] = df_row['m1'].values[0]
+        df_Day.loc[df_Day['time'] == i, 'm2'] = df_row['m2'].values[0]
+        df_Day.loc[df_Day['time'] == i, 'm3'] = df_row['m3'].values[0]
+
+
 
 # ------- Create a nxm grid of subplots
 fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(5.5, 5), gridspec_kw={'height_ratios': [4, 2, 1, 1]}, layout='constrained')  # (width, height) in inches
