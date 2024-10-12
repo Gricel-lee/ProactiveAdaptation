@@ -75,7 +75,7 @@ for i in df['time']:
         df_Day.loc[df_Day['time'] == i, 'm2'] = df_row['m2'].values[0]
         df_Day.loc[df_Day['time'] == i, 'm3'] = df_row['m3'].values[0]
 
-
+df_Day.to_csv('df_Day_output.csv', index=False)
 
 # ------- Create a nxm grid of subplots
 fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(5.5, 5), gridspec_kw={'height_ratios': [4, 2, 1, 1]}, layout='constrained')  # (width, height) in inches

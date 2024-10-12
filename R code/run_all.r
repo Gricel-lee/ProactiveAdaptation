@@ -157,7 +157,7 @@ adapt_for_i_onwards <- function(data, output,adaptation,t_adapt,i) {
      # adapt from row+t_adapt onwards
      keept = 99999 # time to problem
      change = rep("none",3) # no change
-     for (j in row:dim(data)[1]){
+     for (j in (row+1):dim(data)[1]){
           if (data[j,1]>=t_when_adapted+t_adapt){
           # adapt data
            output = rbind(output, c(data[j,1:4], "same trend", keept, change, " "))
