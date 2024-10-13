@@ -16,7 +16,6 @@ gainsboro='#DCDCDC' #lightGrey
 
 # Hyperparameters
 tv= 60 # 10 minutes time window for prediction > previous 600
-time = "minutes" # "seconds" or "minutes"
 time = "seconds" # "seconds" or "minutes"
 
 '''-1 in violation, 1 safe'''
@@ -100,7 +99,6 @@ else:
 # Set x-ticks and labels for all subplots (has to be done in a for to work -- separated causes  problems)
 for ax in [ax1, ax2, ax3, ax4]:
     ax.set_xticks(x_ticks)
-    ax.set_xticklabels(x_ticks, rotation=90)
     ax.set_xticklabels(x_ticks, rotation=70)
     ax.set_xlim(0, max(df_Day['time']))  # Ensure the x-axis starts from 0
 
