@@ -345,7 +345,7 @@ lg[, 1] <- lg[, 1]/60
 day1[, 1] <- day1[, 1]/60
 #############################
 
-
+ 
 # get means and trends from historic data
 historicmeans = colMeans(day)[2:4]
 # get limits on values
