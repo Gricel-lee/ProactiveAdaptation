@@ -1,3 +1,4 @@
+import math
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib import colors as mcolors
@@ -15,6 +16,7 @@ gainsboro='#DCDCDC' #lightGrey
 
 # Hyperparameters
 tv= 60 # 10 minutes time window for prediction > previous 600
+time = "minutes" # "seconds" or "minutes"
 
 '''-1 in violation, 1 safe'''
 def in_violation(time,M1, M2, M3):
@@ -66,16 +68,22 @@ def in_violation(time,M1, M2, M3):
 df = pd.read_csv('/Users/grisv/GitHub/Manifest/outputlg.csv')
 df_Day = pd.read_csv('/Users/grisv/GitHub/Manifest/dataplus.csv')
 
-#Replace data when adaptation happens
-for i in df['time']:
-    print("i",i)
-    df_row = df.loc[df['time'] == i]
-    if not df_row.iloc[0, 1:3].equals(df_Day.loc[df_Day['time'] == i].iloc[0, 1:3]):
-        df_Day.loc[df_Day['time'] == i, 'm1'] = df_row['m1'].values[0]
-        df_Day.loc[df_Day['time'] == i, 'm2'] = df_row['m2'].values[0]
-        df_Day.loc[df_Day['time'] == i, 'm3'] = df_row['m3'].values[0]
+####>> NOT WORKING
+##Replace data when adaptation happens
+# for i in df['time']:
+#     print("i",i)
+#     df_row = df.loc[df['time'] == i]
+#     if not df_row.iloc[i, 1:3].equals(df_Day.loc[df_Day['time'] == i].iloc[i, 1:3]):
+#         df_Day.loc[df_Day['time'] == i, 'm1'] = df_row['m1'].values[0]
+#         df_Day.loc[df_Day['time'] == i, 'm2'] = df_row['m2'].values[0]
+#         df_Day.loc[df_Day['time'] == i, 'm3'] = df_row['m3'].values[0]
+# df_Day.to_csv('df_Day_output.csv', index=False)
+####<< NOT WORKING
 
-df_Day.to_csv('df_Day_output.csv', index=False)
+# change time from seconds to minutes
+if time=="minutes":
+    df['time'] = df['time']/60
+    df_Day['time'] = df_Day['time']/60
 
 # ------- Create a nxm grid of subplots
 fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(5.5, 5), gridspec_kw={'height_ratios': [4, 2, 1, 1]}, layout='constrained')  # (width, height) in inches
@@ -83,12 +91,15 @@ fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(5.5, 5), gridspec_kw={'h
 #Set x scale and x labels
 x_ticks = df_Day['time'][::10]  # Set x-ticks at intervals of 10
 # Set x values
-x_ticks = range(0, max(df_Day['time'])+800, 800)  # Example: Set x-ticks every X units
+if time=="minutes":
+    x_ticks = range(0, math.ceil(max(df_Day['time']))+1, 10)  # Example: Set x-ticks every X units
+else:
+    x_ticks = range(0, math.ceil(max(df_Day['time']))+800, 800)  # Example: Set x-ticks every X units
 
 # Set x-ticks and labels for all subplots (has to be done in a for to work -- separated causes  problems)
 for ax in [ax1, ax2, ax3, ax4]:
     ax.set_xticks(x_ticks)
-    ax.set_xticklabels(x_ticks, rotation=45)
+    ax.set_xticklabels(x_ticks, rotation=90)
     ax.set_xlim(0, max(df_Day['time']))  # Ensure the x-axis starts from 0
 
 
@@ -148,7 +159,10 @@ host_ax1.set_ylabel("Floor friction")
 host_ax2.set_ylabel("Gripper friction")
 
 
-ax4.set_xlabel("Time")
+ax1.set_xlabel("(a)")
+ax2.set_xlabel("(b)")
+ax3.set_xlabel("(c)")
+ax4.set_xlabel("Time\n(d)")
 
 # Plot the day data
 p1 = ax1.plot(df_Day['time'], df_Day['m1'],      color='g', label="Light", linewidth=1)
@@ -174,24 +188,22 @@ host_ax2.spines['right'].set_position(('outward', 50)) # right, left, top, botto
 
 
 # --------- Second subplot: time to problem
-for i in range(1, len(df['time'])):
-    if (df['time2problem'][i] > 0) and (df['time2problem'][i] <= 4000):
-        ax2.scatter(x=df['time'][i], y=df['time2problem'][i], color='k', marker='o', s=2)
-    if df['time2problem'][i] <= 0:
-        pass # note: joined 3rd plot
-
 # Legends
+gold = '#FFD700'
+orange = '#FF4500'
+red='#FF0000'
 legend_dots = [
     Line2D([0], [0], color='black', marker='o', linestyle='None', markersize=3, label='safe'),
-    Line2D([0], [0], color='red', marker='o', linestyle='None', markersize=3, label='in violation'),
-    Line2D([0], [0], color='yellow', marker='o', linestyle='None', markersize=3, label='out of edge')
+    Line2D([0], [0], color=orange, marker='o', linestyle='None', markersize=3, label='in violation'),
+    Line2D([0], [0], color=gold, marker='o', linestyle='None', markersize=3, label='out of edge')
 ]
 ax2.legend(handles=legend_dots, loc='upper right', ncol=1, handletextpad=0.5, labelspacing=0.2)  # Adjust spacing
 
+# Black dots for safe, orange for in violation, gold for out of edge
+for i in range(1, len(df['time'])):
+    if (df['time2problem'][i] > 0) and (df['time2problem'][i] <= 4000):
+        ax2.scatter(x=df['time'][i], y=df['time2problem'][i], color='k', marker='o', s=2)
 
-# --------- Second subplot: in problem colour coded e or b
-def line(x, y1, y2, color, linestyle):
-    return Line2D([x, x], [y1,y2], color=color, linestyle=linestyle, linewidth=2)
 
 # first fill empty values after first prediction (e or b)
 predicted = ""
@@ -205,17 +217,19 @@ for i in range(1,len(df['time'])):
 for i in range(1,len(df['time'])):
     if df['time2problem'][i] <= 0:
         if df['edgeORboundary'][i]=='b':
-            ax2.scatter(x=df['time'][i], y=-1, color='#FF4500', marker='o', s=2)
+            ax2.scatter(x=df['time'][i], y=-1, color=orange, marker='o', s=2)
         if df['edgeORboundary'][i]=='e':
-            gold = '#FFD700'
             ax2.scatter(x=df['time'][i], y=-1, color=gold, marker='o', s=2)
             #ax3.axvline(x=df['time'][i], color=gold, linestyle='-', linewidth=2.5)
 
 
 # --------- Third subplot
 requirementViolationTime = -1;
-
 color123,color23,color13,color12,color3,color2,color1 = colors['darkslateblue'], colors['blueviolet'], colors['mediumorchid'],colors['purple'], colors['magenta'], colors['hotpink'], colors['pink']
+
+def line(x, y1, y2, color, linestyle):
+    return Line2D([x, x], [y1,y2], color=color, linestyle=linestyle, linewidth=2)
+
 
 for i in range(1,len(df['time'])):
     # get violated req.

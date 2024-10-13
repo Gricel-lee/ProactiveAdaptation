@@ -168,7 +168,9 @@ adapt_for_i_onwards <- function(data, output,adaptation,t_adapt,i) {
 
 
 # function to predict violations 
-checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxtime, mintime, msteps){
+checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxtime, mintime, msteps,adapt=0){
+    # NOTE that adapt=0 (change to 1 if trigger adaptation)
+    
     full_length = dim(data)[1]    
     # assume starting trends are all zero
     keeptrends = rep(0, 3)
@@ -220,9 +222,11 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                                                            print(nay[j,])
                                                                       }
                                                                       # adapt to the first one
-                                                                      adaptation = nay[1,]
-                                                                      output <- adapt_for_i_onwards(data,output,adaptation,len,i)
-                                                                      break() # stop when adaptation is done (assuming system recovered for the rest of the time)
+                                                                      if(adapt == 1) {     
+                                                                           adaptation = nay[1,]
+                                                                           output <- adapt_for_i_onwards(data,output,adaptation,len,i)
+                                                                           break() # stop when adaptation is done (assuming system recovered for the rest of the time)
+                                                                      }
                                                                            
                                                                  }
                                                                  else { print("no adaptation possible.") }
@@ -270,10 +274,11 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                                                            print(nay[j,])
                                                                       }
                                                                       # adapt to the first one
-                                                                      adaptation = nay[1,]
-                                                                      output <- adapt_for_i_onwards(data,output,adaptation,len,i)
-                                                                      break() # stop when adaptation is done (assuming system recovered for the rest of the time)
-                                                                           
+                                                                      if (adapt == 1) {
+                                                                           adaptation = nay[1,]
+                                                                           output <- adapt_for_i_onwards(data,output,adaptation,len,i)
+                                                                           break() # stop when adaptation is done (assuming system recovered for the rest of the time)
+                                                                      }    
                                                                  }
                                                                  else { print("no adaptation possible.") }
                                                             }
@@ -298,10 +303,22 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
 
 
 # ---- Section: Import Preparation ---- #
+### SELECT params:
+spikyData = 0    #0=normal grip data, 1=spiker
+#>>> change data file here, can be light, lightnew, grip or lg <<<
+data <- grip #light  #lightnew #grip  #lg
+#>>> Hyperparameters <<<
+len = 20 #####<<<< CHANGE from original len = 10
+sigma1 = 5.0 #####<<<< CHANGE from original = 5.0
+sigma2 = 5.0 #####<<<< CHANGE from original  = 3.0
+# adapt?
+adapt = 0
+
+
 #>>>import data<<<
 day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
 # SPIKY gripper
-#day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/spiky_gripper_day.csv",header = FALSE)
+if (spikyData == 1){ day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/spiky_gripper_day.csv",header = FALSE)}
 
 light = read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_filtered.csv", header = FALSE)
 grip = read.csv("/Users/grisv/GitHub/Manifest/R code/data/degrading_grip_filtered.csv", header = FALSE)
@@ -310,19 +327,12 @@ lg = read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_degrading_g
 #plot_initial_data(day)
 
 
-#>>> change data file here, can be light, lightnew, grip or lg <<<
-data <- grip #light  #lightnew #grip  #lg
-#>>> Hyperparameters <<<
-len = 30 #####<<<< CHANGE from original len = 10
-sigma1 = 5.0 #####<<<< CHANGE from original = 5.0
-sigma2 = 5.0 #####<<<< CHANGE from original  = 3.0
 
-sigma11 = 3.0
 # get means and trends from historic data
 historicmeans = colMeans(day)[2:4]
 # get limits on values
-mlim1 = sigma11*sqrt(var(abs(day[,2] - historicmeans[1])))
-mlim2 = sigma11*sqrt(var(abs(day[,3] - historicmeans[2])))
+mlim1 = sigma1*sqrt(var(abs(day[,2] - historicmeans[1])))
+mlim2 = sigma1*sqrt(var(abs(day[,3] - historicmeans[2])))
 mlim3 = sigma1*sqrt(var(abs(day[,4] - historicmeans[3])))
 lims = c(mlim1, mlim2, mlim3)
 
@@ -387,7 +397,7 @@ msteps = c(0.0125, 0.0062, 0.0125)
 mintime = 600
 
 # Compute trends
-out = checktrends(dataplus, vmap, timestep, historicmeans, lims, changelims, len, maxtime, mintime, msteps)
+out = checktrends(dataplus, vmap, timestep, historicmeans, lims, changelims, len, maxtime, mintime, msteps,adapt)
 #############################
 
 #############################
