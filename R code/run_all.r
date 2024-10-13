@@ -308,13 +308,13 @@ spikyData = 0    #0=normal grip data, 1=spiker
 #>>> change data file here, can be light, lightnew, grip or lg <<<
 data <- grip #light  #lightnew #grip  #lg
 #>>> Hyperparameters <<<
-len = 20 #####<<<< CHANGE from original len = 10
+len = 20 #####<<<< CHANGE from original len = 10   time window to get trends 
 sigma1 = 5.0 #####<<<< CHANGE from original = 5.0
 sigma2 = 5.0 #####<<<< CHANGE from original  = 3.0
-# adapt?
-adapt = 0
-# time to trigger violation
-mintime = 60
+# adaptation
+adapt = 0   # to save adaptation in data, 0 = no adaptation, 1 = adaptation
+# trigger time
+mintime = 60               # time to trigger violation
 
 #>>>import data<<<
 day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
