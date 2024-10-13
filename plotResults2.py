@@ -17,6 +17,7 @@ gainsboro='#DCDCDC' #lightGrey
 # Hyperparameters
 tv= 60 # 10 minutes time window for prediction > previous 600
 time = "minutes" # "seconds" or "minutes"
+time = "seconds" # "seconds" or "minutes"
 
 '''-1 in violation, 1 safe'''
 def in_violation(time,M1, M2, M3):
@@ -92,7 +93,7 @@ fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(5.5, 5), gridspec_kw={'h
 x_ticks = df_Day['time'][::10]  # Set x-ticks at intervals of 10
 # Set x values
 if time=="minutes":
-    x_ticks = range(0, math.ceil(max(df_Day['time']))+1, 10)  # Example: Set x-ticks every X units
+    x_ticks = range(0, math.ceil(max(df_Day['time']))+10, 15)  # Example: Set x-ticks every X units
 else:
     x_ticks = range(0, math.ceil(max(df_Day['time']))+800, 800)  # Example: Set x-ticks every X units
 
@@ -100,6 +101,7 @@ else:
 for ax in [ax1, ax2, ax3, ax4]:
     ax.set_xticks(x_ticks)
     ax.set_xticklabels(x_ticks, rotation=90)
+    ax.set_xticklabels(x_ticks, rotation=70)
     ax.set_xlim(0, max(df_Day['time']))  # Ensure the x-axis starts from 0
 
 
@@ -162,7 +164,7 @@ host_ax2.set_ylabel("Gripper friction")
 ax1.set_xlabel("(a)")
 ax2.set_xlabel("(b)")
 ax3.set_xlabel("(c)")
-ax4.set_xlabel("Time\n(d)")
+ax4.set_xlabel("time (min)\n(d)")
 
 # Plot the day data
 p1 = ax1.plot(df_Day['time'], df_Day['m1'],      color='g', label="Light", linewidth=1)

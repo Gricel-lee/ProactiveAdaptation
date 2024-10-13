@@ -313,7 +313,8 @@ sigma1 = 5.0 #####<<<< CHANGE from original = 5.0
 sigma2 = 5.0 #####<<<< CHANGE from original  = 3.0
 # adapt?
 adapt = 0
-
+# time to trigger violation
+mintime = 60
 
 #>>>import data<<<
 day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
@@ -323,9 +324,26 @@ if (spikyData == 1){ day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sp
 light = read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_filtered.csv", header = FALSE)
 grip = read.csv("/Users/grisv/GitHub/Manifest/R code/data/degrading_grip_filtered.csv", header = FALSE)
 lg = read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_degrading_grip_filtered.csv", header = FALSE)
+# to add "len" normal datapoints to beginning of new data
+day1 = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
 # plot 
 #plot_initial_data(day)
 
+#############################
+# pass to incr. of 15 seconds
+timestep = 15
+day[, 1] <- day[, 1] *timestep / 60
+light[, 1] <- light[, 1] *timestep / 60
+grip[, 1] <- grip[, 1] *timestep / 60
+lg[, 1] <- lg[, 1] *timestep / 60
+day1[, 1] <- day[, 1]*timestep/60
+# pass to minutes from seconds 
+day[, 1] <- day[, 1]/60
+light[, 1] <- light[, 1]/60
+grip[, 1] <- grip[, 1]/60
+lg[, 1] <- lg[, 1]/60
+day1[, 1] <- day1[, 1]/60
+#############################
 
 
 # get means and trends from historic data
@@ -364,7 +382,6 @@ vmap = read.csv("/Users/grisv/GitHub/Manifest/violationMap.csv", header = T)
 
 # ---- Make synthetic data ----
 # add "len" normal datapoints to beginning of new data
-day1 = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
 start = dim(day1)[1] - len+1
 end = dim(day1)[1]
 extra = day1[start:end,]
@@ -378,8 +395,8 @@ lightnew[72:240,2] = lightnew[72:240,2]+0.08
 # ---- Section: Set env. data ---- #
 # add "len" normal datapoints to beginning of new data
 dataplus = rbind(extra, data)
-dataplus$Time = 60*c(0:(nrow(dataplus)-1)) #generates sequence of integers starting from 0 and multiplies by 60
-dataplus$V1 = 60*c(0:(nrow(dataplus)-1)) #to avoid confusion, replace previous time column (named V1)
+dataplus$Time = timestep*c(0:(nrow(dataplus)-1)) #generates sequence of integers starting from 0 and multiplies by time_increment
+dataplus$V1 = timestep*c(0:(nrow(dataplus)-1)) #to avoid confusion, replace previous time column (named V1)
 # Round the second to fourth columns to 9 decimal places (this is to match Julie's answer)
 dataplus[, 2:4] = round(dataplus[, 2:4], 9)
 #############################
@@ -387,14 +404,11 @@ dataplus[, 2:4] = round(dataplus[, 2:4], 9)
 #############################
 # ---- Check trends ---- 
 #>>> Hyperparameters <<<
-# monitoring timestep is currently the same for all measurements
-timestep = 60
 # maximum time possible 
 maxtime = 6000000
 # get msteps from violation map calculation
 msteps = c(0.0125, 0.0062, 0.0125)
-# minimum time allowed to predicted violation
-mintime = 600
+
 
 # Compute trends
 out = checktrends(dataplus, vmap, timestep, historicmeans, lims, changelims, len, maxtime, mintime, msteps,adapt)
