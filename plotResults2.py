@@ -1,4 +1,3 @@
-import math
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib import colors as mcolors
@@ -16,7 +15,6 @@ gainsboro='#DCDCDC' #lightGrey
 
 # Hyperparameters
 tv= 60 # 10 minutes time window for prediction > previous 600
-time = "minutes" # "seconds" or "minutes"
 
 '''-1 in violation, 1 safe'''
 def in_violation(time,M1, M2, M3):
@@ -80,26 +78,18 @@ df_Day = pd.read_csv('/Users/grisv/GitHub/Manifest/dataplus.csv')
 # df_Day.to_csv('df_Day_output.csv', index=False)
 ####<< NOT WORKING
 
-# change time from seconds to minutes
-if time=="minutes":
-    df['time'] = df['time']/60
-    df_Day['time'] = df_Day['time']/60
-
 # ------- Create a nxm grid of subplots
 fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(5.5, 5), gridspec_kw={'height_ratios': [4, 2, 1, 1]}, layout='constrained')  # (width, height) in inches
 
 #Set x scale and x labels
 x_ticks = df_Day['time'][::10]  # Set x-ticks at intervals of 10
 # Set x values
-if time=="minutes":
-    x_ticks = range(0, math.ceil(max(df_Day['time']))+1, 10)  # Example: Set x-ticks every X units
-else:
-    x_ticks = range(0, math.ceil(max(df_Day['time']))+800, 800)  # Example: Set x-ticks every X units
+x_ticks = range(0, max(df_Day['time'])+800, 800)  # Example: Set x-ticks every X units
 
 # Set x-ticks and labels for all subplots (has to be done in a for to work -- separated causes  problems)
 for ax in [ax1, ax2, ax3, ax4]:
     ax.set_xticks(x_ticks)
-    ax.set_xticklabels(x_ticks, rotation=90)
+    ax.set_xticklabels(x_ticks, rotation=45)
     ax.set_xlim(0, max(df_Day['time']))  # Ensure the x-axis starts from 0
 
 
