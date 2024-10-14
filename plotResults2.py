@@ -15,7 +15,7 @@ grey = '#C5C9C7'
 gainsboro='#DCDCDC' #lightGrey
 
 # Hyperparameters
-tv= 1 # 5 minutes time window for prediction > previous 600
+tv=  5 #1 minutes time window for prediction > previous 600
 xlabel_incr_time = 2
 
 '''-1 in violation, 1 safe'''
