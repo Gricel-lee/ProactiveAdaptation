@@ -96,7 +96,7 @@ x_ticks = range(0, math.ceil(max(df_Day['time']))+1, xlabel_incr_time)  # Exampl
 # Set x-ticks and labels for all subplots (has to be done in a for to work -- separated causes  problems)
 for ax in [ax1, ax2, ax3, ax4]:
     ax.set_xticks(x_ticks)
-    ax.set_xticklabels(x_ticks, rotation=90)
+    ax.set_xticklabels(x_ticks, rotation=45)
     ax.set_xlim(0, max(df_Day['time']))  # Ensure the x-axis starts from 0
 
 
