@@ -4,6 +4,13 @@ import pandas as pd
 from matplotlib import colors as mcolors
 from matplotlib.lines import Line2D
 
+
+#>>> Hyperparameters <<<
+tv=  30 #1 minutes time window for prediction > previous 600
+xlabel_incr_time = 15
+###################
+
+
 plt.close('all') 
 
 colors = dict(mcolors.BASE_COLORS, **mcolors.CSS4_COLORS)
@@ -14,9 +21,6 @@ brown = '#A52A2A'
 grey = '#C5C9C7'
 gainsboro='#DCDCDC' #lightGrey
 
-# Hyperparameters
-tv=  5 #1 minutes time window for prediction > previous 600
-xlabel_incr_time = 2
 
 '''-1 in violation, 1 safe'''
 def in_violation(time,M1, M2, M3):
@@ -194,7 +198,7 @@ ax2.legend(handles=legend_dots, loc='upper right', ncol=1, handletextpad=0.5, la
 
 # Black dots for safe, orange for in violation, gold for out of edge
 for i in range(1, len(df['time'])):
-    if (df['time2problem'][i] > 0) and (df['time2problem'][i] <= 22):
+    if (df['time2problem'][i] > 0) and (df['time2problem'][i] <= 50):
         ax2.scatter(x=df['time'][i], y=df['time2problem'][i], color='k', marker='o', s=2)
 
 

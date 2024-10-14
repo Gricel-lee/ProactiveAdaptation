@@ -314,9 +314,9 @@ sigma2 = 5.0 #####<<<< CHANGE from original  = 3.0
 # adaptation
 adapt = 0   # to save adaptation in data, 0 = no adaptation, 1 = adaptation
 # trigger time (ONLY used by python if adapt=1, use tv in python instead)
-mintime = 60  # time to trigger violation (sec)
+mintime = 30  # time to trigger violation (min)
 # adaptation time (ONLY used by python if adapt=1)
-t_adapt=60  #time to perform the adaptation (sec)
+t_adapt= 30  #time to perform the adaptation (min)
 
 #>>>import data<<<
 day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
@@ -332,15 +332,9 @@ day1 = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.cs
 #plot_initial_data(day)
 
 #############################
-# pass to incr. of 15 seconds (by dividing by the current increment of 60, then multiple by 15)
-timestep = 15
-day[, 1] <- day[, 1] *timestep / 60
-light[, 1] <- light[, 1] *timestep / 60
-grip[, 1] <- grip[, 1] *timestep / 60
-lg[, 1] <- lg[, 1] *timestep / 60
-day1[, 1] <- day[, 1]*timestep/60
 # pass to minutes from seconds 
-timestep <- timestep/60
+originalDataIncr = 60
+timestep <- originalDataIncr/60
 day[, 1] <- day[, 1]/60
 light[, 1] <- light[, 1]/60
 grip[, 1] <- grip[, 1]/60
