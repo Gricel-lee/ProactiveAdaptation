@@ -330,7 +330,7 @@ day1 = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.cs
 #plot_initial_data(day)
 
 #############################
-# pass to incr. of 15 seconds
+# pass to incr. of 15 seconds (by dividing by the current increment of 60, then multiple by 15)
 timestep = 15
 day[, 1] <- day[, 1] *timestep / 60
 light[, 1] <- light[, 1] *timestep / 60
@@ -338,6 +338,7 @@ grip[, 1] <- grip[, 1] *timestep / 60
 lg[, 1] <- lg[, 1] *timestep / 60
 day1[, 1] <- day[, 1]*timestep/60
 # pass to minutes from seconds 
+timestep <- timestep/60
 day[, 1] <- day[, 1]/60
 light[, 1] <- light[, 1]/60
 grip[, 1] <- grip[, 1]/60
