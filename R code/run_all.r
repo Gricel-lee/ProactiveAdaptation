@@ -306,11 +306,11 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
 ### SELECT params:
 spikyData = 0    #0=normal grip data, 1=spiker
 #>>> change data file here, can be light, lightnew, grip or lg <<<
-data <- lg #light  #lightnew #grip  #lg
+data <- light #light  #lightnew #grip  #lg
 #>>> Hyperparameters <<<
 len = 20 #####<<<< CHANGE from original len = 10   time window to get trends 
-sigma1 = 3.0 #####<<<< CHANGE from original = 5.0
-sigma2 = 5.0 #####<<<< CHANGE from original  = 3.0
+sigma1 = 4.0 #####<<<< CHANGE from original = 5.0
+sigma2 = 4.0 #####<<<< CHANGE from original  = 3.0
 # adaptation
 adapt = 0   # to save adaptation in data, 0 = no adaptation, 1 = adaptation
 # trigger time (ONLY used by python if adapt=1, use tv in python instead)

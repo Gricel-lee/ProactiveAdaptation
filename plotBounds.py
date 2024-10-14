@@ -114,6 +114,6 @@ def print_trends_limits():
     plt.show()
 
 
-print_measurements_limits()
+#print_measurements_limits()
 
 print_trends_limits()

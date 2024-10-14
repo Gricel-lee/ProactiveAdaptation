@@ -6,8 +6,9 @@ from matplotlib.lines import Line2D
 
 
 #>>> Hyperparameters <<<
-tv=  30 #1 minutes time window for prediction > previous 600
+tv=  20 #1 minutes time window for prediction > previous 600
 xlabel_incr_time = 15
+x_lim2ndPlot = 50
 ###################
 
 
@@ -167,14 +168,27 @@ p2 = host_ax1.plot(df_Day['time'], df_Day['m2'],  color='r', label="Floor", line
 p3 = host_ax2.plot(df_Day['time'], df_Day['m3'], color='b', label="Gripper", linewidth=1, linestyle='-')
 # plot adaptation line
 
+
+# first fill empty values after first prediction (e or b)
+predicted = ""
+for i in range(1,len(df['time'])):
+    if df['edgeORboundary'][i]=='b' or df['edgeORboundary'][i]=='e':
+        predicted = df['edgeORboundary'][i]
+    df.at[i,'edgeORboundary'] = predicted
+#print(df['edgeORboundary'])
+df.to_csv('/Users/grisv/GitHub/Manifest/edgeORboundary.csv', index=False)
+# plot adaptation line
 adaptTime = -1
+
+
+# to save first adaptation time
 for i in range(1,len(df)):
-    if df['edgeORboundary'][i-1]!='-9999999': # problem detected
-        if df['time2problem'][i-1] > tv and df['time2problem'][i] <= tv and df['time2problem'][i] >= 0:
-            ax1.axvline(x=df['time'][i], color='k', linestyle=':', linewidth=1)
-            # save first adaptation time
-            if adaptTime == -1:
-                adaptTime = df['time'][i]
+    if df['time2problem'][i-1] >= tv and df['time2problem'][i] <= tv and df['time2problem'][i] >= 0:
+        ax1.axvline(x=df['time'][i], color='k', linestyle=':', linewidth=1)
+        # save first adaptation time
+        if adaptTime == -1:
+            adaptTime = df['time'][i]
+        break
 
 # Legends
 # new legend line for adaptation
@@ -198,18 +212,10 @@ ax2.legend(handles=legend_dots, loc='upper right', ncol=1, handletextpad=0.5, la
 
 # Black dots for safe, orange for in violation, gold for out of edge
 for i in range(1, len(df['time'])):
-    if (df['time2problem'][i] > 0) and (df['time2problem'][i] <= 30):
+    if (df['time2problem'][i] > 0) and (df['time2problem'][i] <= x_lim2ndPlot):
         ax2.scatter(x=df['time'][i], y=df['time2problem'][i], color='k', marker='o', s=2)
 
 
-# first fill empty values after first prediction (e or b)
-predicted = ""
-for i in range(1,len(df['time'])):
-    if df['edgeORboundary'][i]=='b' or df['edgeORboundary'][i]=='e':
-        predicted = df['edgeORboundary'][i]
-    df.at[i,'edgeORboundary'] = predicted
-#print(df['edgeORboundary'])
-#df.to_csv('/Users/grisv/GitHub/Manifest/edgeORboundary.csv', index=False)
 
 # second plot the problem colour coded
 for i in range(1,len(df['time'])):
@@ -221,8 +227,15 @@ for i in range(1,len(df['time'])):
             #ax3.axvline(x=df['time'][i], color=gold, linestyle='-', linewidth=2.5)
 
 
+#get first pred violation
+t_first_pred_violation = -1
+for i in range(1,len(df['time'])):
+    if df['edgeORboundary'][i]=='b' and df['time2problem'][i] <= 0:
+        t_first_pred_violation = df['time'][i] 
+        break
+
 # --------- Third subplot
-requirementViolationTime = -1;
+t_first_real_violation = -1;
 color123,color23,color13,color12,color3,color2,color1 = colors['darkslateblue'], colors['blueviolet'], colors['mediumorchid'],colors['purple'], colors['magenta'], colors['hotpink'], colors['pink']
 
 def line(x, y1, y2, color, linestyle):
@@ -237,8 +250,8 @@ for i in range(1,len(df['time'])):
     Rfail = in_violation(df['time'][i],M1, M2, M3)
 
     # save first violation time
-    if requirementViolationTime == -1 and Rfail != []:
-        requirementViolationTime = df['time'][i]
+    if t_first_real_violation == -1 and Rfail != []:
+        t_first_real_violation = df['time'][i]
 
     Rfail = set(Rfail)
     # print lines
@@ -263,7 +276,6 @@ for i in range(1,len(df['time'])):
 
 for i in range(0,len(df['time'])):
     if df['trend'][i] == 'new trend':
-        print(i)
         if df['light'][i]!='none':
             l = line(df['time'][i],0,0.33,'g','-') #Line2D([df['time'][i], df['time'][i]], [0, 0.3], color='g', linestyle='-', linewidth=2) 
             ax4.add_line(l)
@@ -273,17 +285,21 @@ for i in range(0,len(df['time'])):
         if df['gripper'][i]!='none':
             l= line(df['time'][i],0.66,1,'b','-')
             ax4.add_line(l)
-        
+
+# no new trends
+saved_computations = sum(df['trend'] != 'new trend')
+numTimes_alg1_triggered = len(df['time']) - saved_computations
 # # --------- ------------- --------------
 
 
 print("First adaptation time:", adaptTime)
-print("First requirement violation time:", requirementViolationTime)
-print("Difference (violation-adaptation time):", requirementViolationTime-adaptTime)
+print("First predicted violation:", t_first_pred_violation)
+print("First real violation time:", t_first_real_violation)
+print("----")
+print("Error in prediction:", t_first_real_violation- t_first_pred_violation)
+print("Time adapt before real pred:", t_first_real_violation-adaptTime)
+print("Number of times algorithm 1 triggered:", numTimes_alg1_triggered,"out of", len(df['time']), "saving",saved_computations/len(df['time'])*100,"of computations")
 
-#plt.show()
+plt.show()
 
-# 63
-# 96
-# 95
-# 49
+
