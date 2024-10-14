@@ -82,7 +82,7 @@ df_Day = pd.read_csv('/Users/grisv/GitHub/Manifest/dataplus.csv')
 
 
 # ------- Create a nxm grid of subplots
-fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(5.5, 5), gridspec_kw={'height_ratios': [4, 2, 1, 1]}, layout='constrained')  # (width, height) in inches
+fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(5.9, 5.5), gridspec_kw={'height_ratios': [4, 2, 1, 1]}, layout='constrained')  # (width, height) in inches
 
 #Set x scale and x labels
 x_ticks = df_Day['time'][::10]  # Set x-ticks at intervals of 10
@@ -111,7 +111,7 @@ ax4.set_facecolor(gainsboro)
 # ax5.set_xlim([min(df['time']), max(df['time'])])
 
 # Set y labels
-ax2.set_ylabel("predicted\ntime to\nproblem (s)")#, rotation=45)#, ha='right')
+ax2.set_ylabel("predicted\ntime to\nproblem (min)")#, rotation=45)#, ha='right')
 ax3.set_ylabel("\nreq.\nviol.")#, rotation=45)#, ha='right')
 ax4.set_ylabel("\nnew\ntrend")#, rotation=45)#, ha='right')
 
@@ -194,7 +194,7 @@ ax2.legend(handles=legend_dots, loc='upper right', ncol=1, handletextpad=0.5, la
 
 # Black dots for safe, orange for in violation, gold for out of edge
 for i in range(1, len(df['time'])):
-    if (df['time2problem'][i] > 0) and (df['time2problem'][i] <= 4000):
+    if (df['time2problem'][i] > 0) and (df['time2problem'][i] <= 22):
         ax2.scatter(x=df['time'][i], y=df['time2problem'][i], color='k', marker='o', s=2)
 
 

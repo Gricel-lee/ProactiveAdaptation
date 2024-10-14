@@ -152,7 +152,7 @@ adapt_for_i_onwards <- function(data, output,adaptation,t_adapt,i) {
 
      # get last saved time data row (by looking at last time saved in output)
      row <- which(data[1] == tail(output, n = 1)[1] )
-
+     
      t_when_adapted = row[1]
      # adapt from row+t_adapt onwards
      keept = 99999 # time to problem
@@ -160,7 +160,7 @@ adapt_for_i_onwards <- function(data, output,adaptation,t_adapt,i) {
      for (j in (row+1):dim(data)[1]){
           if (data[j,1]>=t_when_adapted+t_adapt){
           # adapt data
-           output = rbind(output, c(data[j,1:4], "same trend", keept, change, " "))
+           output = rbind(output, c(data[j,1:4], "same trend 0", keept, change, " "))
           }
      }
   return(output)
@@ -168,7 +168,7 @@ adapt_for_i_onwards <- function(data, output,adaptation,t_adapt,i) {
 
 
 # function to predict violations 
-checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxtime, mintime, msteps,adapt=0){
+checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxtime, mintime, msteps,adapt=0,t_adapt=1){
     # NOTE that adapt=0 (change to 1 if trigger adaptation)
     
     full_length = dim(data)[1]    
@@ -195,7 +195,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
 
                ######## start trends=0     keep last time to violation and problem (keept,last_edge_or_boundary)                  # nolint
                if (((trends[1]) == 0.0) && ((trends[2]) == 0.0) && ((trends[3]) == 0.0))  {            # nolint
-                    print(c(time[i], "new trend 0", "predicted violation in ", keept, "seconds." ))                               # nolint
+                    print(c(time[i], "new trend 0", "predicted violation in ", keept, "minutes." ))                               # nolint
                     change <- rep("none", 3)                                                                                      # nolint
                     output <- rbind(output, c(data[i,1:4], "new trend 0", keept, change, last_edge_or_boundary))                  # nolint
                }                                                                                                                  # nolint                        
@@ -210,7 +210,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                              if ((abs(trendchanges[1]) < changelims[1]) & (abs(trendchanges[2]) < changelims[2]) &(abs(trendchanges[3]) < changelims[3]))  {
 
                                                        keept = keept-tstep
-                                                       print(c(time[i], "same trends", "predicted violation in ", keept, "seconds." ))
+                                                       print(c(time[i], "same trends", "predicted violation in ", keept, "minutes." ))
                                                        output = rbind(output, c(data[i,1:4], "same trend", keept, change, " "))
                                                        # ========== Adaptation if necessary/possible
                                                             if ((keept - timestep) < mintime){
@@ -224,7 +224,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                                                       # adapt to the first one
                                                                       if(adapt == 1) {     
                                                                            adaptation = nay[1,]
-                                                                           output <- adapt_for_i_onwards(data,output,adaptation,len,i)
+                                                                           output <- adapt_for_i_onwards(data,output,adaptation,t_adapt,i)
                                                                            break() # stop when adaptation is done (assuming system recovered for the rest of the time)
                                                                       }
                                                                            
@@ -257,7 +257,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                                             keept = t[[1]]
                                                             phrase = "predicted violation in "
                                                             if (t[[2]] == "e") { phrase = "Could reach unknown parameter space in "}
-                                                            print(c(time[i], " new trend", phrase, keept, "seconds." ))
+                                                            print(c(time[i], " new trend", phrase, keept, "minutes." ))
                                                             last_edge_or_boundary = t[[2]]
                                                             output = rbind(output, c(data[i,1:4], "new trend", keept, change, last_edge_or_boundary))
                                                             #keeptrends = trends
@@ -276,7 +276,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                                                       # adapt to the first one
                                                                       if (adapt == 1) {
                                                                            adaptation = nay[1,]
-                                                                           output <- adapt_for_i_onwards(data,output,adaptation,len,i)
+                                                                           output <- adapt_for_i_onwards(data,output,adaptation,t_adapt,i)
                                                                            break() # stop when adaptation is done (assuming system recovered for the rest of the time)
                                                                       }    
                                                                  }
@@ -306,15 +306,16 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
 ### SELECT params:
 spikyData = 0    #0=normal grip data, 1=spiker
 #>>> change data file here, can be light, lightnew, grip or lg <<<
-data <- grip #light  #lightnew #grip  #lg
+data <- light #light  #lightnew #grip  #lg
 #>>> Hyperparameters <<<
 len = 20 #####<<<< CHANGE from original len = 10   time window to get trends 
-sigma1 = 5.0 #####<<<< CHANGE from original = 5.0
-sigma2 = 5.0 #####<<<< CHANGE from original  = 3.0
+sigma1 = 3.0 #####<<<< CHANGE from original = 5.0
+sigma2 = 3.0 #####<<<< CHANGE from original  = 3.0
 # adaptation
 adapt = 0   # to save adaptation in data, 0 = no adaptation, 1 = adaptation
 # trigger time
-mintime = 60               # time to trigger violation
+mintime = 1               # time to trigger violation
+t_adapt=1  #time to perform the adaptation
 
 #>>>import data<<<
 day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
@@ -412,7 +413,7 @@ msteps = c(0.0125, 0.0062, 0.0125)
 
 
 # Compute trends
-out = checktrends(dataplus, vmap, timestep, historicmeans, lims, changelims, len, maxtime, mintime, msteps,adapt)
+out = checktrends(dataplus, vmap, timestep, historicmeans, lims, changelims, len, maxtime, mintime, msteps,adapt,t_adapt)
 #############################
 
 #############################
