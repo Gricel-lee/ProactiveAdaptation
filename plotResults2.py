@@ -198,7 +198,7 @@ ax2.legend(handles=legend_dots, loc='upper right', ncol=1, handletextpad=0.5, la
 
 # Black dots for safe, orange for in violation, gold for out of edge
 for i in range(1, len(df['time'])):
-    if (df['time2problem'][i] > 0) and (df['time2problem'][i] <= 50):
+    if (df['time2problem'][i] > 0) and (df['time2problem'][i] <= 30):
         ax2.scatter(x=df['time'][i], y=df['time2problem'][i], color='k', marker='o', s=2)
 
 
@@ -209,6 +209,7 @@ for i in range(1,len(df['time'])):
         predicted = df['edgeORboundary'][i]
     df.at[i,'edgeORboundary'] = predicted
 #print(df['edgeORboundary'])
+#df.to_csv('/Users/grisv/GitHub/Manifest/edgeORboundary.csv', index=False)
 
 # second plot the problem colour coded
 for i in range(1,len(df['time'])):
@@ -280,4 +281,9 @@ print("First adaptation time:", adaptTime)
 print("First requirement violation time:", requirementViolationTime)
 print("Difference (violation-adaptation time):", requirementViolationTime-adaptTime)
 
-plt.show()
+#plt.show()
+
+# 63
+# 96
+# 95
+# 49

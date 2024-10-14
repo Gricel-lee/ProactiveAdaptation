@@ -1,5 +1,7 @@
 "time","m1","m2","m3","trend","time2problem","light","floor","gripper","edgeORboundary"
-29,0.941222588,0.45358978,0.923139064,same trend,5999999,none,none,gripper , 
+27,0.956613746,0.455670061,0.930692398,same trend,5999999,none,none,gripper , 
+28,0.945860677,0.441830562,0.927011319,same trend,5999998,none,none,gripper , 
+29,0.941222588,0.45358978,0.923139064,same trend,5999997,none,none,gripper , 
 30,0.946077607,0.446072858,0.921172785,new trend,164,none,none,gripper ,e
 31,0.950297731,0.446312124,0.915595455,same trend,163,none,none,gripper , 
 32,0.946530462,0.455324658,0.911723179,same trend,162,none,none,gripper , 
@@ -68,8 +70,8 @@
 95,0.948095771,0.454154447,0.714524384,same trend,7,none,none,gripper , 
 96,0.941183967,0.450063262,0.709421686,same trend,6,none,none,gripper , 
 97,0.933621084,0.447352993,0.707446652,same trend,5,none,none,gripper , 
-98,0.930304406,0.450358014,0.703183914,same trend,4,none,none,gripper , 
-99,0.929535898,0.449236855,0.700346478,same trend,3,none,none,gripper , 
+98,0.930304406,0.450358014,0.703183914,same trend,4,lighting ,none,gripper , 
+99,0.929535898,0.449236855,0.700346478,same trend,3,lighting ,none,gripper , 
 100,0.924532477,0.448854305,0.69620078,same trend,2,lighting ,none,gripper , 
 101,0.920489637,0.443270629,0.691617201,same trend,1,lighting ,none,gripper , 
 102,0.917376918,0.446113117,0.688342737,new trend,0,lighting ,none,gripper ,b
