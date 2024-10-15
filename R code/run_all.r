@@ -144,7 +144,9 @@ checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps){
      ntsorted = nt[s$ix,]
 
      # Pause execution until the user presses Enter
-     #readline(prompt = "Press [Enter] to continue...")
+     if (pause){
+          readline(prompt = "Press [Enter] to continue...")
+     }
 
 
      return(ntsorted[ which(ntsorted[,4] > max( 0 , (keept + tstep)) ),  ])
@@ -339,6 +341,8 @@ len = 15 #####<<<< CHANGE from original len = 10   time window to get trends
 mintime = 20  # trigger time (ONLY used by python if adapt=1, use tv in python instead)
 sigma1 = 4.0 #####<<<< CHANGE from original = 5.0
 sigma2 = 4.0 #####<<<< CHANGE from original  = 3.0
+# Define the global variable 'pause'
+pause <- TRUE
 # adaptation
 adapt = 0   # to save adaptation in data, 0 = no adaptation, 1 = adaptation
 
