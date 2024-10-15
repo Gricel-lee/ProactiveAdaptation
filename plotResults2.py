@@ -5,11 +5,14 @@ from matplotlib import colors as mcolors
 from matplotlib.lines import Line2D
 
 
+###########################
 #>>> Hyperparameters <<<
 tv=  20 #1 minutes time window for prediction > previous 600
 xlabel_incr_time = 15
 x_lim2ndPlot = 50
+new_config_file = 0
 ###################
+
 
 
 plt.close('all') 
@@ -183,7 +186,7 @@ adaptTime = -1
 
 # to save first adaptation time
 for i in range(1,len(df)):
-    if df['time2problem'][i-1] >= tv and df['time2problem'][i] <= tv and df['time2problem'][i] >= 0:
+    if df['time2problem'][i] >= tv and df['time2problem'][i+1] <= tv and df['time2problem'][i] >= 0:
         ax1.axvline(x=df['time'][i], color='k', linestyle=':', linewidth=1)
         # save first adaptation time
         if adaptTime == -1:
@@ -291,15 +294,40 @@ saved_computations = sum(df['trend'] != 'new trend')
 numTimes_alg1_triggered = len(df['time']) - saved_computations
 # # --------- ------------- --------------
 
-
+print("----")
 print("First adaptation time:", adaptTime)
 print("First predicted violation:", t_first_pred_violation)
 print("First real violation time:", t_first_real_violation)
-print("----")
+print("-")
 print("Error in prediction:", t_first_real_violation- t_first_pred_violation)
 print("Time adapt before real pred:", t_first_real_violation-adaptTime)
 print("Number of times algorithm 1 triggered:", numTimes_alg1_triggered,"out of", len(df['time']), "saving",saved_computations/len(df['time'])*100,"of computations")
+print("----")
+#plt.show()
 
-plt.show()
+t_adaptation_before_predViol = t_first_pred_violation-adaptTime
+t_adaptation_before_viol = t_first_real_violation-adaptTime
+###################
+# Read config. from R
+# name of the day (grip, lg, etc)
+_config_data = pd.read_csv("data.csv")['x'].tolist()#[0]
+print(_config_data)
+_config_data+=[t_first_real_violation- t_first_pred_violation]
+_config_data+=[t_adaptation_before_predViol]
+_config_data+=[t_adaptation_before_viol]
+_config_data+=[t_first_real_violation,t_first_pred_violation,adaptTime]
+_config_data+=[numTimes_alg1_triggered,saved_computations/len(df['time'])*100]
 
-
+# New file
+if new_config_file == 1:
+    with open('/Users/grisv/GitHub/Manifest/config.csv', 'w') as f:
+        f.write("file ,len ,mintime ,a ,b ,t_viol-t_predViol ,t_adaptation_before_predViol ,t_adaptation_before_viol ,viol_at ,pred_viol_at ,adapt_at ,numTimes_alg1_triggered ,saved_computations")
+# Save to new line of .txt file
+with open('/Users/grisv/GitHub/Manifest/config.csv', 'a') as f:
+    f.write("\n")
+    line = ""
+    for item in _config_data:
+        line += "%s," % item
+    line = line[:-1]  # Remove the last character (comma)
+    f.write(line)
+###################

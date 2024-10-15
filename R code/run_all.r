@@ -127,20 +127,28 @@ checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps){
      nt = matrix(0, nrow = ((2*n+1)^3), ncol = 4)
      ind = 1
      for (j in c(-n,0,n)) {
-            for (k in c(-1,0,n)) {
+            for (k in c(-n,0,n)) {
                     for (l in c(-n,0,n)) {
-                           nt[ind, 1] = j
-                           nt[ind, 2] = k
-                           nt[ind, 3] = l
-                           np = c((cp[1] + j*msteps[1]), (cp[2] + k*msteps[2]), (cp[3] + l*msteps[3]))
-                           nt[ind, 4] = violationtime(np, vmap, trends, tstep, maxtime, msteps, 2)[[1]]
-                           ind = ind + 1
+                         if ((j != 0) | (k != 0) | (l != 0)) {
+                              nt[ind, 1] = j
+                              nt[ind, 2] = k
+                              nt[ind, 3] = l
+                              np = c((cp[1] + j*msteps[1]), (cp[2] + k*msteps[2]), (cp[3] + l*msteps[3]))
+                              nt[ind, 4] = violationtime(np, vmap, trends, tstep, maxtime, msteps, 2)[[1]]
+                              ind = ind + 1
+                         }
                     }  
             }  
      }  
      s = sort.int(nt[,4], index.return = T, decreasing = TRUE)
      ntsorted = nt[s$ix,]
-     return(ntsorted[which(ntsorted[,4] >= (keept + timestep)),])
+
+     # Pause execution until the user presses Enter
+     #readline(prompt = "Press [Enter] to continue...")
+
+
+     return(ntsorted[ which(ntsorted[,4] > max( 0 , (keept + tstep)) ),  ])
+     #return(ntsorted[which(ntsorted[,4] > (keept + tstep)),])
 }
 
 
@@ -299,30 +307,9 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
 
 
 
-
-
-
-# ---- Section: Import Preparation ---- #
-### SELECT params:
-spikyData = 0    #0=normal grip data, 1=spiker
-#>>> change data file here, can be light, lightnew, grip or lg <<<
-data <- light #light  #lightnew #grip  #lg
-#>>> Hyperparameters <<<
-len = 20 #####<<<< CHANGE from original len = 10   time window to get trends 
-sigma1 = 4.0 #####<<<< CHANGE from original = 5.0
-sigma2 = 4.0 #####<<<< CHANGE from original  = 3.0
-# adaptation
-adapt = 0   # to save adaptation in data, 0 = no adaptation, 1 = adaptation
-# trigger time (ONLY used by python if adapt=1, use tv in python instead)
-mintime = 30  # time to trigger violation (min)
-# adaptation time (ONLY used by python if adapt=1)
-t_adapt= 30  #time to perform the adaptation (min)
-
+#############################
 #>>>import data<<<
 day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
-# SPIKY gripper
-if (spikyData == 1){ day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/spiky_gripper_day.csv",header = FALSE)}
-
 light = read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_filtered.csv", header = FALSE)
 grip = read.csv("/Users/grisv/GitHub/Manifest/R code/data/degrading_grip_filtered.csv", header = FALSE)
 lg = read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_degrading_grip_filtered.csv", header = FALSE)
@@ -330,6 +317,41 @@ lg = read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_degrading_g
 day1 = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
 # plot 
 #plot_initial_data(day)
+# SPIKY gripper
+#if (spikyData == 1){ day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/spiky_gripper_day.csv",header = FALSE)}
+
+
+
+
+
+
+
+
+###########################
+
+# ---- Section: Import Preparation ---- #
+### SELECT params:
+#spikyData = 0    #0=normal grip data, 1=spiker
+#>>> change data file here, can be light, lightnew, grip or lg <<<
+data_file <- "grip"#light  #lightnew #grip  #lg
+#>>> Hyperparameters <<<
+len = 10 #####<<<< CHANGE from original len = 10   time window to get trends 
+sigma1 = 4.0 #####<<<< CHANGE from original = 5.0
+sigma2 = 4.0 #####<<<< CHANGE from original  = 3.0
+# adaptation
+adapt = 0   # to save adaptation in data, 0 = no adaptation, 1 = adaptation
+# trigger time (ONLY used by python if adapt=1, use tv in python instead)
+mintime = 20  # time to trigger violation (min)
+# adaptation time (ONLY used by python if adapt=1)
+t_adapt= mintime  #time to perform the adaptation (min)
+#############################
+
+
+#############################
+# safe config. data to file (for python code)
+write.csv(c(data_file,len,mintime,sigma1,sigma2), "data.csv", row.names = FALSE)
+data <- get(data_file) 
+#############################
 
 #############################
 # pass to minutes from seconds 
@@ -341,6 +363,7 @@ grip[, 1] <- grip[, 1]/60
 lg[, 1] <- lg[, 1]/60
 day1[, 1] <- day1[, 1]/60
 #############################
+
 
 
 # get means and trends from historic data

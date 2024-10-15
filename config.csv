@@ -1,0 +1,2 @@
+file ,len ,mintime ,a ,b ,t_viol-t_predViol ,t_adaptation_before_predViol ,t_adaptation_before_viol ,viol_at ,pred_viol_at ,adapt_at ,numTimes_alg1_triggered ,saved_computations
+grip,10,20,4,4,47,21,68,124,77,56,26,88.79310344827587
