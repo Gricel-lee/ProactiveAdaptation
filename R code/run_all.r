@@ -144,9 +144,16 @@ checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps){
      ntsorted = nt[s$ix,]
 
      # Pause execution until the user presses Enter
+     
      if (pause){
-          readline(prompt = "Press [Enter] to continue...")
+          res <- readline(prompt = "Press [Enter] to continue...")
+          if (res == "q") {
+               stop("User stopped execution")}
+          if (res == "n") {
+               pause <- FALSE
+          }
      }
+          
 
 
      return(ntsorted[ which(ntsorted[,4] > max( 0 , (keept + tstep)) ),  ])
@@ -354,7 +361,6 @@ t_adapt= mintime  #time to perform the adaptation (min)
 #############################
 # safe config. data to file (for python code)
 write.csv(c(data_file,len,mintime,sigma1,sigma2), "Rconfig.csv", row.names = FALSE)
-data <- get(data_file) 
 #############################
 
 #############################
@@ -413,7 +419,10 @@ extra = day1[start:end,]
 # lose jump in faulty light data
 lightnew = light
 lightnew[72:240,2] = lightnew[72:240,2]+0.08
-
+#############################
+# save data from conf. (do here as it might be lightnew, just declared above)
+data <- get(data_file) 
+#############################
 
 #############################
 # ---- Section: Set env. data ---- #
