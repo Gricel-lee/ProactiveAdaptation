@@ -143,20 +143,21 @@ checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps){
      s = sort.int(nt[,4], index.return = T, decreasing = TRUE)
      ntsorted = nt[s$ix,]
 
-     # Pause execution until the user presses Enter
-     
+     ##########################
+     # Pause execution until the user presses Enter/q/n
      if (pause){
-          res <- readline(prompt = "Press [Enter] to continue...")
+          res <- readline(prompt = "Press [Enter] to continue, [n] to stop pausing, [q] to quit...")
           if (res == "q") {
                stop("User stopped execution")}
           if (res == "n") {
-               pause <- FALSE
+               pause <<- FALSE # global variable
           }
      }
+     ##########################
           
 
 
-     return(ntsorted[ which(ntsorted[,4] > max( 0 , (keept + tstep)) ),  ])
+     return(ntsorted[ which(ntsorted[,4] > max( 0 , (keept + tstep)) ),])
      #return(ntsorted[which(ntsorted[,4] > (keept + tstep)),])
 }
 
