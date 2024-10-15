@@ -1,2 +1,26 @@
-file ,len ,mintime ,a ,b ,t_viol-t_predViol ,t_adaptation_before_predViol ,t_adaptation_before_viol ,viol_at ,pred_viol_at ,adapt_at ,numTimes_alg1_triggered ,saved_computations
-grip,10,20,4,4,47,21,68,124,77,56,26,88.79310344827587
+Explanation,,,,,time difference between violation and prediction,adaptation window (real),adaptation window (predicted),Violation,Predicted violation,adaptation time,,,time difference out ODD real-pred,time when out-ODD,Predicted time when out-ODD,Error to report,
+File,len ,mintime ,a ,b ,Tviol-Tpred ,Tadaptation_before_Tviol (BE zone),Tadaptation_before_Tpred (BE zone),viol_at ,pred_at ,adapt_at ,numTimes_alg1_triggered ,saved_computations,Todd-Tpredodd,out-ODD real,out-ODD pred,Error in prediction,Error in time window
+grip,10,20,4,4,47,68,21,124,77,56,26,88.79310345,,,,47,48
+grip,15,20,4,4,93,104,11,129,36,25,25,89.22413793,,,,,
+grip,15,20,4,5,59,80,21,129,70,49,26,88.79310345,,,,,
+grip,20,20,4,4,95,98,3,134,39,36,46,80.17241379,,,,,
+grip,20,20,4,5,65,86,21,134,69,48,33,85.77586207,,,,,
+,,,,,,,,,,,,,,,,,
+lg,10,20,4,4,20,33,13,111,91,78,5,97.83549784,,,,20,13
+lg,15,20,4,4,20,34,14,116,96,82,8,96.53679654,,,,,
+lg,20,20,4,4,20,25,5,121,101,96,15,93.50649351,,,,,
+,,,,,,,,,,,,,,,,,
+light,10,20,4,4,184*,121,65,183,NA (no violation),82,10,94.15204678,56*,203,147,56*,101
+light,15,20,4,4,189*,189,59,188,NA (no violation),91,15,91.22807018,130*,280,150,,
+light,20,20,4,4,36,94,58,193,157,99,47,72.51461988,,,,,
+,,,,,,,,,,,,,,,,,
+lightnew,10,20,4,4,208*,92,21,207,NA (no violation),138,6,96.34146341,71*,230,159,71*,72
+lightnew,15,20,4,4,8,21,29,212,204,183,6,96.34146341,,,,,
+lightnew,20,20,4,4,37,60,23,217,180,157,37,77.43902439,,,,,
+Ideal values,,,,,0,20 (mintime) or more,20 (mintime) or more,,,,,,0,,,0,0
+,,,,,,,,,,,,,,,,,
+,,,,,*This values do not apply as no violation happen,,,,,,,,*This values are the predicted errors intead,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,"lightnew,15,20,4,4,8,21,29,212,204,183,6,96.34146341463415,235,250",,,,,,,,,,

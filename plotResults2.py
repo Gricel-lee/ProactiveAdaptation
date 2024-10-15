@@ -7,13 +7,19 @@ from matplotlib.lines import Line2D
 
 ###########################
 #>>> Hyperparameters <<<
-tv=  20 #1 minutes time window for prediction > previous 600
 xlabel_incr_time = 15
 x_lim2ndPlot = 50
 new_config_file = 0
 ###################
 
-
+###################
+# Read config. from R
+# name of the day (grip, lg, etc)
+_config_data = pd.read_csv("Rconfig.csv")['x'].tolist()#[0]
+mintime= _config_data[2]   # time window for prediction > previous 600
+tv = int(mintime) # from R
+print(tv)
+###################
 
 plt.close('all') 
 
@@ -236,6 +242,19 @@ for i in range(1,len(df['time'])):
     if df['edgeORboundary'][i]=='b' and df['time2problem'][i] <= 0:
         t_first_pred_violation = df['time'][i] 
         break
+#get first pred ODD
+t_first_pred_ODD = -1
+for i in range(1,len(df['time'])):
+    if df['edgeORboundary'][i]=='e' and df['time2problem'][i] <= 0:
+        t_first_pred_ODD = df['time'][i] 
+        break
+#get first read ODD
+t_first_real_ODD = -1
+for i in range(1,len(df['time'])):
+    if df['m1'][i]<=0.5 or df['m1'][i]>=1 or df['m2'][i]<=0.25 or df['m2'][i]>=0.5 or df['m3'][i]<=0.5 or df['m3'][i]>=1:
+        t_first_real_ODD = df['time'][i] 
+        break
+
 
 # --------- Third subplot
 t_first_real_violation = -1;
@@ -305,23 +324,42 @@ print("Number of times algorithm 1 triggered:", numTimes_alg1_triggered,"out of"
 print("----")
 #plt.show()
 
-t_adaptation_before_predViol = t_first_pred_violation-adaptTime
-t_adaptation_before_viol = t_first_real_violation-adaptTime
+
+
+
+
 ###################
-# Read config. from R
-# name of the day (grip, lg, etc)
-_config_data = pd.read_csv("data.csv")['x'].tolist()#[0]
+# Save results and config. from R
 print(_config_data)
-_config_data+=[t_first_real_violation- t_first_pred_violation]
-_config_data+=[t_adaptation_before_predViol]
-_config_data+=[t_adaptation_before_viol]
-_config_data+=[t_first_real_violation,t_first_pred_violation,adaptTime]
-_config_data+=[numTimes_alg1_triggered,saved_computations/len(df['time'])*100]
+if t_first_pred_violation != 0: #violation detected
+    real_to_pred = t_first_real_violation- t_first_pred_violation
+    t_adaptation_before_predViol = t_first_pred_violation-adaptTime
+    t_adaptation_before_viol = t_first_real_violation-adaptTime
+    ## Save to config file
+    _config_data+=[real_to_pred]
+    _config_data+=[t_adaptation_before_predViol]
+    _config_data+=[t_adaptation_before_viol]
+    _config_data+=[t_first_real_violation,t_first_pred_violation,adaptTime]
+    _config_data+=[numTimes_alg1_triggered,saved_computations/len(df['time'])*100]
+    _config_data+=[t_first_real_ODD]
+    _config_data+=[t_first_pred_ODD]
+else:
+    real_to_pred = "NA"
+    t_adaptation_before_predViol = t_first_pred_violation-adaptTime
+    t_adaptation_before_viol = t_first_real_violation-adaptTime
+    ## Save to config file
+    _config_data+=[real_to_pred]
+    _config_data+=[t_adaptation_before_predViol]
+    _config_data+=[t_adaptation_before_viol]
+    _config_data+=[t_first_real_violation,t_first_pred_violation,adaptTime]
+    _config_data+=[numTimes_alg1_triggered,saved_computations/len(df['time'])*100]
+    _config_data+=[t_first_real_ODD]
+    _config_data+=[t_first_pred_ODD] 
 
 # New file
 if new_config_file == 1:
     with open('/Users/grisv/GitHub/Manifest/config.csv', 'w') as f:
-        f.write("file ,len ,mintime ,a ,b ,t_viol-t_predViol ,t_adaptation_before_predViol ,t_adaptation_before_viol ,viol_at ,pred_viol_at ,adapt_at ,numTimes_alg1_triggered ,saved_computations")
+        f.write("file ,len ,mintime ,a ,b ,t_viol-t_predViol ,t_adaptation_before_predViol ,t_adaptation_before_viol ,viol_at ,pred_viol_at ,adapt_at ,numTimes_alg1_triggered ,saved_computations,out_of_ODD")
 # Save to new line of .txt file
 with open('/Users/grisv/GitHub/Manifest/config.csv', 'a') as f:
     f.write("\n")
