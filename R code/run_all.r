@@ -149,7 +149,7 @@ checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps, t_adap
      # keep neighbours with greater time to problem than current "keept" (and greater than 0 as in violation, keept-tstep<0)
      n = ntsorted[ which(ntsorted[,4] > max( keept, 0) ),]
      # return only the ones that can complete the adaptation in time
-     n = ntsorted[ which(ntsorted[,4] > t_adapt) ),]
+     n = ntsorted[ which(ntsorted[,4] > t_adapt),]
      return(n)
      #return(ntsorted[ which(ntsorted[,4] > max( 0 , (keept + tstep)) ),])
      #return(ntsorted[which(ntsorted[,4] > (keept + tstep)),])
@@ -159,7 +159,7 @@ checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps, t_adap
 adapt_for_i_onwards <- function(data, output,adaptations,t_adapt,i) {
 
      # get only neightbours that have time to adapt
-     adaptations = adaptations[ which(adaptations[,4] > keept)) ),]
+     adaptations = adaptations[ which(adaptations[,4] > keept),]
 
 
      ##########################
@@ -356,16 +356,16 @@ day1 = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.cs
 ### SELECT params:
 #spikyData = 0    #0=normal grip data, 1=spiker
 #>>> change data file here, can be light, lightnew, grip or lg <<<
-data_file <- "lightnew"#light  #lightnew #grip  #lg
+data_file <- "light"#light  #lightnew #grip  #lg
 #>>> Hyperparameters <<<
-len = 15 #####<<<< CHANGE from original len = 10   time window to get trends
+len = 10 #####<<<< CHANGE from original len = 10   time window to get trends
 mintime = 20  # trigger time (ONLY used by python if adapt=1, use tv in python instead)
 sigma1 = 4.0 #####<<<< CHANGE from original = 5.0
 sigma2 = 4.0 #####<<<< CHANGE from original  = 3.0
 # Define the global variable 'pause'
 pause <- TRUE
 # adaptation
-adapt = 1   # to save adaptation in data, 0 = no adaptation, 1 = adaptation
+adapt = 0   # to save adaptation in data, 0 = no adaptation, 1 = adaptation
 
 # adaptation time (ONLY used by python if adapt=1)
 t_adapt= mintime  #time to perform the adaptation (min)
