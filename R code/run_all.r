@@ -139,7 +139,7 @@ checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps){
                          }
                     }  
             }  
-     }  
+     }
      s = sort.int(nt[,4], index.return = T, decreasing = TRUE)
      ntsorted = nt[s$ix,]
 
@@ -217,96 +217,95 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                     change <- rep("none", 3)                                                                                      # nolint
                     output <- rbind(output, c(data[i,1:4], "new trend 0", keept, change, last_edge_or_boundary))                  # nolint
                }                                                                                                                  # nolint                        
-               else{ ####### start else, trends != 0
-                                             
-                                             change = rep("none",3)
-                                             # which trend(s) change
-                                             if (abs(data[i, 2] - hmeans[1]) > hlims[1]) change[1] = "lighting " 
-                                             if (abs(data[i, 3] - hmeans[2]) > hlims[2])  change[2] = "floor friction "
-                                             if (abs(data[i, 4] - hmeans[3]) > hlims[3])  change[3] = "gripper "
-                                             ###### same trend
-                                             if ((abs(trendchanges[1]) < changelims[1]) & (abs(trendchanges[2]) < changelims[2]) &(abs(trendchanges[3]) < changelims[3]))  {
+               else{ ####### >start else, trends != 0
+                    change = rep("none",3)
+                    # which trend(s) change
+                    if (abs(data[i, 2] - hmeans[1]) > hlims[1]) change[1] = "lighting " 
+                    if (abs(data[i, 3] - hmeans[2]) > hlims[2])  change[2] = "floor friction "
+                    if (abs(data[i, 4] - hmeans[3]) > hlims[3])  change[3] = "gripper "
+                    ###### same trend
+                    if ((abs(trendchanges[1]) < changelims[1]) & (abs(trendchanges[2]) < changelims[2]) &(abs(trendchanges[3]) < changelims[3]))  {
 
-                                                       keept = keept-tstep
-                                                       print(c(time[i], "same trends", "predicted violation in ", keept, "minutes." ))
-                                                       output = rbind(output, c(data[i,1:4], "same trend", keept, change, " "))
-                                                       # ========== Adaptation if necessary/possible
-                                                            if ((keept - timestep) < mintime){
-                                                                 # need to respond now, so check neighbours
-                                                                 nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
-                                                                 if (nrow(nay) > 0) {
-                                                                      # print all possible adaptations
-                                                                      for (j in 1:nrow(nay)) { 
-                                                                           print(nay[j,])
-                                                                      }
-                                                                      # adapt to the first one
-                                                                      if(adapt == 1) {     
-                                                                           adaptation = nay[1,]
-                                                                           output <- adapt_for_i_onwards(data,output,adaptation,t_adapt,i)
-                                                                           break() # stop when adaptation is done (assuming system recovered for the rest of the time)
-                                                                      }
-                                                                           
-                                                                 }
-                                                                 else { print("no adaptation possible.") }
-                                                            }
-                                                       # ==========
+                              keept = keept-tstep
+                              print(c(time[i], "same trends", "predicted violation in ", keept, "minutes." ))
+                              output = rbind(output, c(data[i,1:4], "same trend", keept, change, " "))
+                              # ========== Adaptation if necessary/possible
+                                   if ((keept - timestep) < mintime){
+                                        # need to respond now, so check neighbours
+                                        nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
+                                        if (nrow(nay) > 0) {
+                                             # print all possible adaptations
+                                             for (j in 1:nrow(nay)) { 
+                                                  print(nay[j,])
                                              }
-                                             ###### new trend
-                                             else {
-                                                       # calculate time to violation/edge of parameter space from current point
-                                                       cp = c(data[i, 2], data[i, 3], data[i, 4])
-                                                       # print(c(cp, trends))
-                                                       t = violationtime(cp, vmap, trends, tstep, maxtime, msteps, 1)
-                                                       if (t[[1]] < maxtime) {
-
-                                                            ## Check which one changed in trends
-                                                            # if (abs(trendchanges[1]) >=changelims[1]) {
-                                                            #      change[1] = "lighting "
-                                                            # }
-                                                            
-                                                            # if (abs(trendchanges[2]) <=changelims[2]) {
-                                                            #      change[1] = "floor friction "
-                                                            # }
-                                                                 
-                                                            # if (abs(trendchanges[3]) <=changelims[3]) {
-                                                            #      change[1] = "gripper "
-                                                            # }
-
-                                                            keept = t[[1]]
-                                                            phrase = "predicted violation in "
-                                                            if (t[[2]] == "e") { phrase = "Could reach unknown parameter space in "}
-                                                            print(c(time[i], " new trend", phrase, keept, "minutes." ))
-                                                            last_edge_or_boundary = t[[2]]
-                                                            output = rbind(output, c(data[i,1:4], "new trend", keept, change, last_edge_or_boundary))
-                                                            #keeptrends = trends
-                                                            for (i in 1:3){
-                                                                 if (change[i] != "none") { keeptrends[i] = trends[i] }
-                                                            }
-                                                            # ========== Adaptation if necessary/possible
-                                                            if ((keept - timestep) < mintime){
-                                                                 # need to respond now, so check neighbours
-                                                                 nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
-                                                                 if (nrow(nay) > 0) {
-                                                                      # print all possible adaptations
-                                                                      for (j in 1:nrow(nay)) { 
-                                                                           print(nay[j,])
-                                                                      }
-                                                                      # adapt to the first one
-                                                                      if (adapt == 1) {
-                                                                           adaptation = nay[1,]
-                                                                           output <- adapt_for_i_onwards(data,output,adaptation,t_adapt,i)
-                                                                           break() # stop when adaptation is done (assuming system recovered for the rest of the time)
-                                                                      }    
-                                                                 }
-                                                                 else { print("no adaptation possible.") }
-                                                            }
-                                                            # ==========
-                                                       }
-                                                       else { print(c(time[i], "new trend providing maximum time" , keept)) }
-                                                       
-                                                  }
+                                             # adapt to the first one
+                                             if(adapt == 1) {     
+                                                  adaptation = nay[1,]
+                                                  output <- adapt_for_i_onwards(data,output,adaptation,t_adapt,i)
+                                                  break() # stop when adaptation is done (assuming system recovered for the rest of the time)
                                              }
-                    } ####### end else, trends != 0
+                                                  
+                                        }
+                                        else { print("no adaptation possible.") }
+                                   }
+                              # ==========
+                    }
+                    ###### new trend
+                    else {
+                              # calculate time to violation/edge of parameter space from current point
+                              cp = c(data[i, 2], data[i, 3], data[i, 4])
+                              # print(c(cp, trends))
+                              t = violationtime(cp, vmap, trends, tstep, maxtime, msteps, 1)
+                              if (t[[1]] < maxtime) {
+
+                                   ## Check which one changed in trends
+                                   # if (abs(trendchanges[1]) >=changelims[1]) {
+                                   #      change[1] = "lighting "
+                                   # }
+                                   
+                                   # if (abs(trendchanges[2]) <=changelims[2]) {
+                                   #      change[1] = "floor friction "
+                                   # }
+                                        
+                                   # if (abs(trendchanges[3]) <=changelims[3]) {
+                                   #      change[1] = "gripper "
+                                   # }
+
+                                   keept = t[[1]]
+                                   phrase = "predicted violation in "
+                                   if (t[[2]] == "e") { phrase = "Could reach unknown parameter space in "}
+                                   print(c(time[i], " new trend", phrase, keept, "minutes." ))
+                                   last_edge_or_boundary = t[[2]]
+                                   output = rbind(output, c(data[i,1:4], "new trend", keept, change, last_edge_or_boundary))
+                                   #keeptrends = trends
+                                   for (i in 1:3){
+                                        if (change[i] != "none") { keeptrends[i] = trends[i] }
+                                   }
+                                   # ========== Adaptation if necessary/possible
+                                   if ((keept - timestep) < mintime){
+                                        # need to respond now, so check neighbours
+                                        nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
+                                        if (nrow(nay) > 0) {
+                                             # print all possible adaptations
+                                             for (j in 1:nrow(nay)) { 
+                                                  print(nay[j,])
+                                             }
+                                             # adapt to the first one
+                                             if (adapt == 1) {
+                                                  adaptation = nay[1,]
+                                                  output <- adapt_for_i_onwards(data,output,adaptation,t_adapt,i)
+                                                  break() # stop when adaptation is done (assuming system recovered for the rest of the time)
+                                             }    
+                                        }
+                                        else { print("no adaptation possible.") }
+                                   }
+                                   # ==========
+                              }
+                              else { print(c(time[i], "new trend providing maximum time" , keept)) }
+                                   
+                              }
+                         }
+                    } ####### <end else, trends != 0
          else {
                        # otherwise all ok
                        print(c(time[i], "No problem" )) 
