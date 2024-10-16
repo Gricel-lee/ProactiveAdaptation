@@ -318,17 +318,22 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                     output <- rbind(output, c(data[i,1:4], "new trend 0", keept, change, last_edge_or_boundary))                  # nolint
                }                                                                                                                  # nolint                        
                else{ ####### >start else, trends != 0
-                    change = rep("none",3)
+                    change = rep("none",3) # check outside limits
                     # which trend(s) change
-                    if (abs(data[i, 2] - hmeans[1]) > hlims[1]) change[1] = "lighting " 
-                    if (abs(data[i, 3] - hmeans[2]) > hlims[2])  change[2] = "floor friction "
-                    if (abs(data[i, 4] - hmeans[3]) > hlims[3])  change[3] = "gripper "
-                    ###### same trend
+                    if (abs(data[i, 2] - hmeans[1]) > hlims[1]) change[1] = "lightingOut " 
+                    if (abs(data[i, 3] - hmeans[2]) > hlims[2])  change[2] = "floor frictionOut "
+                    if (abs(data[i, 4] - hmeans[3]) > hlims[3])  change[3] = "gripperOut "
+                    ###### save trend
+                    changeTrend = rep("none",3)
+                    if ((abs(trendchanges[1]) > changelims[1])){changeTrend[1] = "lighting "} else {changeTrend[1] = "none"}
+                    if (abs(trendchanges[2]) > changelims[2]){changeTrend[2] = "floor friction "} else {changeTrend[2] = "none"}
+                    if (abs(trendchanges[3]) > changelims[3]){changeTrend[3] = "gripper "} else {changeTrend[3] = "none"}
+
                     if ((abs(trendchanges[1]) < changelims[1]) & (abs(trendchanges[2]) < changelims[2]) &(abs(trendchanges[3]) < changelims[3]))  {
 
                               keept = keept-tstep
                               print(c(time[i], "same trends", "predicted violation in ", keept, "minutes." ))
-                              output = rbind(output, c(data[i,1:4], "same trend", keept, change, " "))
+                              output = rbind(output, c(data[i,1:4], "same trend", keept, change, " ", changeTrend))
                               # ========== Adaptation if necessary/possible
                                    if ((keept - tstep) < mintime){        #keept=current time to problem
                                         # need to respond now, so check neighbours
@@ -375,7 +380,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                    if (t[[2]] == "e") { phrase = "Could reach unknown parameter space in "}
                                    print(c(time[i], " new trend", phrase, keept, "minutes." ))
                                    last_edge_or_boundary = t[[2]]
-                                   output = rbind(output, c(data[i,1:4], "new trend", keept, change, last_edge_or_boundary))
+                                   output = rbind(output, c(data[i,1:4], "new trend", keept, change, last_edge_or_boundary, changeTrend))
                                    #keeptrends = trends
                                    for (i in 1:3){
                                         if (change[i] != "none") { keeptrends[i] = trends[i] }
@@ -551,7 +556,7 @@ out = checktrends(dataplus, vmap, tstep, historicmeans, lims, changelims, len, m
 # ---- Section: Python Export Preparation ---- #
 # change column names -- python will read these files
 colnames(dataplus) = c("time", "m1", "m2", "m3", "-", "--")
-colnames(out) = c("time", "m1", "m2", "m3", "trend", "time2problem","light","floor","gripper","edgeORboundary")
+colnames(out) = c("time", "m1", "m2", "m3", "trend", "time2problem","lightOutTypical","floorOutTypical","gripperOutTypical","edgeORboundary","light","floor","gripper")
 # save data -- python will read these files
 write.csv(out, "outputlg.csv", row.names = FALSE)
 write.csv(dataplus, "dataplus.csv", row.names = FALSE)
