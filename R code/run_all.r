@@ -143,6 +143,27 @@ checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps){
      s = sort.int(nt[,4], index.return = T, decreasing = TRUE)
      ntsorted = nt[s$ix,]
 
+     #tstep = increment in time in data (1 min, prev. 60 sec)
+     #keept = time to problem kept from previous calculation
+     
+     # keep neighbours with greater time to problem "> keept" (and greater than 0 as in violation, keept-tstep<0)
+     n = ntsorted[ which(ntsorted[,4] > max( keept, 0) ),]
+
+     
+     
+     n = ntsorted[ which(ntsorted[,4] > max( 0 , (keept)) ),]
+     return(n)
+     #return(ntsorted[ which(ntsorted[,4] > max( 0 , (keept + tstep)) ),])
+     #return(ntsorted[which(ntsorted[,4] > (keept + tstep)),])
+}
+
+
+adapt_for_i_onwards <- function(data, output,adaptations,t_adapt,i) {
+
+     # get only neightbours that have time to adapt
+     adaptations = adaptations[ which(adaptations[,4] > keept)) ),]
+
+
      ##########################
      # Pause execution until the user presses Enter/q/n
      if (pause){
@@ -154,17 +175,9 @@ checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps){
           }
      }
      ##########################
-          
 
-
-     return(ntsorted[ which(ntsorted[,4] > max( 0 , (keept + tstep)) ),])
-     #return(ntsorted[which(ntsorted[,4] > (keept + tstep)),])
-}
-
-
-adapt_for_i_onwards <- function(data, output,adaptation,t_adapt,i) {
      #stop if current time + t_adapt exceeds the time in data file
-     if (i+t_adapt>dim(data)[1]){
+     if (mintime+t_adapt>dim(data)[1]){
           stop("i+t_adapt exceeds the number of rows in data")
      }
 
@@ -183,6 +196,8 @@ adapt_for_i_onwards <- function(data, output,adaptation,t_adapt,i) {
      }
   return(output)
 }
+
+
 
 
 # function to predict violations 
@@ -230,7 +245,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                               print(c(time[i], "same trends", "predicted violation in ", keept, "minutes." ))
                               output = rbind(output, c(data[i,1:4], "same trend", keept, change, " "))
                               # ========== Adaptation if necessary/possible
-                                   if ((keept - timestep) < mintime){
+                                   if ((keept - tstep) < mintime){
                                         # need to respond now, so check neighbours
                                         nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
                                         if (nrow(nay) > 0) {
@@ -240,8 +255,8 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                              }
                                              # adapt to the first one
                                              if(adapt == 1) {     
-                                                  adaptation = nay[1,]
-                                                  output <- adapt_for_i_onwards(data,output,adaptation,t_adapt,i)
+                                                  adaptations = nay
+                                                  output <- adapt_for_i_onwards(data,output,adaptations,t_adapt,i)
                                                   break() # stop when adaptation is done (assuming system recovered for the rest of the time)
                                              }
                                                   
@@ -282,7 +297,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                         if (change[i] != "none") { keeptrends[i] = trends[i] }
                                    }
                                    # ========== Adaptation if necessary/possible
-                                   if ((keept - timestep) < mintime){
+                                   if ((keept - tstep) < mintime){
                                         # need to respond now, so check neighbours
                                         nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
                                         if (nrow(nay) > 0) {
@@ -291,15 +306,16 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                                   print(nay[j,])
                                              }
                                              # adapt to the first one
-                                             if (adapt == 1) {
-                                                  adaptation = nay[1,]
-                                                  output <- adapt_for_i_onwards(data,output,adaptation,t_adapt,i)
+                                             if(adapt == 1) {     
+                                                  adaptations = nay
+                                                  output <- adapt_for_i_onwards(data,output,adaptations,t_adapt,i)
                                                   break() # stop when adaptation is done (assuming system recovered for the rest of the time)
-                                             }    
+                                             }
+                                                  
                                         }
                                         else { print("no adaptation possible.") }
                                    }
-                                   # ==========
+                              # ==========
                               }
                               else { print(c(time[i], "new trend providing maximum time" , keept)) }
                                    
@@ -351,7 +367,7 @@ sigma2 = 4.0 #####<<<< CHANGE from original  = 3.0
 # Define the global variable 'pause'
 pause <- TRUE
 # adaptation
-adapt = 0   # to save adaptation in data, 0 = no adaptation, 1 = adaptation
+adapt = 1   # to save adaptation in data, 0 = no adaptation, 1 = adaptation
 
 # adaptation time (ONLY used by python if adapt=1)
 t_adapt= mintime  #time to perform the adaptation (min)
@@ -366,7 +382,7 @@ write.csv(c(data_file,len,mintime,sigma1,sigma2), "Rconfig.csv", row.names = FAL
 #############################
 # pass to minutes from seconds 
 originalDataIncr = 60
-timestep <- originalDataIncr/60
+tstep <- originalDataIncr/60
 day[, 1] <- day[, 1]/60
 light[, 1] <- light[, 1]/60
 grip[, 1] <- grip[, 1]/60
@@ -428,8 +444,8 @@ data <- get(data_file)
 # ---- Section: Set env. data ---- #
 # add "len" normal datapoints to beginning of new data
 dataplus = rbind(extra, data)
-dataplus$Time = timestep*c(0:(nrow(dataplus)-1)) #generates sequence of integers starting from 0 and multiplies by time_increment
-dataplus$V1 = timestep*c(0:(nrow(dataplus)-1)) #to avoid confusion, replace previous time column (named V1)
+dataplus$Time = tstep*c(0:(nrow(dataplus)-1)) #generates sequence of integers starting from 0 and multiplies by time_increment
+dataplus$V1 = tstep*c(0:(nrow(dataplus)-1)) #to avoid confusion, replace previous time column (named V1)
 # Round the second to fourth columns to 9 decimal places (this is to match Julie's answer)
 dataplus[, 2:4] = round(dataplus[, 2:4], 9)
 #############################
@@ -444,7 +460,7 @@ msteps = c(0.0125, 0.0062, 0.0125)
 
 
 # Compute trends
-out = checktrends(dataplus, vmap, timestep, historicmeans, lims, changelims, len, maxtime, mintime, msteps,adapt,t_adapt)
+out = checktrends(dataplus, vmap, tstep, historicmeans, lims, changelims, len, maxtime, mintime, msteps,adapt,t_adapt)
 #############################
 
 #############################
