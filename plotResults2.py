@@ -190,7 +190,7 @@ df.to_csv('/Users/grisv/GitHub/Manifest/edgeORboundary.csv', index=False)
 adaptTime = -1
 
 
-# to save first adaptation time
+# adaptation line and save first adaptation time
 for i in range(1,len(df)):
     if df['time2problem'][i] >= tv and df['time2problem'][i+1] <= tv and df['time2problem'][i] >= 0:
         ax1.axvline(x=df['time'][i], color='k', linestyle=':', linewidth=1)
