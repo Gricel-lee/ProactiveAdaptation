@@ -322,7 +322,7 @@ print("Error in prediction:", t_first_real_violation- t_first_pred_violation)
 print("Time adapt before real pred:", t_first_real_violation-adaptTime)
 print("Number of times algorithm 1 triggered:", numTimes_alg1_triggered,"out of", len(df['time']), "saving",saved_computations/len(df['time'])*100,"of computations")
 print("----")
-#plt.show()
+plt.show()
 
 
 

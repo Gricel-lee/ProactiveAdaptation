@@ -120,49 +120,8 @@ gettrends <- function(data, len){
     return(trends)
 }
 
-
-
-# function to check time from neighbouring violation map points 
-checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps, t_adapt){
-     nt = matrix(0, nrow = ((2*n+1)^3), ncol = 4)
-     ind = 1
-     for (j in c(-n,0,n)) {
-            for (k in c(-n,0,n)) {
-                    for (l in c(-n,0,n)) {
-                         if ((j != 0) | (k != 0) | (l != 0)) {
-                              nt[ind, 1] = j
-                              nt[ind, 2] = k
-                              nt[ind, 3] = l
-                              np = c((cp[1] + j*msteps[1]), (cp[2] + k*msteps[2]), (cp[3] + l*msteps[3]))
-                              nt[ind, 4] = violationtime(np, vmap, trends, tstep, maxtime, msteps, 2)[[1]]
-                              ind = ind + 1
-                         }
-                    }  
-            }  
-     }
-     s = sort.int(nt[,4], index.return = T, decreasing = TRUE)
-     ntsorted = nt[s$ix,]
-
-     #tstep = increment in time in data (1 min, prev. 60 sec)
-     #keept = time to problem kept from previous calculation
-     
-     # keep neighbours with greater time to problem than current "keept" (and greater than 0 as in violation, keept-tstep<0)
-     n = ntsorted[ which(ntsorted[,4] > max( keept, 0) ),]
-     # return only the ones that can complete the adaptation in time
-     n = ntsorted[ which(ntsorted[,4] > t_adapt),]
-     return(n)
-     #return(ntsorted[ which(ntsorted[,4] > max( 0 , (keept + tstep)) ),])
-     #return(ntsorted[which(ntsorted[,4] > (keept + tstep)),])
-}
-
-
-adapt_for_i_onwards <- function(data, output,adaptations,t_adapt,i) {
-
-     # get only neightbours that have time to adapt
-     adaptations = adaptations[ which(adaptations[,4] > keept),]
-
-
-     ##########################
+##########################
+pausing <- function(){
      # Pause execution until the user presses Enter/q/n
      if (pause){
           res <- readline(prompt = "Press [Enter] to continue, [n] to stop pausing, [q] to quit...")
@@ -172,34 +131,162 @@ adapt_for_i_onwards <- function(data, output,adaptations,t_adapt,i) {
                pause <<- FALSE # global variable
           }
      }
-     ##########################
-
-     #stop if current time + t_adapt exceeds the time in data file
-     if (mintime+t_adapt>dim(data)[1]){
-          stop("i+t_adapt exceeds the number of rows in data")
-     }
-
-     # get last saved time data row (by looking at last time saved in output)
-     row <- which(data[1] == tail(output, n = 1)[1] )
-     
-     t_when_adapted = row[1]
-     # adapt from row+t_adapt onwards
-     keept = 99999 # time to problem
-     change = rep("none",3) # no change
-     for (j in (row+1):dim(data)[1]){
-          if (data[j,1]>=t_when_adapted+t_adapt){
-          # adapt data
-           output = rbind(output, c(data[j,1:4], "same trend 0", keept, change, " "))
-          }
-     }
-  return(output)
 }
+##########################
+
+
+# function to check time from neighbouring violation map points 
+checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, msteps, t_adapt){
+
+     # increase neighbours by adding up to n increments in each direction
+     n =1
+      
+     ## Select which adaptations possible, incr/decr[-1,1] in each env
+     nlight = c(0,1) #only increase but adding an extra light, or the same
+     nfloor = c(-1,0,1) #decrease by cleaning floor, increase by changin the wheels, or the same
+     ngrip = c(-1,0,1)  #decresae by cleaning the gripper, increase by changing the gripper, or the same
+
+     ## Select if adaptation resets trend (set 0 when reset)
+     trends_after_adapt = c(trends[1],0,0)
+
+     #nt = matrix(0, nrow = ((2*n+1)^3), ncol = 7)
+     num_rows <- (length(nlight) * length(nfloor) * length(ngrip)) * n + 1
+     nt = matrix(0, nrow = num_rows, ncol = 7)
+     
+     ind =1
+     for (i in n:n) { # or 1:n to check 1 to n increments
+          for (j in (i*nlight)) {
+                    for (k in (i*nfloor)) {
+                         for (l in (i*ngrip)) {
+                         nt[ind, 1] = j
+                         nt[ind, 2] = k
+                         nt[ind, 3] = l
+                         ind = ind + 1
+                         np = c((cp[1] + j*msteps[1]), (cp[2] + k*msteps[2]), (cp[3] + l*msteps[3]))
+                         nt[ind, 4] = violationtime(np, vmap, trends, tstep, maxtime, msteps, 2)[[1]]
+                         nt[ind,5:7] <- np #real env. values
+                         #print(c(j, k, l, nt[ind, 4]))
+                    }}}}
+n1=nt 
+
+nt = nt[order(nt[,4],decreasing = TRUE), , drop = FALSE] #more rows than required as it can contain all neighbour incre. if "for (i in 1:n)" in the loop above #NOTE: use , drop = FALSE to keep as matrix, even when only one row satisfy the condition # nolint
+nt_ = nt[which(nt[,4] > max(t_adapt,keept)), , drop = FALSE] #t_adapt=mintime
+nt__ = nt_[which(nt_[,4] == max(nt_[,4])), , drop = FALSE] #max time
+
+### TESTS
+# print(trends)
+# n1 = n1[which(n1[, 1] != 0),]
+# print("all"); print(n1); print("ordered"); print(nt)
+# print(">time to adapt or >current time to BE-zone(keept)"); print(nt_); print("prev. time to viol"); print(keept)
+# print("greater time"); print(nt__)
+# pausing()
+####
+return(nt__)
+}
+
+
+
+
+check_independent_possible_adaptations <- function(data, output,nay,t_adapt) {
+     adaptations = nay
+     if(nrow(adaptations) < 2) {
+          print("no independent adaptation possible.")
+          return()
+     }
+     ### >>from checknay - Select which adaptations possible, incr/decr[-1,1] in each env
+     nlight = c(0,1) #only increase but adding an extra light, or the same
+     nfloor = c(-1,0,1) #decrease by cleaning floor, increase by changin the wheels, or the same
+     ngrip = c(-1,0,1)  #decresae by cleaning the gripper, increase by changing the gripper, or the same
+     n=1
+     #####
+     # expected values in nt
+     nlight=n*nlight; nfloor=n*nfloor; ngrip=n*ngrip
+
+     int = 0
+
+     # Initialize an empty list to store values
+     adapt_ <- list()
+     
+     #==== iterate over Light
+     for (j in nlight){ #light
+          kl_depend <- 0
+          for (k in nfloor){
+               for (l in ngrip){
+                    val = c(j,k,l)
+                    exists <- any(apply(adaptations[, 1:3], 1, function(row) all(row == val)))
+                    #print(val); print(exists)
+                    # check if not exist adaptation (any combination of k,l with j)
+                    if (!exists) { kl_depend <- 1; break }
+               }
+               if (kl_depend == 1) break
+          }
+          if (kl_depend==0){ # if not dependent on k and l
+               adapt_ <- append(adapt_, list(list("light", j))); int = int + 1
+          }
+          adapt <- do.call(rbind, adapt_) # convert list to matrix
+          # print(adapt)
+          # pausing()
+     }
+
+     #==== iterate over Floor
+     for (j in nfloor){ #floor
+          kl_depend <- 0
+          for (k in nlight){
+               for (l in ngrip){
+                    val = c(k,j,l) ##
+                    exists <- any(apply(adaptations[, 1:3], 1, function(row) all(row == val)))
+                    #print(val); print(exists)
+                    # check if not exist adaptation (any combination of k,l with j)
+                    if (!exists) { kl_depend <- 1; break }
+               }
+               if (kl_depend == 1) break
+          }
+          if (kl_depend==0){ # if not dependent on k and l
+               adapt_ <- append(adapt_, list(list("floor", j))); int = int + 1
+          }
+          adapt <- do.call(rbind, adapt_) # convert list to matrix
+          # print(adapt)
+          # pausing()
+     }
+     #==== iterate over Gripper
+     for (j in ngrip){ #gripper
+          kl_depend <- 0
+          for (k in nlight){
+               for (l in nfloor){
+                    val = c(k,l,j) ##
+                    exists <- any(apply(adaptations[, 1:3], 1, function(row) all(row == val)))
+                    #print(val); print(exists)
+                    # check if not exist adaptation (any combination of k,l with j)
+                    if (!exists) { kl_depend <- 1; break }
+               }
+               if (kl_depend == 1) break
+          }
+          if (kl_depend==0){ # if not dependent on k and l
+               adapt_ <- append(adapt_, list(list("gripper", j))); int = int + 1
+          }
+          adapt <- do.call(rbind, adapt_) # convert list to matrix
+          # print(adapt)
+          # pausing()
+     }
+     if (!is.null(adapt)) {
+          print("*independent adaptations:");print(adapt)
+          pausing()
+          return(adapt)
+     }
+     else { print("no independent adaptation possible.")}
+     # pausing()
+}
+
+
+
+
 
 
 
 
 # function to predict violations 
 checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxtime, mintime, msteps,adapt=0,t_adapt=1){
+    
     # NOTE that adapt=0 (change to 1 if trigger adaptation)
     
     full_length = dim(data)[1]    
@@ -245,17 +332,16 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                               # ========== Adaptation if necessary/possible
                                    if ((keept - tstep) < mintime){        #keept=current time to problem
                                         # need to respond now, so check neighbours
-                                        nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps, t_adapt)
+                                        nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, msteps, t_adapt)
                                         if (nrow(nay) > 0) {
                                              # print all possible adaptations
                                              for (j in 1:nrow(nay)) { 
                                                   print(nay[j,])
                                              }
                                              # adapt to the first one
-                                             if(adapt == 1) {     
-                                                  adaptations = nay
-                                                  output <- adapt_for_i_onwards(data,output,adaptations,t_adapt,i)
-                                                  break() # stop when adaptation is done (assuming system recovered for the rest of the time)
+                                             if(adapt == 1) {
+                                                  check_independent_possible_adaptations(data,output,nay,t_adapt)
+                                                  #break() # stop when adaptation is done (assuming system recovered for the rest of the time)
                                              }
                                                   
                                         }
@@ -297,7 +383,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                    # ========== Adaptation if necessary/possible
                                    if ((keept - tstep) < mintime){ #keept=current time to problem
                                         # need to respond now, so check neighbours
-                                        nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps, t_adapt)
+                                        nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, msteps, t_adapt)
                                         if (nrow(nay) > 0) {
                                              # print all possible adaptations
                                              for (j in 1:nrow(nay)) { 
@@ -306,8 +392,8 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                              # adapt to the first one
                                              if(adapt == 1) {     
                                                   adaptations = nay
-                                                  output <- adapt_for_i_onwards(data,output,adaptations,t_adapt,i)
-                                                  break() # stop when adaptation is done (assuming system recovered for the rest of the time)
+                                                  check_independent_possible_adaptations(data,output,adaptations,t_adapt)
+                                                  #break() # stop when adaptation is done (assuming system recovered for the rest of the time)
                                              }
                                                   
                                         }
@@ -356,7 +442,7 @@ day1 = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.cs
 ### SELECT params:
 #spikyData = 0    #0=normal grip data, 1=spiker
 #>>> change data file here, can be light, lightnew, grip or lg <<<
-data_file <- "light"#light  #lightnew #grip  #lg
+data_file <- "lg"#light  #lightnew #grip  #lg
 #>>> Hyperparameters <<<
 len = 10 #####<<<< CHANGE from original len = 10   time window to get trends
 mintime = 20  # trigger time (ONLY used by python if adapt=1, use tv in python instead)
@@ -365,7 +451,7 @@ sigma2 = 4.0 #####<<<< CHANGE from original  = 3.0
 # Define the global variable 'pause'
 pause <- TRUE
 # adaptation
-adapt = 0   # to save adaptation in data, 0 = no adaptation, 1 = adaptation
+adapt = 1   # to save adaptation in data, 0 = no adaptation, 1 = adaptation
 
 # adaptation time (ONLY used by python if adapt=1)
 t_adapt= mintime  #time to perform the adaptation (min)
