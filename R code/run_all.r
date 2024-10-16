@@ -123,7 +123,7 @@ gettrends <- function(data, len){
 
 
 # function to check time from neighbouring violation map points 
-checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps){
+checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps, t_adapt){
      nt = matrix(0, nrow = ((2*n+1)^3), ncol = 4)
      ind = 1
      for (j in c(-n,0,n)) {
@@ -146,12 +146,10 @@ checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps){
      #tstep = increment in time in data (1 min, prev. 60 sec)
      #keept = time to problem kept from previous calculation
      
-     # keep neighbours with greater time to problem "> keept" (and greater than 0 as in violation, keept-tstep<0)
+     # keep neighbours with greater time to problem than current "keept" (and greater than 0 as in violation, keept-tstep<0)
      n = ntsorted[ which(ntsorted[,4] > max( keept, 0) ),]
-
-     
-     
-     n = ntsorted[ which(ntsorted[,4] > max( 0 , (keept)) ),]
+     # return only the ones that can complete the adaptation in time
+     n = ntsorted[ which(ntsorted[,4] > t_adapt) ),]
      return(n)
      #return(ntsorted[ which(ntsorted[,4] > max( 0 , (keept + tstep)) ),])
      #return(ntsorted[which(ntsorted[,4] > (keept + tstep)),])
@@ -245,9 +243,9 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                               print(c(time[i], "same trends", "predicted violation in ", keept, "minutes." ))
                               output = rbind(output, c(data[i,1:4], "same trend", keept, change, " "))
                               # ========== Adaptation if necessary/possible
-                                   if ((keept - tstep) < mintime){
+                                   if ((keept - tstep) < mintime){        #keept=current time to problem
                                         # need to respond now, so check neighbours
-                                        nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
+                                        nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps, t_adapt)
                                         if (nrow(nay) > 0) {
                                              # print all possible adaptations
                                              for (j in 1:nrow(nay)) { 
@@ -297,9 +295,9 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                         if (change[i] != "none") { keeptrends[i] = trends[i] }
                                    }
                                    # ========== Adaptation if necessary/possible
-                                   if ((keept - tstep) < mintime){
+                                   if ((keept - tstep) < mintime){ #keept=current time to problem
                                         # need to respond now, so check neighbours
-                                        nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
+                                        nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps, t_adapt)
                                         if (nrow(nay) > 0) {
                                              # print all possible adaptations
                                              for (j in 1:nrow(nay)) { 
