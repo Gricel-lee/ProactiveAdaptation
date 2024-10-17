@@ -140,9 +140,9 @@ checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, msteps, t_adapt){
 
      # increase neighbours by adding up to n increments in each direction
      n =1
-      
+     print(keept)
      ## Select which adaptations possible, incr/decr[-1,1] in each env
-     nlight = c(0,1) #only increase but adding an extra light, or the same
+     nlight = c(-1,0,1) #only increase but adding an extra light, or the same
      nfloor = c(-1,0,1) #decrease by cleaning floor, increase by changin the wheels, or the same
      ngrip = c(-1,0,1)  #decresae by cleaning the gripper, increase by changing the gripper, or the same
 
@@ -194,7 +194,7 @@ check_independent_possible_adaptations <- function(data, output,nay,t_adapt) {
           return()
      }
      ### >>from checknay - Select which adaptations possible, incr/decr[-1,1] in each env
-     nlight = c(0,1) #only increase but adding an extra light, or the same
+     nlight = c(-1,0,1) #only increase but adding an extra light, or the same
      nfloor = c(-1,0,1) #decrease by cleaning floor, increase by changin the wheels, or the same
      ngrip = c(-1,0,1)  #decresae by cleaning the gripper, increase by changing the gripper, or the same
      n=1
