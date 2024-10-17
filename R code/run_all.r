@@ -447,7 +447,7 @@ day1 = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.cs
 ### SELECT params:
 #spikyData = 0    #0=normal grip data, 1=spiker
 #>>> change data file here, can be light, lightnew, grip or lg <<<
-data_file <- "lg"#light  #lightnew #grip  #lg
+data_file <- "grip"#light  #lightnew #grip  #lg
 #>>> Hyperparameters <<<
 len = 10 #####<<<< CHANGE from original len = 10   time window to get trends
 mintime = 20  # trigger time (ONLY used by python if adapt=1, use tv in python instead)

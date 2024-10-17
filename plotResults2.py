@@ -9,7 +9,6 @@ from matplotlib.lines import Line2D
 #>>> Hyperparameters <<<
 xlabel_incr_time = 15
 x_lim2ndPlot = 50
-new_config_file = 0
 ###################
 
 ###################
@@ -322,44 +321,31 @@ print("Error in prediction:", t_first_real_violation- t_first_pred_violation)
 print("Time adapt before real pred:", t_first_real_violation-adaptTime)
 print("Number of times algorithm 1 triggered:", numTimes_alg1_triggered,"out of", len(df['time']), "saving",saved_computations/len(df['time'])*100,"of computations")
 print("----")
-plt.show()
-
-
 
 
 
 ###################
 # Save results and config. from R
 print(_config_data)
-if t_first_pred_violation != 0: #violation detected
-    real_to_pred = t_first_real_violation- t_first_pred_violation
-    t_adaptation_before_predViol = t_first_pred_violation-adaptTime
-    t_adaptation_before_viol = t_first_real_violation-adaptTime
-    ## Save to config file
-    _config_data+=[real_to_pred]
-    _config_data+=[t_adaptation_before_predViol]
-    _config_data+=[t_adaptation_before_viol]
-    _config_data+=[t_first_real_violation,t_first_pred_violation,adaptTime]
-    _config_data+=[numTimes_alg1_triggered,saved_computations/len(df['time'])*100]
-    _config_data+=[t_first_real_ODD]
-    _config_data+=[t_first_pred_ODD]
-else:
-    real_to_pred = "NA"
-    t_adaptation_before_predViol = t_first_pred_violation-adaptTime
-    t_adaptation_before_viol = t_first_real_violation-adaptTime
-    ## Save to config file
-    _config_data+=[real_to_pred]
-    _config_data+=[t_adaptation_before_predViol]
-    _config_data+=[t_adaptation_before_viol]
-    _config_data+=[t_first_real_violation,t_first_pred_violation,adaptTime]
-    _config_data+=[numTimes_alg1_triggered,saved_computations/len(df['time'])*100]
-    _config_data+=[t_first_real_ODD]
-    _config_data+=[t_first_pred_ODD] 
 
+real_to_pred = t_first_real_violation- t_first_pred_violation
+t_adaptation_before_predViol = t_first_pred_violation-adaptTime
+t_adaptation_before_viol = t_first_real_violation-adaptTime
+## Save to config file
+_config_data+=[real_to_pred]
+_config_data+=[t_adaptation_before_predViol]
+_config_data+=[t_adaptation_before_viol]
+_config_data+=[t_first_real_violation,t_first_pred_violation,adaptTime]
+_config_data+=[numTimes_alg1_triggered,saved_computations/len(df_Day['time'])*100]
+_config_data+=[t_first_real_ODD]
+_config_data+=[t_first_pred_ODD]
+
+
+#plt.show()
 # New file
-if new_config_file == 1:
+if False:
     with open('/Users/grisv/GitHub/Manifest/config.csv', 'w') as f:
-        f.write("file ,len ,mintime ,a ,b ,t_viol-t_predViol ,t_adaptation_before_predViol ,t_adaptation_before_viol ,viol_at ,pred_viol_at ,adapt_at ,numTimes_alg1_triggered ,saved_computations,out_of_ODD")
+        f.write("file ,len ,mintime ,a ,b ,t_viol-t_predViol ,t_adaptation_before_predViol ,t_adaptation_before_viol ,viol_at ,pred_viol_at ,adapt_at ,numTimes_alg1_triggered ,saved_computations,out_of_ODD,pred_out_of_ODD")
 # Save to new line of .txt file
 with open('/Users/grisv/GitHub/Manifest/config.csv', 'a') as f:
     f.write("\n")
