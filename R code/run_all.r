@@ -269,8 +269,9 @@ check_independent_possible_adaptations <- function(data, output,nay,t_adapt) {
           # pausing()
      }
      if (!is.null(adapt)) {
-          print("*independent adaptations:");print(adapt)
-          pausing()
+          print("*independent adaptations:");
+          print(adapt)
+          #pausing()
           return(adapt)
      }
      else { print("no independent adaptation possible.")}
@@ -351,6 +352,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                                   
                                         }
                                         else { print("no adaptation possible.") }
+                                   pausing()
                                    }
                               # ==========
                     }
@@ -403,6 +405,7 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
                                                   
                                         }
                                         else { print("no adaptation possible.") }
+                                   pausing()
                                    }
                               # ==========
                               }
