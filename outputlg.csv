@@ -1,232 +1,233 @@
-"time","m1","m2","m3","trend","time2problem","light","floor","gripper","edgeORboundary"
-19,0.941222588,0.45358978,0.923139064,same trend,5999999,none,none,gripper , 
-20,0.946077607,0.446072858,0.921172785,same trend,5999998,none,none,gripper , 
-21,0.950297731,0.446312124,0.915595455,same trend,5999997,none,none,gripper , 
-22,0.946530462,0.455324658,0.911723179,same trend,5999996,none,none,gripper , 
-23,0.953063541,0.447460966,0.907060905,same trend,5999995,none,none,gripper , 
-24,0.951177304,0.454955995,0.905253394,new trend,75,none,none,gripper ,b
-25,0.952877419,0.445294356,0.902632033,same trend,74,none,none,gripper , 
-26,0.947725039,0.457332754,0.900756268,same trend,73,none,none,gripper , 
-27,0.955524449,0.458021044,0.897893891,same trend,72,none,none,gripper , 
-28,0.939300179,0.448839283,0.893961279,same trend,71,none,none,gripper , 
-29,0.952225489,0.459625552,0.891090362,same trend,70,none,none,gripper , 
-30,0.956015075,0.453414265,0.887885223,same trend,69,none,none,gripper , 
-31,0.949248675,0.443749836,0.885933268,same trend,68,none,none,gripper , 
-32,0.948802496,0.463177435,0.883217548,same trend,67,none,none,gripper , 
-33,0.947633517,0.447497567,0.879498421,same trend,66,none,none,gripper , 
-34,0.956376735,0.451772365,0.874497323,same trend,65,none,none,gripper , 
-35,0.954872369,0.445266584,0.87231417,same trend,64,none,none,gripper , 
-36,0.950075297,0.457965104,0.869318738,same trend,63,none,none,gripper , 
-37,0.953396891,0.452380149,0.865857117,same trend,62,none,none,gripper , 
-38,0.94537143,0.454002456,0.862373084,same trend,61,none,none,gripper , 
-39,0.949066741,0.453634761,0.85831981,same trend,60,none,none,gripper , 
-40,0.952072005,0.455886007,0.855237516,same trend,59,none,none,gripper , 
-41,0.934094647,0.451386953,0.851898705,same trend,58,none,none,gripper , 
-42,0.954565634,0.44807324,0.848973817,same trend,57,none,none,gripper , 
-43,0.953628876,0.448695799,0.845029815,same trend,56,none,none,gripper , 
-44,0.964550393,0.454688316,0.842135444,same trend,55,none,none,gripper , 
-45,0.950648563,0.437328039,0.838337623,same trend,54,none,none,gripper , 
-46,0.946965773,0.446645776,0.835220261,same trend,53,none,none,gripper , 
-47,0.943547058,0.446316421,0.831875493,same trend,52,none,none,gripper , 
-48,0.947196391,0.443390619,0.827806249,same trend,51,none,none,gripper , 
-49,0.943397292,0.456880146,0.82394132,same trend,50,none,none,gripper , 
-50,0.94525088,0.442345362,0.81992234,same trend,49,none,none,gripper , 
-51,0.949782163,0.455144246,0.816613339,same trend,48,none,none,gripper , 
-52,0.942373739,0.447905006,0.814094427,same trend,47,none,none,gripper , 
-53,0.951426323,0.457833126,0.812159293,same trend,46,none,none,gripper , 
-54,0.953763441,0.451022314,0.808857972,same trend,45,none,none,gripper , 
-55,0.942650864,0.450241238,0.806637462,same trend,44,none,none,gripper , 
-56,0.945369006,0.458920191,0.803186362,same trend,43,none,none,gripper , 
-57,0.948799418,0.448837248,0.800342106,same trend,42,none,none,gripper , 
-58,0.951983167,0.454918626,0.797814714,same trend,41,none,none,gripper , 
-59,0.950818304,0.443630859,0.79472012,same trend,40,none,none,gripper , 
-60,0.958438224,0.456904267,0.790870628,same trend,39,none,none,gripper , 
-61,0.947372203,0.453931361,0.785308416,same trend,38,none,none,gripper , 
-62,0.953128492,0.454518715,0.783344906,same trend,37,none,none,gripper , 
-63,0.950949794,0.451641823,0.779319732,same trend,36,none,none,gripper , 
-64,0.95508233,0.448288501,0.776328921,same trend,35,none,none,gripper , 
-65,0.945286285,0.445112877,0.772810805,same trend,34,none,none,gripper , 
-66,0.944214087,0.442555861,0.771281388,same trend,33,none,none,gripper , 
-67,0.947083858,0.447218073,0.768919585,same trend,32,none,none,gripper , 
-68,0.952243473,0.453454683,0.765981868,same trend,31,none,none,gripper , 
-69,0.938393843,0.441535641,0.763071802,same trend,30,none,none,gripper , 
-70,0.956940983,0.442641112,0.760194139,same trend,29,none,none,gripper , 
-71,0.950997459,0.456351405,0.757387634,same trend,28,none,none,gripper , 
-72,0.948022991,0.452496031,0.755892229,same trend,27,none,none,gripper , 
-73,0.950333185,0.444261522,0.752453312,same trend,26,none,none,gripper , 
-74,0.943172829,0.454744696,0.748672268,same trend,25,none,none,gripper , 
-75,0.945455307,0.4461019,0.749068833,same trend,24,none,none,gripper , 
-76,0.952794083,0.453608176,0.745473603,same trend,23,none,none,gripper , 
-77,0.940435997,0.446486279,0.741940951,same trend,22,none,none,gripper , 
-78,0.947405145,0.450997349,0.737669279,same trend,21,none,none,gripper , 
-79,0.946003749,0.456455665,0.73497536,same trend,20,none,none,gripper , 
-80,0.953430035,0.447822024,0.73225358,same trend,19,none,none,gripper , 
-81,0.958371771,0.446324659,0.728350814,same trend,18,none,none,gripper , 
-82,0.953735617,0.453446877,0.725506796,same trend,17,none,none,gripper , 
-83,0.95151678,0.450342649,0.721640674,same trend,16,none,none,gripper , 
-84,0.950899438,0.452651552,0.717065345,same trend,15,none,none,gripper , 
-85,0.948095771,0.454154447,0.714524384,same trend,14,none,none,gripper , 
-86,0.941183967,0.450063262,0.709421686,same trend,13,none,none,gripper , 
-87,0.933621084,0.447352993,0.707446652,same trend,12,none,none,gripper , 
-88,0.930304406,0.450358014,0.703183914,same trend,11,none,none,gripper , 
-89,0.929535898,0.449236855,0.700346478,same trend,10,none,none,gripper , 
-90,0.924532477,0.448854305,0.69620078,same trend,9,lighting ,none,gripper , 
-91,0.920489637,0.443270629,0.691617201,new trend,0,lighting ,none,gripper ,b
-92,0.917376918,0.446113117,0.688342737,same trend,-1,lighting ,none,gripper , 
-93,0.914643876,0.446077419,0.685174176,same trend,-2,lighting ,none,gripper , 
-94,0.91228246,0.44853846,0.680962764,same trend,-3,lighting ,none,gripper , 
-95,0.908871531,0.454517266,0.677240142,same trend,-4,lighting ,none,gripper , 
-96,0.909319626,0.454225953,0.672801061,same trend,-5,lighting ,none,gripper , 
-97,0.907003966,0.448123878,0.669983297,same trend,-6,lighting ,none,gripper , 
-98,0.903122907,0.447652963,0.668068025,same trend,-7,lighting ,none,gripper , 
-99,0.900327241,0.452075633,0.665853219,same trend,-8,lighting ,none,gripper , 
-100,0.895630995,0.453849662,0.662689089,same trend,-9,lighting ,none,gripper , 
-101,0.890280888,0.455535775,0.658609077,same trend,-10,lighting ,none,gripper , 
-102,0.888746687,0.446931987,0.655734711,same trend,-11,lighting ,none,gripper , 
-103,0.887271604,0.449293829,0.650663727,same trend,-12,lighting ,none,gripper , 
-104,0.885464969,0.459472053,0.647546469,same trend,-13,lighting ,none,gripper , 
-105,0.882595827,0.446267445,0.644279396,same trend,-14,lighting ,none,gripper , 
-106,0.8753908,0.454348173,0.642480089,same trend,-15,lighting ,none,gripper , 
-107,0.869769417,0.454975835,0.640353197,same trend,-16,lighting ,none,gripper , 
-108,0.86602488,0.451414656,0.63773512,same trend,-17,lighting ,none,gripper , 
-109,0.866437842,0.444259214,0.635571969,same trend,-18,lighting ,none,gripper , 
-110,0.863012192,0.44650466,0.631266441,same trend,-19,lighting ,none,gripper , 
-111,0.85604249,0.445482418,0.627043616,same trend,-20,lighting ,none,gripper , 
-112,0.855207736,0.456100646,0.623633506,same trend,-21,lighting ,none,gripper , 
-113,0.853579586,0.451769692,0.619041702,same trend,-22,lighting ,none,gripper , 
-114,0.848022963,0.454206665,0.61580844,same trend,-23,lighting ,none,gripper , 
-115,0.841868457,0.447056861,0.613444123,same trend,-24,lighting ,none,gripper , 
-116,0.836992011,0.443487581,0.61013418,same trend,-25,lighting ,none,gripper , 
-117,0.832156997,0.451336038,0.608466212,same trend,-26,lighting ,none,gripper , 
-118,0.828060991,0.445550385,0.605655126,same trend,-27,lighting ,none,gripper , 
-119,0.821423849,0.443927393,0.604375318,same trend,-28,lighting ,none,gripper , 
-120,0.817495929,0.437096021,0.601712822,same trend,-29,lighting ,none,gripper , 
-121,0.811097768,0.448713209,0.599940523,same trend,-30,lighting ,none,gripper , 
-122,0.808930262,0.456218525,0.596832157,same trend,-31,lighting ,none,gripper , 
-123,0.804988703,0.448347443,0.59352599,same trend,-32,lighting ,none,gripper , 
-124,0.800448728,0.452203653,0.592044396,same trend,-33,lighting ,none,gripper , 
-125,0.798319628,0.454021506,0.587526227,same trend,-34,lighting ,none,gripper , 
-126,0.794898066,0.457937261,0.585049056,same trend,-35,lighting ,none,gripper , 
-127,0.791928247,0.441066123,0.583785797,same trend,-36,lighting ,none,gripper , 
-128,0.786449825,0.454637958,0.581556807,same trend,-37,lighting ,none,gripper , 
-129,0.786896875,0.450035477,0.579589184,same trend,-38,lighting ,none,gripper , 
-130,0.782567423,0.453904511,0.57501949,same trend,-39,lighting ,none,gripper , 
-131,0.778837049,0.44770914,0.570363672,same trend,-40,lighting ,none,gripper , 
-132,0.776513225,0.439879922,0.567807567,same trend,-41,lighting ,none,gripper , 
-133,0.775130014,0.450517829,0.564447446,same trend,-42,lighting ,none,gripper , 
-134,0.773153842,0.448069133,0.562106872,same trend,-43,lighting ,none,gripper , 
-135,0.771026367,0.453071762,0.559138586,same trend,-44,lighting ,none,gripper , 
-136,0.76869947,0.4393208,0.555603256,same trend,-45,lighting ,none,gripper , 
-137,0.765253189,0.443063081,0.552575851,same trend,-46,lighting ,none,gripper , 
-138,0.756921944,0.448545327,0.548870526,same trend,-47,lighting ,none,gripper , 
-139,0.752017732,0.448156832,0.546525716,same trend,-48,lighting ,none,gripper , 
-140,0.747549647,0.452593927,0.542734676,same trend,-49,lighting ,none,gripper , 
-141,0.744728418,0.438826898,0.540312529,same trend,-50,lighting ,none,gripper , 
-142,0.7399439,0.444258957,0.536404725,same trend,-51,lighting ,none,gripper , 
-143,0.735747276,0.437304443,0.533205626,same trend,-52,lighting ,none,gripper , 
-144,0.735503868,0.445313349,0.529459275,same trend,-53,lighting ,none,gripper , 
-145,0.732409555,0.448326798,0.526358091,same trend,-54,lighting ,none,gripper , 
-146,0.728538807,0.457471646,0.52145133,same trend,-55,lighting ,none,gripper , 
-147,0.725254514,0.448509349,0.516545886,same trend,-56,lighting ,none,gripper , 
-148,0.720961178,0.456794796,0.513834919,same trend,-57,lighting ,none,gripper , 
-149,0.714761411,0.449156866,0.510636905,same trend,-58,lighting ,none,gripper , 
-150,0.710389382,0.445108363,0.507646806,same trend,-59,lighting ,none,gripper , 
-151,0.708129804,0.448291889,0.503927862,same trend,-60,lighting ,none,gripper , 
-152,0.703146687,0.452817856,0.502435821,same trend,-61,lighting ,none,gripper , 
-153,0.699625416,0.445537617,0.499424124,same trend,-62,lighting ,none,gripper , 
-154,0.698124305,0.454531726,0.496884075,same trend,-63,lighting ,none,gripper , 
-155,0.696056937,0.458065984,0.49341072,same trend,-64,lighting ,none,gripper , 
-156,0.689418258,0.448373603,0.491493531,same trend,-65,lighting ,none,gripper , 
-157,0.686121602,0.45109433,0.489032223,same trend,-66,lighting ,none,gripper , 
-158,0.683742115,0.446526983,0.486312539,same trend,-67,lighting ,none,gripper , 
-159,0.681977888,0.452711091,0.481159182,same trend,-68,lighting ,none,gripper , 
-160,0.679373323,0.446077446,0.47855186,same trend,-69,lighting ,none,gripper , 
-161,0.67614732,0.457045254,0.47803053,same trend,-70,lighting ,none,gripper , 
-162,0.671873599,0.449856895,0.475164871,same trend,-71,lighting ,none,gripper , 
-163,0.667288645,0.451491184,0.471975643,same trend,-72,lighting ,none,gripper , 
-164,0.662232041,0.45058241,0.468035579,same trend,-73,lighting ,none,gripper , 
-165,0.659993634,0.449095295,0.466196979,same trend,-74,lighting ,none,gripper , 
-166,0.651592907,0.448604419,0.462891816,same trend,-75,lighting ,none,gripper , 
-167,0.646815701,0.449575307,0.460043083,same trend,-76,lighting ,none,gripper , 
-168,0.640877713,0.458022049,0.456738169,same trend,-77,lighting ,none,gripper , 
-169,0.637544685,0.448630543,0.455245446,same trend,-78,lighting ,none,gripper , 
-170,0.633694914,0.442686374,0.452239639,same trend,-79,lighting ,none,gripper , 
-171,0.631621521,0.456379453,0.450086689,same trend,-80,lighting ,none,gripper , 
-172,0.630208506,0.445599494,0.448447227,same trend,-81,lighting ,none,gripper , 
-173,0.625736918,0.454262971,0.444908415,same trend,-82,lighting ,none,gripper , 
-174,0.623194365,0.454383824,0.441139212,same trend,-83,lighting ,none,gripper , 
-175,0.616051783,0.456796042,0.437721434,same trend,-84,lighting ,none,gripper , 
-176,0.614466021,0.449270263,0.433798079,same trend,-85,lighting ,none,gripper , 
-177,0.609739614,0.444219692,0.431112238,same trend,-86,lighting ,none,gripper , 
-178,0.601049225,0.46131891,0.429580003,same trend,-87,lighting ,none,gripper , 
-179,0.599671128,0.446361422,0.426525347,same trend,-88,lighting ,none,gripper , 
-180,0.597095749,0.453148127,0.425221833,same trend,-89,lighting ,none,gripper , 
-181,0.590809735,0.457524232,0.422750296,same trend,-90,lighting ,none,gripper , 
-182,0.588047373,0.449858583,0.418947587,same trend,-91,lighting ,none,gripper , 
-183,0.585407308,0.458327661,0.41704817,same trend,-92,lighting ,none,gripper , 
-184,0.580870127,0.449595015,0.413834253,same trend,-93,lighting ,none,gripper , 
-185,0.576160976,0.447093542,0.411279484,same trend,-94,lighting ,none,gripper , 
-186,0.570292159,0.445441587,0.406779038,same trend,-95,lighting ,none,gripper , 
-187,0.564534446,0.454573044,0.402476668,same trend,-96,lighting ,none,gripper , 
-188,0.561154759,0.448485786,0.4,same trend,-97,lighting ,none,gripper , 
-189,0.560989286,0.449658086,0.400108688,same trend,-98,lighting ,none,gripper , 
-190,0.560548626,0.450742098,0.399156511,same trend,-99,lighting ,none,gripper , 
-191,0.554339695,0.457459326,0.400185395,same trend,-100,lighting ,none,gripper , 
-192,0.552160532,0.451149812,0.39935944,same trend,-101,lighting ,none,gripper , 
-193,0.546600381,0.442198467,0.400026737,same trend,-102,lighting ,none,gripper , 
-194,0.541203497,0.452118893,0.400392534,same trend,-103,lighting ,none,gripper , 
-195,0.536487188,0.445074571,0.399527485,same trend,-104,lighting ,none,gripper , 
-196,0.532034847,0.446963499,0.399180557,same trend,-105,lighting ,none,gripper , 
-197,0.530113755,0.457291725,0.399287486,new trend,0,lighting ,none,gripper ,e
-198,0.522001877,0.443255449,0.399723268,same trend,-1,lighting ,none,gripper , 
-199,0.51669808,0.446930478,0.399994104,same trend,-2,lighting ,none,gripper , 
-200,0.514583202,0.454067092,0.399098023,same trend,-3,lighting ,none,gripper , 
-201,0.512212967,0.443187219,0.400769107,same trend,-4,lighting ,none,gripper , 
-202,0.510504149,0.453647486,0.399999843,same trend,-5,lighting ,none,gripper , 
-203,0.504547671,0.4490793,0.400522803,same trend,-6,lighting ,none,gripper , 
-204,0.501962335,0.453549201,0.400324351,same trend,-7,lighting ,none,gripper , 
-205,0.50160119,0.444508472,0.398838886,same trend,-8,lighting ,none,gripper , 
-206,0.501407187,0.452115317,0.400118103,same trend,-9,lighting ,none,gripper , 
-207,0.497225348,0.453430129,0.399445329,same trend,-10,lighting ,none,gripper , 
-208,0.494637968,0.450151693,0.399876258,same trend,-11,lighting ,none,gripper , 
-209,0.49360577,0.44650087,0.399856446,same trend,-12,lighting ,none,gripper , 
-210,0.490103134,0.441718724,0.399600516,same trend,-13,lighting ,none,gripper , 
-211,0.488967144,0.444687211,0.400794457,same trend,-14,lighting ,none,gripper , 
-212,0.482709233,0.445366254,0.400126207,same trend,-15,lighting ,none,gripper , 
-213,0.480308361,0.446765407,0.399212311,same trend,-16,lighting ,none,gripper , 
-214,0.476161055,0.447558859,0.400172416,same trend,-17,lighting ,none,gripper , 
-215,0.474951672,0.452318694,0.400332843,same trend,-18,lighting ,none,gripper , 
-216,0.473229587,0.445653253,0.399465198,same trend,-19,lighting ,none,gripper , 
-217,0.474875326,0.446289443,0.400441736,same trend,-20,lighting ,none,gripper , 
-218,0.473045986,0.444873861,0.399585923,same trend,-21,lighting ,none,gripper , 
-219,0.467096679,0.448502401,0.399607948,same trend,-22,lighting ,none,gripper , 
-220,0.464577321,0.457702543,0.40011286,same trend,-23,lighting ,none,gripper , 
-221,0.46065207,0.438148988,0.399786906,same trend,-24,lighting ,none,gripper , 
-222,0.456281689,0.441455282,0.400391806,same trend,-25,lighting ,none,gripper , 
-223,0.453550602,0.452262713,0.40048649,same trend,-26,lighting ,none,gripper , 
-224,0.448430707,0.449957105,0.399207343,same trend,-27,lighting ,none,gripper , 
-225,0.444703245,0.455495578,0.400088115,same trend,-28,lighting ,none,gripper , 
-226,0.44004572,0.461548913,0.399612315,same trend,-29,lighting ,none,gripper , 
-227,0.435516421,0.449057931,0.400215912,same trend,-30,lighting ,none,gripper , 
-228,0.433370004,0.456158584,0.399698043,same trend,-31,lighting ,none,gripper , 
-229,0.431181814,0.445722104,0.400477885,same trend,-32,lighting ,none,gripper , 
-230,0.430315918,0.453219509,0.401355711,same trend,-33,lighting ,none,gripper , 
-231,0.429364112,0.444003046,0.399624468,same trend,-34,lighting ,none,gripper , 
-232,0.422524475,0.448535473,0.399324184,same trend,-35,lighting ,none,gripper , 
-233,0.419502257,0.446071365,0.400417002,same trend,-36,lighting ,none,gripper , 
-234,0.415687695,0.448817077,0.399908863,same trend,-37,lighting ,none,gripper , 
-235,0.410122315,0.445884581,0.399880486,same trend,-38,lighting ,none,gripper , 
-236,0.408355945,0.449200188,0.400354711,same trend,-39,lighting ,none,gripper , 
-237,0.40446241,0.446739722,0.399640725,same trend,-40,lighting ,none,gripper , 
-238,0.403528023,0.453545991,0.399452861,same trend,-41,lighting ,none,gripper , 
-239,0.394876426,0.453608839,0.399788673,same trend,-42,lighting ,none,gripper , 
-240,0.389451621,0.452875319,0.400663244,same trend,-43,lighting ,none,gripper , 
-241,0.40985159,0.447130036,0.399682053,same trend,-44,lighting ,none,gripper , 
-242,0.390346505,0.449324152,0.399934176,same trend,-45,lighting ,none,gripper , 
-243,0.401470928,0.448088998,0.39987968,same trend,-46,lighting ,none,gripper , 
-244,0.391216239,0.442735154,0.400328216,same trend,-47,lighting ,none,gripper , 
-245,0.393020497,0.453541108,0.400140506,same trend,-48,lighting ,none,gripper , 
-246,0.400084105,0.451926192,0.399334083,same trend,-49,lighting ,none,gripper , 
-247,0.39465048,0.452089051,0.40027805,same trend,-50,lighting ,none,gripper , 
-248,0.391938978,0.44808901,0.40097605,same trend,-51,lighting ,none,gripper , 
-249,0.410614032,0.445251791,0.400715736,new trend,0,lighting ,none,gripper ,e
+"time","m1","m2","m3","trend","time2problem","lightOutTypical","floorOutTypical","gripperOutTypical","edgeORboundary","light","floor","gripper"
+18,0.952038863,0.450013851,0.924012897,same trend,5999999,none,none,gripperOut , ,none,none,none
+19,0.957466576,0.444384982,0.921542132,same trend,5999998,none,none,gripperOut , ,none,none,none
+20,0.938140999,0.4569758,0.91942245,new trend,57,none,none,gripperOut ,b,none,none,gripper 
+21,0.938511482,0.46369923,0.917653326,same trend,56,none,none,gripperOut , ,none,none,none
+22,0.981596216,0.459817829,0.91521602,same trend,55,lightingOut ,none,gripperOut , ,none,none,none
+23,0.944336495,0.465599194,0.91169013,same trend,54,none,none,gripperOut , ,none,none,none
+24,0.961578786,0.459905774,0.908273413,same trend,53,none,none,gripperOut , ,none,none,none
+25,0.950902795,0.448786778,0.905257052,same trend,52,none,none,gripperOut , ,none,none,none
+26,0.965023341,0.446223515,0.901271608,same trend,51,none,none,gripperOut , ,none,none,none
+27,0.954158522,0.458050535,0.897688148,same trend,50,none,none,gripperOut , ,none,none,none
+28,0.968247557,0.450781196,0.895269402,same trend,49,none,none,gripperOut , ,none,none,none
+29,0.970388825,0.45405265,0.891914566,same trend,48,none,none,gripperOut , ,none,none,none
+30,0.954080581,0.451529721,0.888646193,same trend,47,none,none,gripperOut , ,none,none,none
+31,0.971742479,0.454068016,0.885314385,same trend,46,none,none,gripperOut , ,none,none,none
+32,0.952949753,0.462104257,0.881932015,same trend,45,none,none,gripperOut , ,none,none,none
+33,0.956964741,0.457788679,0.879198565,same trend,44,none,none,gripperOut , ,none,none,none
+34,0.963578893,0.447267878,0.875085984,same trend,43,none,none,gripperOut , ,none,none,none
+35,0.939351613,0.441131453,0.871762006,same trend,42,none,none,gripperOut , ,none,none,none
+36,0.943684988,0.444219985,0.870240134,same trend,41,none,none,gripperOut , ,none,none,none
+37,0.946832329,0.469084512,0.867690941,same trend,40,none,none,gripperOut , ,none,none,none
+38,0.951929594,0.447718694,0.863839475,same trend,39,none,none,gripperOut , ,none,none,none
+39,0.955598541,0.460189166,0.862009388,same trend,38,none,none,gripperOut , ,none,none,none
+40,0.942197709,0.437693613,0.861218177,same trend,37,none,none,gripperOut , ,none,none,none
+41,0.951756633,0.449393551,0.858305808,same trend,36,none,none,gripperOut , ,none,none,none
+42,0.947577202,0.473168635,0.854766083,same trend,35,none,none,gripperOut , ,none,none,none
+43,0.961544256,0.450918616,0.852686561,same trend,34,none,none,gripperOut , ,none,none,none
+44,0.954560666,0.456016467,0.848377525,same trend,33,none,none,gripperOut , ,none,none,none
+45,0.937861407,0.447385891,0.845568176,same trend,32,none,none,gripperOut , ,none,none,none
+46,0.952835135,0.460955607,0.844188572,same trend,31,none,none,gripperOut , ,none,none,none
+47,0.953799412,0.454362319,0.838695696,same trend,30,none,none,gripperOut , ,none,none,none
+48,0.93427482,0.439822565,0.835947516,same trend,29,none,none,gripperOut , ,none,none,none
+49,0.952249886,0.476233564,0.833579237,same trend,28,none,floor frictionOut ,gripperOut , ,none,none,none
+50,0.967291272,0.444492585,0.829325668,same trend,27,none,none,gripperOut , ,none,none,none
+51,0.956392192,0.449903079,0.826736381,same trend,26,none,none,gripperOut , ,none,none,none
+52,0.928576087,0.454284023,0.824195963,same trend,25,none,none,gripperOut , ,none,none,none
+53,0.962762516,0.451506205,0.82133406,same trend,24,none,none,gripperOut , ,none,none,none
+54,0.96432434,0.44517279,0.819416245,same trend,23,none,none,gripperOut , ,none,none,none
+55,0.960775767,0.444090171,0.816252003,same trend,22,none,none,gripperOut , ,none,none,none
+56,0.965684956,0.441510494,0.813589514,same trend,21,none,none,gripperOut , ,none,none,none
+57,0.953392233,0.456319797,0.813297655,same trend,20,none,none,gripperOut , ,none,none,none
+58,0.941732659,0.449001844,0.811329662,same trend,19,none,none,gripperOut , ,none,none,none
+59,0.947544794,0.446958128,0.807311038,same trend,18,none,none,gripperOut , ,none,none,none
+60,0.952209101,0.436651586,0.805038522,same trend,17,none,none,gripperOut , ,none,none,none
+61,0.966736198,0.449769654,0.801175634,same trend,16,none,none,gripperOut , ,none,none,none
+62,0.954654175,0.455709302,0.796920348,same trend,15,none,none,gripperOut , ,none,none,none
+63,0.936650195,0.451989316,0.793711887,same trend,14,none,none,gripperOut , ,none,none,none
+64,0.951698274,0.458669276,0.791066561,same trend,13,none,none,gripperOut , ,none,none,none
+65,0.955096839,0.457040398,0.789500922,same trend,12,none,none,gripperOut , ,none,none,none
+66,0.952005184,0.455593297,0.784627885,same trend,11,none,none,gripperOut , ,none,none,none
+67,0.95396933,0.455974179,0.780995149,same trend,10,none,none,gripperOut , ,none,none,none
+68,0.956519498,0.435877352,0.777015884,same trend,9,none,none,gripperOut , ,none,none,none
+69,0.97113683,0.456227406,0.77460053,same trend,8,none,none,gripperOut , ,none,none,none
+70,0.953655355,0.445696738,0.771401861,same trend,7,none,none,gripperOut , ,none,none,none
+71,0.963295698,0.443717328,0.76782615,same trend,6,none,none,gripperOut , ,none,none,none
+72,0.953282866,0.466921954,0.764330395,same trend,5,none,none,gripperOut , ,none,none,none
+73,0.948494957,0.45364253,0.760949318,same trend,4,none,none,gripperOut , ,none,none,none
+74,0.967182579,0.44330692,0.757972567,same trend,3,none,none,gripperOut , ,none,none,none
+75,0.93170533,0.46984186,0.755347353,same trend,2,none,none,gripperOut , ,none,none,none
+76,0.939009417,0.442988968,0.75050861,same trend,1,none,none,gripperOut , ,none,none,none
+77,0.947584424,0.452285695,0.746115628,same trend,0,none,none,gripperOut , ,none,none,none
+78,0.941464163,0.457746218,0.743900197,same trend,-1,none,none,gripperOut , ,none,none,none
+79,0.943081221,0.439868797,0.740708366,same trend,-2,none,none,gripperOut , ,none,none,none
+80,0.946453985,0.450445626,0.73746247,same trend,-3,none,none,gripperOut , ,none,none,none
+81,0.942046593,0.469732278,0.734512542,same trend,-4,none,none,gripperOut , ,none,none,none
+82,0.961302931,0.456896129,0.73040889,same trend,-5,none,none,gripperOut , ,none,none,none
+83,0.950160613,0.442341544,0.72704408,same trend,-6,none,none,gripperOut , ,none,none,none
+84,0.937993708,0.469661413,0.725200622,same trend,-7,none,none,gripperOut , ,none,none,none
+85,0.953201312,0.462874834,0.723524815,same trend,-8,none,none,gripperOut , ,none,none,none
+86,0.959499615,0.438664587,0.72152947,same trend,-9,none,none,gripperOut , ,none,none,none
+87,0.935756793,0.440922279,0.719238407,same trend,-10,none,none,gripperOut , ,none,none,none
+88,0.946105967,0.444831514,0.716661693,same trend,-11,none,none,gripperOut , ,none,none,none
+89,0.945127591,0.454500902,0.712275503,same trend,-12,none,none,gripperOut , ,none,none,none
+90,0.967659805,0.436312178,0.709664667,same trend,-13,none,none,gripperOut , ,none,none,none
+91,0.951993073,0.463226749,0.707626121,same trend,-14,none,none,gripperOut , ,none,none,none
+92,0.943363835,0.451347967,0.703650493,same trend,-15,none,none,gripperOut , ,none,none,none
+93,0.949342873,0.463437747,0.699888071,same trend,-16,none,none,gripperOut , ,none,none,none
+94,0.949128229,0.45917297,0.696686281,same trend,-17,none,none,gripperOut , ,none,none,none
+95,0.961343974,0.440994222,0.693366344,same trend,-18,none,none,gripperOut , ,none,none,none
+96,0.933014205,0.458843862,0.68969062,same trend,-19,none,none,gripperOut , ,none,none,none
+97,0.938731437,0.475764846,0.688000756,same trend,-20,none,floor frictionOut ,gripperOut , ,none,none,none
+98,0.947021292,0.464716834,0.686079156,same trend,-21,none,none,gripperOut , ,none,none,none
+99,0.961897112,0.457845137,0.684035477,same trend,-22,none,none,gripperOut , ,none,none,none
+100,0.942429303,0.450025989,0.679718441,same trend,-23,none,none,gripperOut , ,none,none,none
+101,0.957678586,0.467490991,0.677275778,same trend,-24,none,none,gripperOut , ,none,none,none
+102,0.9396967,0.440023987,0.675116202,same trend,-25,none,none,gripperOut , ,none,none,none
+103,0.961664419,0.460678748,0.671527052,same trend,-26,none,none,gripperOut , ,none,none,none
+104,0.937086788,0.440416554,0.66885891,same trend,-27,none,none,gripperOut , ,none,none,none
+105,0.964708701,0.444669075,0.666923518,same trend,-28,none,none,gripperOut , ,none,none,none
+106,0.949285713,0.434744609,0.663493671,same trend,-29,none,none,gripperOut , ,none,none,none
+107,0.962941223,0.457963415,0.661140244,same trend,-30,none,none,gripperOut , ,none,none,none
+108,0.932468192,0.459683721,0.659258131,same trend,-31,none,none,gripperOut , ,none,none,none
+109,0.943396735,0.458106798,0.657058748,same trend,-32,none,none,gripperOut , ,none,none,none
+110,0.959610103,0.465261306,0.654666414,same trend,-33,none,none,gripperOut , ,none,none,none
+111,0.95328077,0.448199644,0.650510769,same trend,-34,none,none,gripperOut , ,none,none,none
+112,0.948295472,0.44459126,0.647853204,same trend,-35,none,none,gripperOut , ,none,none,none
+113,0.965664429,0.460132835,0.644684192,same trend,-36,none,none,gripperOut , ,none,none,none
+114,0.958513241,0.438683393,0.642276688,same trend,-37,none,none,gripperOut , ,none,none,none
+115,0.947263722,0.438724435,0.639066879,same trend,-38,none,none,gripperOut , ,none,none,none
+116,0.956795203,0.44896013,0.638085408,same trend,-39,none,none,gripperOut , ,none,none,none
+117,0.946369241,0.466829997,0.637567432,same trend,-40,none,none,gripperOut , ,none,none,none
+118,0.951565139,0.450180045,0.633235881,same trend,-41,none,none,gripperOut , ,none,none,none
+119,0.937601256,0.431694436,0.631692625,same trend,-42,none,none,gripperOut , ,none,none,none
+120,0.949626531,0.467100407,0.631020412,same trend,-43,none,none,gripperOut , ,none,none,none
+121,0.93521484,0.4487334,0.628112069,same trend,-44,none,none,gripperOut , ,none,none,none
+122,0.953961237,0.441221892,0.624739563,same trend,-45,none,none,gripperOut , ,none,none,none
+123,0.945616767,0.422662111,0.622647161,same trend,-46,none,floor frictionOut ,gripperOut , ,none,none,none
+124,0.955989674,0.433501759,0.619500283,same trend,-47,none,none,gripperOut , ,none,none,none
+125,0.938353884,0.453515417,0.61564123,same trend,-48,none,none,gripperOut , ,none,none,none
+126,0.971852301,0.437092599,0.61082634,same trend,-49,none,none,gripperOut , ,none,none,none
+127,0.953299954,0.432112623,0.606308329,same trend,-50,none,none,gripperOut , ,none,none,none
+128,0.93854253,0.445567707,0.602576708,same trend,-51,none,none,gripperOut , ,none,none,none
+129,0.963349582,0.443473848,0.597436149,same trend,-52,none,none,gripperOut , ,none,none,none
+130,0.952250473,0.454447362,0.594558952,same trend,-53,none,none,gripperOut , ,none,none,none
+131,0.942345827,0.454623498,0.589148606,same trend,-54,none,none,gripperOut , ,none,none,none
+132,0.961518455,0.450747805,0.585190941,same trend,-55,none,none,gripperOut , ,none,none,none
+133,0.950850803,0.435278632,0.583979921,same trend,-56,none,none,gripperOut , ,none,none,none
+134,0.937514297,0.45327567,0.582177988,same trend,-57,none,none,gripperOut , ,none,none,none
+135,0.958916403,0.455501002,0.579431068,same trend,-58,none,none,gripperOut , ,none,none,none
+136,0.942451586,0.430295797,0.575649259,same trend,-59,none,none,gripperOut , ,none,none,none
+137,0.957562023,0.445249104,0.574044145,same trend,-60,none,none,gripperOut , ,none,none,none
+138,0.942525808,0.466611235,0.570792415,same trend,-61,none,none,gripperOut , ,none,none,none
+139,0.957893341,0.450495062,0.566519315,same trend,-62,none,none,gripperOut , ,none,none,none
+140,0.950339729,0.457831528,0.560372168,same trend,-63,none,none,gripperOut , ,none,none,none
+141,0.963929169,0.447919739,0.556180624,same trend,-64,none,none,gripperOut , ,none,none,none
+142,0.952870884,0.451223525,0.551603353,same trend,-65,none,none,gripperOut , ,none,none,none
+143,0.975226477,0.463601638,0.548156677,same trend,-66,lightingOut ,none,gripperOut , ,none,none,none
+144,0.969013558,0.459103339,0.543147951,same trend,-67,none,none,gripperOut , ,none,none,none
+145,0.943770143,0.435407393,0.538944341,same trend,-68,none,none,gripperOut , ,none,none,none
+146,0.94864747,0.437303044,0.534374582,same trend,-69,none,none,gripperOut , ,none,none,none
+147,0.95126986,0.456866111,0.532289075,same trend,-70,none,none,gripperOut , ,none,none,none
+148,0.936244922,0.445151395,0.527385078,same trend,-71,none,none,gripperOut , ,none,none,none
+149,0.955453313,0.448039224,0.523434266,same trend,-72,none,none,gripperOut , ,none,none,none
+150,0.975092431,0.451340977,0.520063966,same trend,-73,lightingOut ,none,gripperOut , ,none,none,none
+151,0.965395993,0.455107114,0.518200023,same trend,-74,none,none,gripperOut , ,none,none,none
+152,0.946737995,0.466560016,0.515019891,same trend,-75,none,none,gripperOut , ,none,none,none
+153,0.957286555,0.450024485,0.51302291,same trend,-76,none,none,gripperOut , ,none,none,none
+154,0.933209701,0.446430201,0.509962756,same trend,-77,none,none,gripperOut , ,none,none,none
+155,0.96955753,0.453771574,0.508409374,same trend,-78,none,none,gripperOut , ,none,none,none
+156,0.947604158,0.420713648,0.504104911,same trend,-79,none,floor frictionOut ,gripperOut , ,none,none,none
+157,0.936238763,0.471904722,0.501314099,same trend,-80,none,none,gripperOut , ,none,none,none
+158,0.957361026,0.44247057,0.499019321,same trend,-81,none,none,gripperOut , ,none,none,none
+159,0.949986812,0.441573393,0.49576445,same trend,-82,none,none,gripperOut , ,none,none,none
+160,0.953623405,0.458477971,0.491814511,same trend,-83,none,none,gripperOut , ,none,none,none
+161,0.956355346,0.443882889,0.48854613,same trend,-84,none,none,gripperOut , ,none,none,none
+162,0.955683961,0.455551073,0.485949682,same trend,-85,none,none,gripperOut , ,none,none,none
+163,0.938953125,0.456415386,0.483296807,same trend,-86,none,none,gripperOut , ,none,none,none
+164,0.95529566,0.445201897,0.480205039,same trend,-87,none,none,gripperOut , ,none,none,none
+165,0.94241352,0.440601075,0.475898774,same trend,-88,none,none,gripperOut , ,none,none,none
+166,0.956210087,0.443628727,0.47343824,same trend,-89,none,none,gripperOut , ,none,none,none
+167,0.958525785,0.456053934,0.469961088,same trend,-90,none,none,gripperOut , ,none,none,none
+168,0.94751117,0.448996913,0.468718651,same trend,-91,none,none,gripperOut , ,none,none,none
+169,0.959081499,0.44175667,0.466441937,same trend,-92,none,none,gripperOut , ,none,none,none
+170,0.952292326,0.451363881,0.462149809,same trend,-93,none,none,gripperOut , ,none,none,none
+171,0.956901039,0.447832512,0.459469861,same trend,-94,none,none,gripperOut , ,none,none,none
+172,0.939964932,0.439226177,0.457333983,same trend,-95,none,none,gripperOut , ,none,none,none
+173,0.948163977,0.446648747,0.455001366,same trend,-96,none,none,gripperOut , ,none,none,none
+174,0.950502282,0.44219846,0.450804253,same trend,-97,none,none,gripperOut , ,none,none,none
+175,0.958857588,0.448332277,0.448228039,same trend,-98,none,none,gripperOut , ,none,none,none
+176,0.931317059,0.451639281,0.44495864,same trend,-99,none,none,gripperOut , ,none,none,none
+177,0.959185606,0.452091431,0.441386831,same trend,-100,none,none,gripperOut , ,none,none,none
+178,0.954540835,0.450814407,0.436850339,same trend,-101,none,none,gripperOut , ,none,none,none
+179,0.954118575,0.462881176,0.433780872,same trend,-102,none,none,gripperOut , ,none,none,none
+180,0.937374639,0.436084328,0.431468443,same trend,-103,none,none,gripperOut , ,none,none,none
+181,0.937365166,0.458986555,0.429305781,same trend,-104,none,none,gripperOut , ,none,none,none
+182,0.953852568,0.441145458,0.425572924,same trend,-105,none,none,gripperOut , ,none,none,none
+183,0.957600717,0.453339991,0.423878831,same trend,-106,none,none,gripperOut , ,none,none,none
+184,0.940074844,0.455275983,0.42175976,same trend,-107,none,none,gripperOut , ,none,none,none
+185,0.950771062,0.452727258,0.419696176,same trend,-108,none,none,gripperOut , ,none,none,none
+186,0.939078275,0.443205651,0.416548095,same trend,-109,none,none,gripperOut , ,none,none,none
+187,0.949591703,0.428838178,0.414529829,same trend,-110,none,none,gripperOut , ,none,none,none
+188,0.953868082,0.458538591,0.412744495,same trend,-111,none,none,gripperOut , ,none,none,none
+189,0.95279098,0.437448606,0.410064669,same trend,-112,none,none,gripperOut , ,none,none,none
+190,0.95493936,0.452545491,0.407632046,same trend,-113,none,none,gripperOut , ,none,none,none
+191,0.960898823,0.450982476,0.405136401,same trend,-114,none,none,gripperOut , ,none,none,none
+192,0.956600512,0.456747819,0.403025389,same trend,-115,none,none,gripperOut , ,none,none,none
+193,0.925317775,0.450728658,0.400631378,same trend,-116,lightingOut ,none,gripperOut , ,none,none,none
+194,0.953463231,0.449723427,0.4,same trend,-117,none,none,gripperOut , ,none,none,none
+195,0.938091374,0.470580921,0.400872302,same trend,-118,none,none,gripperOut , ,none,none,none
+196,0.938477759,0.460090975,0.386341309,same trend,-119,none,none,gripperOut , ,none,none,none
+197,0.960013849,0.443229685,0.392150042,same trend,-120,none,none,gripperOut , ,none,none,none
+198,0.951848284,0.45066506,0.40705383,same trend,-121,none,none,gripperOut , ,none,none,none
+199,0.949840519,0.442436397,0.381853527,same trend,-122,none,none,gripperOut , ,none,none,none
+200,0.967090807,0.44135345,0.396930713,same trend,-123,none,none,gripperOut , ,none,none,none
+201,0.97693078,0.463610354,0.396792776,same trend,-124,lightingOut ,none,gripperOut , ,none,none,none
+202,0.949625969,0.450040661,0.40496849,same trend,-125,none,none,gripperOut , ,none,none,none
+203,0.96066288,0.45917956,0.404526089,new trend,0,none,none,gripperOut ,e,none,none,gripper 
+204,0.962642193,0.439085245,0.3971224,same trend,-1,none,none,gripperOut , ,none,none,none
+205,0.961583045,0.446599172,0.41019254,same trend,-2,none,none,gripperOut , ,none,none,none
+206,0.94147616,0.451120926,0.396020774,same trend,-3,none,none,gripperOut , ,none,none,none
+207,0.942276711,0.460556233,0.389433879,same trend,-4,none,none,gripperOut , ,none,none,none
+208,0.942102628,0.455527687,0.405461426,same trend,-5,none,none,gripperOut , ,none,none,none
+209,0.930691542,0.452020017,0.412016067,same trend,-6,none,none,gripperOut , ,none,none,none
+210,0.944770612,0.4419726,0.390481884,new trend,0,none,none,gripperOut ,e,lighting ,none,none
+211,0.963963265,0.453685536,0.3994923,new trend,0,none,none,gripperOut ,e,lighting ,none,none
+212,0.949972777,0.433483838,0.404396807,same trend,-1,none,none,gripperOut , ,none,none,none
+213,0.945245265,0.462029231,0.406871404,same trend,-2,none,none,gripperOut , ,none,none,none
+214,0.957899651,0.467231841,0.399941777,same trend,-3,none,none,gripperOut , ,none,none,none
+215,0.932509588,0.456006746,0.398503235,same trend,-4,none,none,gripperOut , ,none,none,none
+216,0.941767577,0.455409852,0.401797672,same trend,-5,none,none,gripperOut , ,none,none,none
+217,0.9488997,0.442715904,0.405306036,same trend,-6,none,none,gripperOut , ,none,none,none
+218,0.941074643,0.456257715,0.407659479,same trend,-7,none,none,gripperOut , ,none,none,none
+219,0.936558409,0.433583299,0.395688843,same trend,-8,none,none,gripperOut , ,none,none,none
+220,0.930535608,0.445024571,0.404160437,same trend,-9,none,none,gripperOut , ,none,none,none
+221,0.945846272,0.449627997,0.398250153,same trend,-10,none,none,gripperOut , ,none,none,none
+222,0.962764806,0.454014353,0.404907344,same trend,-11,none,none,gripperOut , ,none,none,none
+223,0.954537901,0.464120493,0.405855489,same trend,-12,none,none,gripperOut , ,none,none,none
+224,0.950353114,0.43255967,0.406047075,same trend,-13,none,none,gripperOut , ,none,none,none
+225,0.960636863,0.459744382,0.390040808,same trend,-14,none,none,gripperOut , ,none,none,none
+226,0.962090702,0.443521367,0.400587749,same trend,-15,none,none,gripperOut , ,none,none,none
+227,0.9395322,0.438030391,0.384309087,same trend,-16,none,none,gripperOut , ,none,none,none
+228,0.946673028,0.451456032,0.398335641,same trend,-17,none,none,gripperOut , ,none,none,none
+229,0.947571779,0.430938,0.379876856,same trend,-18,none,none,gripperOut , ,none,none,none
+230,0.977123289,0.457435413,0.396842157,same trend,-19,lightingOut ,none,gripperOut , ,none,none,none
+231,0.962644906,0.461049077,0.405238234,same trend,-20,none,none,gripperOut , ,none,none,none
+232,0.942393592,0.459007376,0.408512364,same trend,-21,none,none,gripperOut , ,none,none,none
+233,0.951262238,0.446175761,0.401714831,same trend,-22,none,none,gripperOut , ,none,none,none
+234,0.949137125,0.464250268,0.386331199,same trend,-23,none,none,gripperOut , ,none,none,none
+235,0.957828804,0.447805024,0.405305662,same trend,-24,none,none,gripperOut , ,none,none,none
+236,0.960711981,0.451439607,0.395104521,same trend,-25,none,none,gripperOut , ,none,none,none
+237,0.953357464,0.448060085,0.392871261,same trend,-26,none,none,gripperOut , ,none,none,none
+238,0.935354965,0.434311025,0.408770438,same trend,-27,none,none,gripperOut , ,none,none,none
+239,0.961005765,0.458098721,0.391535324,same trend,-28,none,none,gripperOut , ,none,none,none
+240,0.944235607,0.463091539,0.395717916,same trend,-29,none,none,gripperOut , ,none,none,none
+241,0.954540113,0.453423793,0.410646116,same trend,-30,none,none,gripperOut , ,none,none,none
+242,0.95688137,0.453219344,0.400509409,same trend,-31,none,none,gripperOut , ,none,none,none
+243,0.950531873,0.42029952,0.412448351,same trend,-32,none,floor frictionOut ,gripperOut , ,none,none,none
+244,0.933456472,0.444610099,0.397609118,same trend,-33,none,none,gripperOut , ,none,none,none
+245,0.969588166,0.442355606,0.408081847,same trend,-34,none,none,gripperOut , ,none,none,none
+246,0.948201398,0.456074717,0.398333652,same trend,-35,none,none,gripperOut , ,none,none,none
+247,0.954564005,0.452634354,0.402644655,same trend,-36,none,none,gripperOut , ,none,none,none
+248,0.943485806,0.438398572,0.397612507,same trend,-37,none,none,gripperOut , ,none,none,none
+249,0.963623596,0.449445058,0.401826269,same trend,-38,none,none,gripperOut , ,none,none,none
