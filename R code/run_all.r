@@ -18,17 +18,25 @@ out_of_edge <- function(s,printnum){
 
 # function to calculate time to violation 
 violationtime <- function(s, vmap, trends, tstep, maxtime, msteps, printnum){
-
+     # check zero velocity
+     type <- "NA"
+     if (all(trends == c(0, 0, 0))) {
+          print(c("NA", "this is zero trend"))
+          return(list(maxtime, type))
+     }
+     # check out of edge
      type = out_of_edge(s,printnum)
      if (type == "e") {
+          print(c(type, "this is an out of edge point ",s))
           return(list(0, type))
      }
+     # else check violation
      else{
-
-	border = vmap[which(vmap[,4] == 0),1:3]
-	edge = vmap[which(vmap[,4] == 2),1:3]
+          
+	       border = vmap[which(vmap[,4] == 0),1:3]
+	       edge = vmap[which(vmap[,4] == 2),1:3]
             borderedge = rbind(border, edge)
-	R = sqrt(trends[1]^2 + trends[2]^2 + trends[3]^2)
+	       R = sqrt(trends[1]^2 + trends[2]^2 + trends[3]^2)
             x = borderedge[,1]-s[1]
             y = borderedge[,2]-s[2]
             z = borderedge[,3]-s[3]
@@ -36,6 +44,7 @@ violationtime <- function(s, vmap, trends, tstep, maxtime, msteps, printnum){
             type = "v"     
             timepred = 0  
             # before considering a move, check whether already on a border/edge point
+            ### msteps = c(0.0125, 0.0062, 0.0125), if too close to an BE poit, say in the BE zone
             ind0 = which((abs(x) < (msteps[1]/2)) & (abs(y) < (msteps[2]/2))  & (abs(z) < (msteps[3]/2)))
             if (length(ind0) > 0) {
                type = betype[ind0]
@@ -46,7 +55,7 @@ violationtime <- function(s, vmap, trends, tstep, maxtime, msteps, printnum){
                 indsx = which( (abs(x) <  0.00001) | (sign(x) == sign(trends[1])))
                 indsy = which( (abs(y) <  0.00001) |(sign(y) == sign(trends[2])))
                 indsz = which( (abs(z) <  0.00001) |(sign(z) == sign(trends[3])))
-                inds = intersect(indsx, intersect(indsy, indsz)) 
+                inds = intersect(indsx, intersect(indsy, indsz))
                 if (length(inds) > 0) {
                       x = x[inds]
                       y = y[inds]
@@ -77,8 +86,8 @@ violationtime <- function(s, vmap, trends, tstep, maxtime, msteps, printnum){
                            type = betype[inds]       
                      }
                      displacement = sqrt((keepx-s[1])*(keepx-s[1])+ (keepy-s[2])*(keepy-s[2])+ (keepz-s[3])*(keepz-s[3]))
-                      velocity = sqrt(trends[1]*trends[1] + trends[2]*trends[2] +  trends[3]* trends[3])/tstep        
-                     timepred = maxtime                  
+                     velocity = sqrt(trends[1]*trends[1] + trends[2]*trends[2] +  trends[3]* trends[3])/tstep        
+                     timepred = maxtime                
                      if (velocity > 0) timepred = displacement/velocity              
                      timepred = floor(timepred + 0.5)
                }
@@ -120,55 +129,220 @@ gettrends <- function(data, len){
     return(trends)
 }
 
+##########################
+pausing <- function(){
+     # Pause execution until the user presses Enter/q/n
+     if (pause){
+          res <- readline(prompt = "Press [Enter] to continue, [n] to stop pausing, [q] to quit...")
+          if (res == "q") {
+               stop("User stopped execution")}
+          if (res == "n") {
+               pause <<- FALSE # global variable
+          }
+     }
+}
+##########################
+
+
+##########################
+#  Costs
+# Light   -1   c1=2
+# Light   1     c2=4
+# Floor   1.    c3=1
+# Floor  -1.    c4=5
+# Gripper  1.  c6=1
+# Gripper -1   c5=5
+cost <- function(env,incr){
+     # cost function to calculate cost of adaptation
+     if (env == "light") {
+          if (incr == 0) {return(0)}
+          if (incr == 1) {return(4)}
+          if (incr == -1) {return(2)}
+     }
+     if (env == "floor") {
+          if (incr == 0) {return(0)}
+          if (incr == 1) {return(5)}
+          if (incr == -1) {return(1)}
+     }
+     if (env == "grip") {
+          if (incr == 0) {return(0)}
+          if (incr == 1) {return(5)}
+          if (incr == -1) {return(1)}
+     }
+}
 
 
 # function to check time from neighbouring violation map points 
-checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, n, msteps){
-     nt = matrix(0, nrow = ((2*n+1)^3), ncol = 4)
-     ind = 1
-     for (j in c(-n,0,n)) {
-            for (k in c(-1,0,n)) {
-                    for (l in c(-n,0,n)) {
-                           nt[ind, 1] = j
-                           nt[ind, 2] = k
-                           nt[ind, 3] = l
-                           np = c((cp[1] + j*msteps[1]), (cp[2] + k*msteps[2]), (cp[3] + l*msteps[3]))
-                           nt[ind, 4] = violationtime(np, vmap, trends, tstep, maxtime, msteps, 2)[[1]]
-                           ind = ind + 1
-                    }  
-            }  
-     }  
-     s = sort.int(nt[,4], index.return = T, decreasing = TRUE)
-     ntsorted = nt[s$ix,]
-     return(ntsorted[which(ntsorted[,4] >= (keept + timestep)),])
+checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, msteps, t_adapt){
+
+     lightcost <- 0.05
+     floorcost <- 0.04
+     gripcost <- 0.02
+
+     # increase neighbours by adding up to n increments in each direction
+     n =1
+     print(keept)
+     ## Select which adaptations possible, incr/decr[-1,1] in each env
+     nlight = c(-1,0,1) #decrease or increase but adding an extra light or turning it off, or the same
+     nfloor = c(-1,0,1) #decrease by cleaning floor, increase by changin the wheels, or the same
+     ngrip = c(-1,0,1)  #decresae by cleaning the gripper, increase by changing the gripper, or the same
+
+     ## Select if adaptation resets trend (set 0 when reset)
+     trends_after_adapt = c(trends[1],0,0)
+
+     #nt = matrix(0, nrow = ((2*n+1)^3), ncol = 7)
+     num_rows <- (length(nlight) * length(nfloor) * length(ngrip)) * n -1
+     nt = matrix(0, nrow = num_rows, ncol = 8)
+     
+     ind =0
+     for (i in n:n) { # or 1:n to check 1 to n increments
+          for (j in (i*nlight)) {
+                    for (k in (i*nfloor)) {
+                         for (l in (i*ngrip)) {
+                              # if all different to zero
+                              if (j != 0 || k != 0 || l != 0) {
+                                   ind = ind + 1
+                                   nt[ind, 1] = j
+                                   nt[ind, 2] = k
+                                   nt[ind, 3] = l
+                                   costs = cost("light",j) + cost("floor",k) + cost("grip",l)
+                                   #np = c((cp[1] + j*msteps[1]), (cp[2] + k*msteps[2]), (cp[3] + l*msteps[3]))
+                                   ##add adaptation increments in each direction
+                                   np = c((cp[1] + j*lightcost), (cp[2] + k*floorcost), (cp[3] + l*gripcost))
+                                   #set trends to vector of 0s
+                                   #trends <- c(0,0,0)
+                                   #print(c(np,"here"))
+                                   nt[ind, 4] = violationtime(np, vmap, trends, tstep, maxtime, msteps, 2)[[1]]
+                                   print(nt)
+                                   nt[ind,5:7] <- np #real env. values
+                                   nt[ind,8] <- costs
+                                   # print(c(j, k, l, nt[ind, 4]))
+                              }
+                    }}}}
+n1<-nt
+nt = nt[order(nt[,4],decreasing = TRUE), , drop = FALSE] #more rows than required as it can contain all neighbour incre. if "for (i in 1:n)" in the loop above #NOTE: use , drop = FALSE to keep as matrix, even when only one row satisfy the condition # nolint
+nt_ = nt[which(nt[,4] > max(t_adapt,keept)), , drop = FALSE] #t_adapt=mintime
+nt__ = nt_[which(nt_[,4] == max(nt_[,4])), , drop = FALSE] #max time
+nt___ <- nt__[order(nt__[,8], decreasing = FALSE), , drop = FALSE]#[1, , drop = FALSE] #ordered by cost; select the first row as a matrix
+### TESTS
+print("trends"); print(trends)
+print("current point"); print(cp)
+#n1 = n1[which(n1[, 1] != 0),]
+print("all"); print(n1); print("ordered"); print(nt)
+print(c(">time to adapt or >current time to BE-zone(keept)",keept)); print(nt_); print("prev. time to viol"); print(keept)
+print("greater time"); print(nt__)
+print("cheapest"); print(nt___)
+pausing()
+####
+print("current point")
+print(cp)
+return(nt___)
 }
 
 
-adapt_for_i_onwards <- function(data, output,adaptation,t_adapt,i) {
-     #stop if current time + t_adapt exceeds the time in data file
-     if (i+t_adapt>dim(data)[1]){
-          stop("i+t_adapt exceeds the number of rows in data")
+
+
+check_independent_possible_adaptations <- function(data, output,nay,t_adapt) {
+     adaptations = nay
+     if(nrow(adaptations) < 2) {
+          print("no independent adaptation possible.")
+          return()
      }
+     ### >>from checknay - Select which adaptations possible, incr/decr[-1,1] in each env
+     nlight = c(-1,0,1) #only increase but adding an extra light, or the same
+     nfloor = c(-1,0,1) #decrease by cleaning floor, increase by changin the wheels, or the same
+     ngrip = c(-1,0,1)  #decresae by cleaning the gripper, increase by changing the gripper, or the same
+     n=1
+     #####
+     # expected values in nt
+     nlight=n*nlight; nfloor=n*nfloor; ngrip=n*ngrip
 
-     # get last saved time data row (by looking at last time saved in output)
-     row <- which(data[1] == tail(output, n = 1)[1] )
+     int = 0
 
-     t_when_adapted = row[1]
-     # adapt from row+t_adapt onwards
-     keept = 99999 # time to problem
-     change = rep("none",3) # no change
-     for (j in (row+1):dim(data)[1]){
-          if (data[j,1]>=t_when_adapted+t_adapt){
-          # adapt data
-           output = rbind(output, c(data[j,1:4], "same trend", keept, change, " "))
+     # Initialize an empty list to store values
+     adapt_ <- list()
+     
+     #==== iterate over Light
+     for (j in nlight){ #light
+          kl_depend <- 0
+          for (k in nfloor){
+               for (l in ngrip){
+                    val = c(j,k,l)
+                    exists <- any(apply(adaptations[, 1:3], 1, function(row) all(row == val)))
+                    #print(val); print(exists)
+                    # check if not exist adaptation (any combination of k,l with j)
+                    if (!exists) { kl_depend <- 1; break }
+               }
+               if (kl_depend == 1) break
           }
+          if (kl_depend==0){ # if not dependent on k and l
+               adapt_ <- append(adapt_, list(list("light", j))); int = int + 1
+          }
+          adapt <- do.call(rbind, adapt_) # convert list to matrix
+          # print(adapt)
+          # pausing()
      }
-  return(output)
+
+     #==== iterate over Floor
+     for (j in nfloor){ #floor
+          kl_depend <- 0
+          for (k in nlight){
+               for (l in ngrip){
+                    val = c(k,j,l) ##
+                    exists <- any(apply(adaptations[, 1:3], 1, function(row) all(row == val)))
+                    #print(val); print(exists)
+                    # check if not exist adaptation (any combination of k,l with j)
+                    if (!exists) { kl_depend <- 1; break }
+               }
+               if (kl_depend == 1) break
+          }
+          if (kl_depend==0){ # if not dependent on k and l
+               adapt_ <- append(adapt_, list(list("floor", j))); int = int + 1
+          }
+          adapt <- do.call(rbind, adapt_) # convert list to matrix
+          # print(adapt)
+          # pausing()
+     }
+     #==== iterate over Gripper
+     for (j in ngrip){ #gripper
+          kl_depend <- 0
+          for (k in nlight){
+               for (l in nfloor){
+                    val = c(k,l,j) ##
+                    exists <- any(apply(adaptations[, 1:3], 1, function(row) all(row == val)))
+                    #print(val); print(exists)
+                    # check if not exist adaptation (any combination of k,l with j)
+                    if (!exists) { kl_depend <- 1; break }
+               }
+               if (kl_depend == 1) break
+          }
+          if (kl_depend==0){ # if not dependent on k and l
+               adapt_ <- append(adapt_, list(list("gripper", j))); int = int + 1
+          }
+          adapt <- do.call(rbind, adapt_) # convert list to matrix
+          # print(adapt)
+          # pausing()
+     }
+     if (!is.null(adapt)) {
+          print("*independent adaptations:");
+          print(adapt)
+          #pausing()
+          return(adapt)
+     }
+     else { print("no independent adaptation possible.")}
+     # pausing()
 }
+
+
+
+
+
+
 
 
 # function to predict violations 
-checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxtime, mintime, msteps,adapt=0){
+checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxtime, mintime, msteps,adapt=0,t_adapt=1){
+    
     # NOTE that adapt=0 (change to 1 if trigger adaptation)
     
     full_length = dim(data)[1]    
@@ -195,100 +369,106 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
 
                ######## start trends=0     keep last time to violation and problem (keept,last_edge_or_boundary)                  # nolint
                if (((trends[1]) == 0.0) && ((trends[2]) == 0.0) && ((trends[3]) == 0.0))  {            # nolint
-                    print(c(time[i], "new trend 0", "predicted violation in ", keept, "seconds." ))                               # nolint
+                    print(c(time[i], "new trend 0", "predicted violation in ", keept, "minutes." ))                               # nolint
                     change <- rep("none", 3)                                                                                      # nolint
                     output <- rbind(output, c(data[i,1:4], "new trend 0", keept, change, last_edge_or_boundary))                  # nolint
                }                                                                                                                  # nolint                        
-               else{ ####### start else, trends != 0
-                                             
-                                             change = rep("none",3)
-                                             # which trend(s) change
-                                             if (abs(data[i, 2] - hmeans[1]) > hlims[1]) change[1] = "lighting " 
-                                             if (abs(data[i, 3] - hmeans[2]) > hlims[2])  change[2] = "floor friction "
-                                             if (abs(data[i, 4] - hmeans[3]) > hlims[3])  change[3] = "gripper "
-                                             ###### same trend
-                                             if ((abs(trendchanges[1]) < changelims[1]) & (abs(trendchanges[2]) < changelims[2]) &(abs(trendchanges[3]) < changelims[3]))  {
+               else{ ####### >start else, trends != 0
+                    change = rep("none",3) # check outside limits
+                    # which trend(s) change
+                    if (abs(data[i, 2] - hmeans[1]) > hlims[1]) change[1] = "lightingOut " 
+                    if (abs(data[i, 3] - hmeans[2]) > hlims[2])  change[2] = "floor frictionOut "
+                    if (abs(data[i, 4] - hmeans[3]) > hlims[3])  change[3] = "gripperOut "
+                    ###### save trend
+                    changeTrend = rep("none",3)
+                    if ((abs(trendchanges[1]) > changelims[1])){changeTrend[1] = "lighting "} else {changeTrend[1] = "none"}
+                    if (abs(trendchanges[2]) > changelims[2]){changeTrend[2] = "floor friction "} else {changeTrend[2] = "none"}
+                    if (abs(trendchanges[3]) > changelims[3]){changeTrend[3] = "gripper "} else {changeTrend[3] = "none"}
 
-                                                       keept = keept-tstep
-                                                       print(c(time[i], "same trends", "predicted violation in ", keept, "seconds." ))
-                                                       output = rbind(output, c(data[i,1:4], "same trend", keept, change, " "))
-                                                       # ========== Adaptation if necessary/possible
-                                                            if ((keept - timestep) < mintime){
-                                                                 # need to respond now, so check neighbours
-                                                                 nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
-                                                                 if (nrow(nay) > 0) {
-                                                                      # print all possible adaptations
-                                                                      for (j in 1:nrow(nay)) { 
-                                                                           print(nay[j,])
-                                                                      }
-                                                                      # adapt to the first one
-                                                                      if(adapt == 1) {     
-                                                                           adaptation = nay[1,]
-                                                                           output <- adapt_for_i_onwards(data,output,adaptation,len,i)
-                                                                           break() # stop when adaptation is done (assuming system recovered for the rest of the time)
-                                                                      }
-                                                                           
-                                                                 }
-                                                                 else { print("no adaptation possible.") }
-                                                            }
-                                                       # ==========
+                    if ((abs(trendchanges[1]) < changelims[1]) & (abs(trendchanges[2]) < changelims[2]) &(abs(trendchanges[3]) < changelims[3]))  {
+
+                              keept = keept-tstep
+                              print(c(time[i], "same trends", "predicted violation in ", keept, "minutes." ))
+                              output = rbind(output, c(data[i,1:4], "same trend", keept, change, " ", changeTrend))
+                              # ========== Adaptation if necessary/possible
+                                   if ((keept - tstep) < mintime){        #keept=current time to problem
+                                        # need to respond now, so check neighbours
+                                        nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, msteps, t_adapt)
+                                        if (nrow(nay) > 0) {
+                                             # print all possible adaptations
+                                             for (j in 1:nrow(nay)) { 
+                                                  print(nay[j,])
                                              }
-                                             ###### new trend
-                                             else {
-                                                       # calculate time to violation/edge of parameter space from current point
-                                                       cp = c(data[i, 2], data[i, 3], data[i, 4])
-                                                       # print(c(cp, trends))
-                                                       t = violationtime(cp, vmap, trends, tstep, maxtime, msteps, 1)
-                                                       if (t[[1]] < maxtime) {
-
-                                                            ## Check which one changed in trends
-                                                            # if (abs(trendchanges[1]) >=changelims[1]) {
-                                                            #      change[1] = "lighting "
-                                                            # }
-                                                            
-                                                            # if (abs(trendchanges[2]) <=changelims[2]) {
-                                                            #      change[1] = "floor friction "
-                                                            # }
-                                                                 
-                                                            # if (abs(trendchanges[3]) <=changelims[3]) {
-                                                            #      change[1] = "gripper "
-                                                            # }
-
-                                                            keept = t[[1]]
-                                                            phrase = "predicted violation in "
-                                                            if (t[[2]] == "e") { phrase = "Could reach unknown parameter space in "}
-                                                            print(c(time[i], " new trend", phrase, keept, "seconds." ))
-                                                            last_edge_or_boundary = t[[2]]
-                                                            output = rbind(output, c(data[i,1:4], "new trend", keept, change, last_edge_or_boundary))
-                                                            #keeptrends = trends
-                                                            for (i in 1:3){
-                                                                 if (change[i] != "none") { keeptrends[i] = trends[i] }
-                                                            }
-                                                            # ========== Adaptation if necessary/possible
-                                                            if ((keept - timestep) < mintime){
-                                                                 # need to respond now, so check neighbours
-                                                                 nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, 1, msteps)
-                                                                 if (nrow(nay) > 0) {
-                                                                      # print all possible adaptations
-                                                                      for (j in 1:nrow(nay)) { 
-                                                                           print(nay[j,])
-                                                                      }
-                                                                      # adapt to the first one
-                                                                      if (adapt == 1) {
-                                                                           adaptation = nay[1,]
-                                                                           output <- adapt_for_i_onwards(data,output,adaptation,len,i)
-                                                                           break() # stop when adaptation is done (assuming system recovered for the rest of the time)
-                                                                      }    
-                                                                 }
-                                                                 else { print("no adaptation possible.") }
-                                                            }
-                                                            # ==========
-                                                       }
-                                                       else { print(c(time[i], "new trend providing maximum time" , keept)) }
-                                                       
-                                                  }
+                                             # adapt to the first one
+                                             if(adapt == 1) {
+                                                  check_independent_possible_adaptations(data,output,nay,t_adapt)
+                                                  #break() # stop when adaptation is done (assuming system recovered for the rest of the time)
                                              }
-                    } ####### end else, trends != 0
+                                                  
+                                        }
+                                        else { print("no adaptation possible.") }
+                                   pausing()
+                                   }
+                              # ==========
+                    }
+                    ###### new trend
+                    else {
+                              # calculate time to violation/edge of parameter space from current point
+                              cp = c(data[i, 2], data[i, 3], data[i, 4])
+                              # print(c(cp, trends))
+                              t = violationtime(cp, vmap, trends, tstep, maxtime, msteps, 1)
+                              if (t[[1]] < maxtime) {
+
+                                   ## Check which one changed in trends
+                                   # if (abs(trendchanges[1]) >=changelims[1]) {
+                                   #      change[1] = "lighting "
+                                   # }
+                                   
+                                   # if (abs(trendchanges[2]) <=changelims[2]) {
+                                   #      change[1] = "floor friction "
+                                   # }
+                                        
+                                   # if (abs(trendchanges[3]) <=changelims[3]) {
+                                   #      change[1] = "gripper "
+                                   # }
+
+                                   keept = t[[1]]
+                                   phrase = "predicted violation in "
+                                   if (t[[2]] == "e") { phrase = "Could reach unknown parameter space in "}
+                                   print(c(time[i], " new trend", phrase, keept, "minutes." ))
+                                   last_edge_or_boundary = t[[2]]
+                                   output = rbind(output, c(data[i,1:4], "new trend", keept, change, last_edge_or_boundary, changeTrend))
+                                   #keeptrends = trends
+                                   for (i in 1:3){
+                                        if (change[i] != "none") { keeptrends[i] = trends[i] }
+                                   }
+                                   # ========== Adaptation if necessary/possible
+                                   if ((keept - tstep) < mintime){ #keept=current time to problem
+                                        # need to respond now, so check neighbours
+                                        nay = checknay(cp, trends, tstep, keept, vmap,  maxtime, msteps, t_adapt)
+                                        if (nrow(nay) > 0) {
+                                             # print all possible adaptations
+                                             for (j in 1:nrow(nay)) { 
+                                                  print(nay[j,])
+                                             }
+                                             # adapt to the first one
+                                             if(adapt == 1) {     
+                                                  adaptations = nay
+                                                  check_independent_possible_adaptations(data,output,adaptations,t_adapt)
+                                                  #break() # stop when adaptation is done (assuming system recovered for the rest of the time)
+                                             }
+                                                  
+                                        }
+                                        else { print("no adaptation possible.") }
+                                   pausing()
+                                   }
+                              # ==========
+                              }
+                              else { print(c(time[i], "new trend providing maximum time" , keept)) }
+                                   
+                              }
+                         }
+                    } ####### <end else, trends != 0
          else {
                        # otherwise all ok
                        print(c(time[i], "No problem" )) 
@@ -299,32 +479,63 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
 
 
 
-
-
-
-# ---- Section: Import Preparation ---- #
-### SELECT params:
-spikyData = 0    #0=normal grip data, 1=spiker
-#>>> change data file here, can be light, lightnew, grip or lg <<<
-data <- grip #light  #lightnew #grip  #lg
-#>>> Hyperparameters <<<
-len = 20 #####<<<< CHANGE from original len = 10
-sigma1 = 5.0 #####<<<< CHANGE from original = 5.0
-sigma2 = 5.0 #####<<<< CHANGE from original  = 3.0
-# adapt?
-adapt = 0
-
-
+#############################
 #>>>import data<<<
 day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
-# SPIKY gripper
-if (spikyData == 1){ day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/spiky_gripper_day.csv",header = FALSE)}
-
 light = read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_filtered.csv", header = FALSE)
 grip = read.csv("/Users/grisv/GitHub/Manifest/R code/data/degrading_grip_filtered.csv", header = FALSE)
 lg = read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_degrading_grip_filtered.csv", header = FALSE)
+# to add "len" normal datapoints to beginning of new data
+day1 = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
 # plot 
 #plot_initial_data(day)
+# SPIKY gripper
+#if (spikyData == 1){ day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/spiky_gripper_day.csv",header = FALSE)}
+
+
+
+
+
+
+
+
+###########################
+
+# ---- Section: Import Preparation ---- #
+### SELECT params:
+#spikyData = 0    #0=normal grip data, 1=spiker
+#>>> change data file here, can be light, lightnew, grip or lg <<<
+data_file <- "lg"#light  #lightnew #grip  #lg
+#>>> Hyperparameters <<<
+len = 10 #####<<<< CHANGE from original len = 10   time window to get trends
+mintime = 20  # trigger time (ONLY used by python if adapt=1, use tv in python instead)
+sigma1 = 4.0 #####<<<< CHANGE from original = 5.0
+sigma2 = 4.0 #####<<<< CHANGE from original  = 3.0
+# Define the global variable 'pause'
+pause <- TRUE
+# adaptation
+adapt = 1   # to save adaptation in data, 0 = no adaptation, 1 = adaptation
+
+# adaptation time (ONLY used by python if adapt=1)
+t_adapt= mintime  #time to perform the adaptation (min)
+#############################
+
+
+#############################
+# safe config. data to file (for python code)
+write.csv(c(data_file,len,mintime,sigma1,sigma2), "Rconfig.csv", row.names = FALSE)
+#############################
+
+#############################
+# pass to minutes from seconds 
+originalDataIncr = 60
+tstep <- originalDataIncr/60
+day[, 1] <- day[, 1]/60
+light[, 1] <- light[, 1]/60
+grip[, 1] <- grip[, 1]/60
+lg[, 1] <- lg[, 1]/60
+day1[, 1] <- day1[, 1]/60
+#############################
 
 
 
@@ -364,7 +575,6 @@ vmap = read.csv("/Users/grisv/GitHub/Manifest/violationMap.csv", header = T)
 
 # ---- Make synthetic data ----
 # add "len" normal datapoints to beginning of new data
-day1 = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
 start = dim(day1)[1] - len+1
 end = dim(day1)[1]
 extra = day1[start:end,]
@@ -372,14 +582,17 @@ extra = day1[start:end,]
 # lose jump in faulty light data
 lightnew = light
 lightnew[72:240,2] = lightnew[72:240,2]+0.08
-
+#############################
+# save data from conf. (do here as it might be lightnew, just declared above)
+data <- get(data_file) 
+#############################
 
 #############################
 # ---- Section: Set env. data ---- #
 # add "len" normal datapoints to beginning of new data
 dataplus = rbind(extra, data)
-dataplus$Time = 60*c(0:(nrow(dataplus)-1)) #generates sequence of integers starting from 0 and multiplies by 60
-dataplus$V1 = 60*c(0:(nrow(dataplus)-1)) #to avoid confusion, replace previous time column (named V1)
+dataplus$Time = tstep*c(0:(nrow(dataplus)-1)) #generates sequence of integers starting from 0 and multiplies by time_increment
+dataplus$V1 = tstep*c(0:(nrow(dataplus)-1)) #to avoid confusion, replace previous time column (named V1)
 # Round the second to fourth columns to 9 decimal places (this is to match Julie's answer)
 dataplus[, 2:4] = round(dataplus[, 2:4], 9)
 #############################
@@ -387,24 +600,21 @@ dataplus[, 2:4] = round(dataplus[, 2:4], 9)
 #############################
 # ---- Check trends ---- 
 #>>> Hyperparameters <<<
-# monitoring timestep is currently the same for all measurements
-timestep = 60
 # maximum time possible 
 maxtime = 6000000
 # get msteps from violation map calculation
 msteps = c(0.0125, 0.0062, 0.0125)
-# minimum time allowed to predicted violation
-mintime = 600
+
 
 # Compute trends
-out = checktrends(dataplus, vmap, timestep, historicmeans, lims, changelims, len, maxtime, mintime, msteps,adapt)
+out = checktrends(dataplus, vmap, tstep, historicmeans, lims, changelims, len, maxtime, mintime, msteps,adapt,t_adapt)
 #############################
 
 #############################
 # ---- Section: Python Export Preparation ---- #
 # change column names -- python will read these files
 colnames(dataplus) = c("time", "m1", "m2", "m3", "-", "--")
-colnames(out) = c("time", "m1", "m2", "m3", "trend", "time2problem","light","floor","gripper","edgeORboundary")
+colnames(out) = c("time", "m1", "m2", "m3", "trend", "time2problem","lightOutTypical","floorOutTypical","gripperOutTypical","edgeORboundary","light","floor","gripper")
 # save data -- python will read these files
 write.csv(out, "outputlg.csv", row.names = FALSE)
 write.csv(dataplus, "dataplus.csv", row.names = FALSE)
@@ -420,40 +630,4 @@ R1 = 0.6
 R2 = 100
 R3 = 0.35
 
-# check a data file for violations 
-violationCheck<- function(data, R1, R2, R3){
-     for (i in 1:dim(data)[1]){
-                   M1 = data[i, 2]
-                   M2 = data[i, 3]
-                   M3 = data[i, 4]
-       P1 =  0.2018 +  (0.8191 * M1)  
-       P2 =  0.414 + (0.4612 * M1) 
-       P3 = 0.1
-       P4 =  -0.1618+ (1.2523 * M3)
-       PR = 0.8
-       T1 = 0  
-       T2 = 19.765 + (15.627 * M1)
-       T3 = 63.15
-       T1F = 0 
-       T2F = 7.343 + ( 72.234 * M1) + (161.485 * M2) - (231.337 * M1*M2)
-       TR = 6.498 - (5.482 * M1) - (6.855 * M3) + (8.301 * M1*M3)
-                   r1 = (P1*P2*P4) / (1 - PR*P3)
-   	        r2 = (P1*(P3*T2 - P2*T3 - P3*T2F - T1 - T2 + T1F) + PR*P3*(T1F - P1*TR - P1*T1F) - T1F) / (PR*P3 -  1)
-                   r3 = (P1*P2*(1 - P4)) / (1 - PR*P3)
-                   if ((1 - PR*P3) == 0) {
-                        print("fail")
-                  }
-                  else {
-                        if (r1 < R1){
-                             print(c(data[i,1], "R1 fail"))
-                        }
-                        if (r2 > R2) {
-                             print(c(data[i,1], "R2 fail"))
-                        }
-                        if (r3 > R3) {
-                             print(c(data[i,1], "R3 fail"))
-                        }
-                 }
-     }
-}
 #############################

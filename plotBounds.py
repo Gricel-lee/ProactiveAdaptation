@@ -17,7 +17,7 @@ def print_measurements_limits():
     ax1.set_ylabel("light")
     ax2.set_ylabel("gripper")
     ax3.set_ylabel("floor")
-    plt.xlabel("time (s)")
+    plt.xlabel("time (min)")
     
     # # No x/y scale
     ax1.xaxis.set_ticks([]);
@@ -25,6 +25,7 @@ def print_measurements_limits():
 
 
     # plot data
+    df['time'] = df['time']/60
     p1 = ax1.plot(df['time'], df['m1'],      color='k', label="Light", linewidth=1)
     p2 = ax2.plot(df['time'], df['m2'],      color='k', label="Light", linewidth=1)
     p3 = ax3.plot(df['time'], df['m3'],      color='k', label="Light", linewidth=1)
@@ -63,7 +64,7 @@ def print_trends_limits():
     
     # add time as a column
     df_time = pd.read_csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv", header=None)
-    df['time'] = df_time[0]
+    df['time'] = df_time[0]/60
     print(df.head())
 
     # ------- Create a nxm grid of subplots
@@ -72,7 +73,7 @@ def print_trends_limits():
     ax1.set_ylabel("light\ntrend\nchange")
     ax2.set_ylabel("gripper\ntrend\nchange")
     ax3.set_ylabel("floor\ntrend\nchange")
-    plt.xlabel("time (s)")
+    plt.xlabel("time (min)")
 
     # # No x/y scale
     ax1.xaxis.set_ticks([]);
@@ -113,6 +114,6 @@ def print_trends_limits():
     plt.show()
 
 
-print_measurements_limits()
+#print_measurements_limits()
 
-#print_trends_limits()
+print_trends_limits()
