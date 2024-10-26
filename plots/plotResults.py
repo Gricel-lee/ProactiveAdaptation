@@ -9,6 +9,7 @@ import math
 #>>> Hyperparameters <<<
 xlabel_incr_time = 15
 x_lim2ndPlot = 50
+fpath = "/Users/grisv/GitHub/Manifest"
 ###################
 
 ###################
@@ -78,8 +79,8 @@ def in_violation(time,M1, M2, M3):
 
 
 # Read the CSV file
-df = pd.read_csv('/Users/grisv/GitHub/Manifest/gen_files/outputlg.csv')
-df_Day = pd.read_csv('/Users/grisv/GitHub/Manifest/gen_files/dataplus.csv')
+df = pd.read_csv(fpath+'/gen_files/outputlg.csv')
+df_Day = pd.read_csv(fpath+'/gen_files/dataplus.csv')
 
 
 # ------- Create a nxm grid of subplots
@@ -172,7 +173,7 @@ for i in range(1,len(df['time'])):
         predicted = df['edgeORboundary'][i]
     df.at[i,'edgeORboundary'] = predicted
 #print(df['edgeORboundary'])
-df.to_csv('/Users/grisv/GitHub/Manifest/gen_files/py/edgeORboundary.csv', index=False)
+df.to_csv(fpath+'/gen_files/py/edgeORboundary.csv', index=False)
 # plot adaptation line
 adaptTime = -1
 
@@ -332,10 +333,10 @@ _config_data+=[t_first_pred_ODD]
 plt.show()
 # New file
 if False:
-    with open('/Users/grisv/GitHub/Manifest/config.csv', 'w') as f:
+    with open(fpath+'/config.csv', 'w') as f:
         f.write("file ,len ,mintime ,a ,b ,t_viol-t_predViol ,t_adaptation_before_predViol ,t_adaptation_before_viol ,viol_at ,pred_viol_at ,adapt_at ,numTimes_alg1_triggered ,saved_computations,out_of_ODD,pred_out_of_ODD")
 # Save to new line of .txt file
-with open('/Users/grisv/GitHub/Manifest/config.csv', 'a') as f:
+with open(fpath+'/config.csv', 'a') as f:
     f.write("\n")
     line = ""
     for item in _config_data:

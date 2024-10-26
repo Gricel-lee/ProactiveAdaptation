@@ -482,13 +482,13 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
 #############################
 #>>>Import data<<<
 # Normal conditions 
-day = read.csv("/Users/grisv/GitHub/Manifest/data/sample_day_filtered.csv",header = FALSE)
+day = read.csv("/Users/grisv/GitHub/Manifest/data/sample_normal_day.csv",header = FALSE)
 # Faulty day data
 light = read.csv("/Users/grisv/GitHub/Manifest/data/runtime/faulty_light_filtered.csv", header = FALSE)
 grip = read.csv("/Users/grisv/GitHub/Manifest/data/runtime/degrading_grip_filtered.csv", header = FALSE)
 lg = read.csv("/Users/grisv/GitHub/Manifest/data/runtime/faulty_light_degrading_grip_filtered.csv", header = FALSE)
 # (used also to add "len" normal datapoints to beginning of new data)
-day1 = read.csv("/Users/grisv/GitHub/Manifest/data/sample_day_filtered.csv",header = FALSE)
+day1 = read.csv("/Users/grisv/GitHub/Manifest/data/sample_normal_day.csv",header = FALSE)
 # plot 
 #plot_initial_data(day)
 

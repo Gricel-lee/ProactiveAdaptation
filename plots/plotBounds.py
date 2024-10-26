@@ -6,7 +6,7 @@ import numpy as np
 fpath = "/Users/grisv/GitHub/Manifest"
 
 def print_measurements_limits():
-    df = pd.read_csv(fpath+"/data/sample_day_filtered.csv", header=None)
+    df = pd.read_csv(fpath+"/data/sample_normal_day.csv", header=None)
     historicmeans = pd.read_csv(fpath+"/gen_files/1historicmeans.csv")["x"]
     lims = pd.read_csv(fpath+"/gen_files/1lims.csv")["x"]
     
@@ -66,7 +66,7 @@ def print_trends_limits():
     df.columns = ['trend1', 'trend2', 'trend3']
     
     # add time as a column
-    df_time = pd.read_csv(fpath+"/data/sample_day_filtered.csv", header=None)
+    df_time = pd.read_csv(fpath+"/data/sample_normal_day.csv", header=None)
     df['time'] = df_time[0]/60
     print(df.head())
 
