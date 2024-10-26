@@ -18,17 +18,25 @@ out_of_edge <- function(s,printnum){
 
 # function to calculate time to violation 
 violationtime <- function(s, vmap, trends, tstep, maxtime, msteps, printnum){
-
+     # check zero velocity
+     type <- "NA"
+     if (all(trends == c(0, 0, 0))) {
+          print(c("NA", "this is zero trend"))
+          return(list(maxtime, type))
+     }
+     # check out of edge
      type = out_of_edge(s,printnum)
      if (type == "e") {
+          print(c(type, "this is an out of edge point ",s))
           return(list(0, type))
      }
+     # else check violation
      else{
-
-	border = vmap[which(vmap[,4] == 0),1:3]
-	edge = vmap[which(vmap[,4] == 2),1:3]
+          
+	       border = vmap[which(vmap[,4] == 0),1:3]
+	       edge = vmap[which(vmap[,4] == 2),1:3]
             borderedge = rbind(border, edge)
-	R = sqrt(trends[1]^2 + trends[2]^2 + trends[3]^2)
+	       R = sqrt(trends[1]^2 + trends[2]^2 + trends[3]^2)
             x = borderedge[,1]-s[1]
             y = borderedge[,2]-s[2]
             z = borderedge[,3]-s[3]
@@ -36,6 +44,7 @@ violationtime <- function(s, vmap, trends, tstep, maxtime, msteps, printnum){
             type = "v"     
             timepred = 0  
             # before considering a move, check whether already on a border/edge point
+            ### msteps = c(0.0125, 0.0062, 0.0125), if too close to an BE poit, say in the BE zone
             ind0 = which((abs(x) < (msteps[1]/2)) & (abs(y) < (msteps[2]/2))  & (abs(z) < (msteps[3]/2)))
             if (length(ind0) > 0) {
                type = betype[ind0]
@@ -46,7 +55,7 @@ violationtime <- function(s, vmap, trends, tstep, maxtime, msteps, printnum){
                 indsx = which( (abs(x) <  0.00001) | (sign(x) == sign(trends[1])))
                 indsy = which( (abs(y) <  0.00001) |(sign(y) == sign(trends[2])))
                 indsz = which( (abs(z) <  0.00001) |(sign(z) == sign(trends[3])))
-                inds = intersect(indsx, intersect(indsy, indsz)) 
+                inds = intersect(indsx, intersect(indsy, indsz))
                 if (length(inds) > 0) {
                       x = x[inds]
                       y = y[inds]
@@ -77,8 +86,8 @@ violationtime <- function(s, vmap, trends, tstep, maxtime, msteps, printnum){
                            type = betype[inds]       
                      }
                      displacement = sqrt((keepx-s[1])*(keepx-s[1])+ (keepy-s[2])*(keepy-s[2])+ (keepz-s[3])*(keepz-s[3]))
-                      velocity = sqrt(trends[1]*trends[1] + trends[2]*trends[2] +  trends[3]* trends[3])/tstep        
-                     timepred = maxtime                  
+                     velocity = sqrt(trends[1]*trends[1] + trends[2]*trends[2] +  trends[3]* trends[3])/tstep        
+                     timepred = maxtime                
                      if (velocity > 0) timepred = displacement/velocity              
                      timepred = floor(timepred + 0.5)
                }
@@ -135,14 +144,46 @@ pausing <- function(){
 ##########################
 
 
+##########################
+#  Costs
+# Light   -1   c1=2
+# Light   1     c2=4
+# Floor   1.    c3=1
+# Floor  -1.    c4=5
+# Gripper  1.  c6=1
+# Gripper -1   c5=5
+cost <- function(env,incr){
+     # cost function to calculate cost of adaptation
+     if (env == "light") {
+          if (incr == 0) {return(0)}
+          if (incr == 1) {return(4)}
+          if (incr == -1) {return(2)}
+     }
+     if (env == "floor") {
+          if (incr == 0) {return(0)}
+          if (incr == 1) {return(5)}
+          if (incr == -1) {return(1)}
+     }
+     if (env == "grip") {
+          if (incr == 0) {return(0)}
+          if (incr == 1) {return(5)}
+          if (incr == -1) {return(1)}
+     }
+}
+
+
 # function to check time from neighbouring violation map points 
 checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, msteps, t_adapt){
+
+     lightcost <- 0.05
+     floorcost <- 0.04
+     gripcost <- 0.02
 
      # increase neighbours by adding up to n increments in each direction
      n =1
      print(keept)
      ## Select which adaptations possible, incr/decr[-1,1] in each env
-     nlight = c(-1,0,1) #only increase but adding an extra light, or the same
+     nlight = c(-1,0,1) #decrease or increase but adding an extra light or turning it off, or the same
      nfloor = c(-1,0,1) #decrease by cleaning floor, increase by changin the wheels, or the same
      ngrip = c(-1,0,1)  #decresae by cleaning the gripper, increase by changing the gripper, or the same
 
@@ -150,38 +191,52 @@ checknay <- function(cp, trends, tstep, keept, vmap,  maxtime, msteps, t_adapt){
      trends_after_adapt = c(trends[1],0,0)
 
      #nt = matrix(0, nrow = ((2*n+1)^3), ncol = 7)
-     num_rows <- (length(nlight) * length(nfloor) * length(ngrip)) * n + 1
-     nt = matrix(0, nrow = num_rows, ncol = 7)
+     num_rows <- (length(nlight) * length(nfloor) * length(ngrip)) * n -1
+     nt = matrix(0, nrow = num_rows, ncol = 8)
      
-     ind =1
+     ind =0
      for (i in n:n) { # or 1:n to check 1 to n increments
           for (j in (i*nlight)) {
                     for (k in (i*nfloor)) {
                          for (l in (i*ngrip)) {
-                         nt[ind, 1] = j
-                         nt[ind, 2] = k
-                         nt[ind, 3] = l
-                         ind = ind + 1
-                         np = c((cp[1] + j*msteps[1]), (cp[2] + k*msteps[2]), (cp[3] + l*msteps[3]))
-                         nt[ind, 4] = violationtime(np, vmap, trends, tstep, maxtime, msteps, 2)[[1]]
-                         nt[ind,5:7] <- np #real env. values
-                         #print(c(j, k, l, nt[ind, 4]))
+                              # if all different to zero
+                              if (j != 0 || k != 0 || l != 0) {
+                                   ind = ind + 1
+                                   nt[ind, 1] = j
+                                   nt[ind, 2] = k
+                                   nt[ind, 3] = l
+                                   costs = cost("light",j) + cost("floor",k) + cost("grip",l)
+                                   #np = c((cp[1] + j*msteps[1]), (cp[2] + k*msteps[2]), (cp[3] + l*msteps[3]))
+                                   ##add adaptation increments in each direction
+                                   np = c((cp[1] + j*lightcost), (cp[2] + k*floorcost), (cp[3] + l*gripcost))
+                                   #set trends to vector of 0s
+                                   #trends <- c(0,0,0)
+                                   #print(c(np,"here"))
+                                   nt[ind, 4] = violationtime(np, vmap, trends, tstep, maxtime, msteps, 2)[[1]]
+                                   print(nt)
+                                   nt[ind,5:7] <- np #real env. values
+                                   nt[ind,8] <- costs
+                                   # print(c(j, k, l, nt[ind, 4]))
+                              }
                     }}}}
-n1=nt 
-
+n1<-nt
 nt = nt[order(nt[,4],decreasing = TRUE), , drop = FALSE] #more rows than required as it can contain all neighbour incre. if "for (i in 1:n)" in the loop above #NOTE: use , drop = FALSE to keep as matrix, even when only one row satisfy the condition # nolint
 nt_ = nt[which(nt[,4] > max(t_adapt,keept)), , drop = FALSE] #t_adapt=mintime
 nt__ = nt_[which(nt_[,4] == max(nt_[,4])), , drop = FALSE] #max time
-
+nt___ <- nt__[order(nt__[,8], decreasing = FALSE), , drop = FALSE]#[1, , drop = FALSE] #ordered by cost; select the first row as a matrix
 ### TESTS
-# print(trends)
-# n1 = n1[which(n1[, 1] != 0),]
-# print("all"); print(n1); print("ordered"); print(nt)
-# print(">time to adapt or >current time to BE-zone(keept)"); print(nt_); print("prev. time to viol"); print(keept)
-# print("greater time"); print(nt__)
-# pausing()
+print("trends"); print(trends)
+print("current point"); print(cp)
+#n1 = n1[which(n1[, 1] != 0),]
+print("all"); print(n1); print("ordered"); print(nt)
+print(c(">time to adapt or >current time to BE-zone(keept)",keept)); print(nt_); print("prev. time to viol"); print(keept)
+print("greater time"); print(nt__)
+print("cheapest"); print(nt___)
+pausing()
 ####
-return(nt__)
+print("current point")
+print(cp)
+return(nt___)
 }
 
 
@@ -450,7 +505,7 @@ day1 = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.cs
 ### SELECT params:
 #spikyData = 0    #0=normal grip data, 1=spiker
 #>>> change data file here, can be light, lightnew, grip or lg <<<
-data_file <- "grip"#light  #lightnew #grip  #lg
+data_file <- "lg"#light  #lightnew #grip  #lg
 #>>> Hyperparameters <<<
 len = 10 #####<<<< CHANGE from original len = 10   time window to get trends
 mintime = 20  # trigger time (ONLY used by python if adapt=1, use tv in python instead)
