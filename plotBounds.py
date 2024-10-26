@@ -2,10 +2,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
+#>>> Change path
+fpath = "/Users/grisv/GitHub/Manifest"
+
 def print_measurements_limits():
-    df = pd.read_csv("/Users/grisv/GitHub/Manifest/data/sample_day_filtered.csv", header=None)
-    historicmeans = pd.read_csv("/Users/grisv/GitHub/Manifest/gen_files/1historicmeans.csv")["x"]
-    lims = pd.read_csv("/Users/grisv/GitHub/Manifest/gen_files/1lims.csv")["x"]
+    df = pd.read_csv(fpath+"/data/sample_day_filtered.csv", header=None)
+    historicmeans = pd.read_csv(fpath+"/gen_files/1historicmeans.csv")["x"]
+    lims = pd.read_csv(fpath+"/gen_files/1lims.csv")["x"]
     
     print(df.head())
 
@@ -57,13 +60,13 @@ def print_measurements_limits():
 
 
 def print_trends_limits():
-    df = pd.read_csv("/Users/grisv/GitHub/Manifest/gen_files/2change.csv")
-    lims = pd.read_csv("/Users/grisv/GitHub/Manifest/gen_files/2lims.csv")["x"]
+    df = pd.read_csv(fpath+"/gen_files/2change.csv")
+    lims = pd.read_csv(fpath+"/gen_files/2lims.csv")["x"]
     
     df.columns = ['trend1', 'trend2', 'trend3']
     
     # add time as a column
-    df_time = pd.read_csv("/Users/grisv/GitHub/Manifest/data/sample_day_filtered.csv", header=None)
+    df_time = pd.read_csv(fpath+"/data/sample_day_filtered.csv", header=None)
     df['time'] = df_time[0]/60
     print(df.head())
 
