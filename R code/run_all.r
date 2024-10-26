@@ -480,22 +480,15 @@ checktrends <- function(data, vmap, tstep, hmeans, hlims, changelims, len, maxti
 
 
 #############################
-#>>>import data<<<
-day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
-light = read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_filtered.csv", header = FALSE)
-grip = read.csv("/Users/grisv/GitHub/Manifest/R code/data/degrading_grip_filtered.csv", header = FALSE)
-lg = read.csv("/Users/grisv/GitHub/Manifest/R code/data/faulty_light_degrading_grip_filtered.csv", header = FALSE)
-# to add "len" normal datapoints to beginning of new data
-day1 = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.csv",header = FALSE)
+#>>>Import data<<<
+day = read.csv("/Users/grisv/GitHub/Manifest/data/sample_day_filtered.csv",header = FALSE)
+light = read.csv("/Users/grisv/GitHub/Manifest/data/faulty_light_filtered.csv", header = FALSE)
+grip = read.csv("/Users/grisv/GitHub/Manifest/data/degrading_grip_filtered.csv", header = FALSE)
+lg = read.csv("/Users/grisv/GitHub/Manifest/data/faulty_light_degrading_grip_filtered.csv", header = FALSE)
+# Normal conditions (used also to add "len" normal datapoints to beginning of new data)
+day1 = read.csv("/Users/grisv/GitHub/Manifest/data/sample_day_filtered.csv",header = FALSE)
 # plot 
 #plot_initial_data(day)
-# SPIKY gripper
-#if (spikyData == 1){ day = read.csv("/Users/grisv/GitHub/Manifest/R code/data/spiky_gripper_day.csv",header = FALSE)}
-
-
-
-
-
 
 
 
@@ -503,7 +496,6 @@ day1 = read.csv("/Users/grisv/GitHub/Manifest/R code/data/sample_day_filtered.cs
 
 # ---- Section: Import Preparation ---- #
 ### SELECT params:
-#spikyData = 0    #0=normal grip data, 1=spiker
 #>>> change data file here, can be light, lightnew, grip or lg <<<
 data_file <- "lg"#light  #lightnew #grip  #lg
 #>>> Hyperparameters <<<
@@ -512,7 +504,7 @@ mintime = 20  # trigger time (ONLY used by python if adapt=1, use tv in python i
 sigma1 = 4.0 #####<<<< CHANGE from original = 5.0
 sigma2 = 4.0 #####<<<< CHANGE from original  = 3.0
 # Define the global variable 'pause'
-pause <- TRUE
+pause <- FALSE
 # adaptation
 adapt = 1   # to save adaptation in data, 0 = no adaptation, 1 = adaptation
 
@@ -523,7 +515,7 @@ t_adapt= mintime  #time to perform the adaptation (min)
 
 #############################
 # safe config. data to file (for python code)
-write.csv(c(data_file,len,mintime,sigma1,sigma2), "gen_files\Rconfig.csv", row.names = FALSE)
+write.csv(c(data_file,len,mintime,sigma1,sigma2), "/Users/grisv/GitHub/Manifest/gen_files/Rconfig.csv", row.names = FALSE)
 #############################
 
 #############################
@@ -548,8 +540,8 @@ mlim3 = sigma1*sqrt(var(abs(day[,4] - historicmeans[3])))
 lims = c(mlim1, mlim2, mlim3)
 
 #save means and lims -- python will read these files
-write.csv(historicmeans, "1historicmeans.csv", row.names = F)
-write.csv(lims, "1lims.csv", row.names = F)
+write.csv(historicmeans, "gen_files/1historicmeans.csv", row.names = F)
+write.csv(lims, "gen_files/1lims.csv", row.names = F)
 
 
 # get trends
@@ -565,12 +557,12 @@ clim3 = sigma2*sqrt(var(change[,3]))
 changelims = c(clim1, clim2, clim3)
 
 #save changes/trends and lims -- python will read these files
-write.csv(change, "2change.csv", row.names = F)
-write.csv(changelims, "2lims.csv", row.names = F)
+write.csv(change, "gen_files/2change.csv", row.names = F)
+write.csv(changelims, "gen_files/2lims.csv", row.names = F)
 
 
 # get violation map
-vmap = read.csv("/Users/grisv/GitHub/Manifest/violationMap.csv", header = T)
+vmap = read.csv("/Users/grisv/GitHub/Manifest/gen_files/violationMap.csv", header = T)
 
 
 # ---- Make synthetic data ----
@@ -616,8 +608,8 @@ out = checktrends(dataplus, vmap, tstep, historicmeans, lims, changelims, len, m
 colnames(dataplus) = c("time", "m1", "m2", "m3", "-", "--")
 colnames(out) = c("time", "m1", "m2", "m3", "trend", "time2problem","lightOutTypical","floorOutTypical","gripperOutTypical","edgeORboundary","light","floor","gripper")
 # save data -- python will read these files
-write.csv(out, "outputlg.csv", row.names = FALSE)
-write.csv(dataplus, "dataplus.csv", row.names = FALSE)
+write.csv(out, "gen_files/outputlg.csv", row.names = FALSE)
+write.csv(dataplus, "gen_files/dataplus.csv", row.names = FALSE)
 # ---- End of Python Section ---- #
 #############################
 
