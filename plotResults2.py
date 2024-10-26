@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib import colors as mcolors
 from matplotlib.lines import Line2D
+import math
 
 
 ###########################
@@ -13,7 +14,7 @@ x_lim2ndPlot = 50
 ###################
 # Read config. from R
 # name of the day (grip, lg, etc)
-_config_data = pd.read_csv("Rconfig.csv")['x'].tolist()#[0]
+_config_data = pd.read_csv("gen_files/Rconfig.csv")['x'].tolist()#[0]
 mintime= _config_data[2]   # time window for prediction > previous 600
 tv = int(mintime) # from R
 print(tv)
@@ -29,11 +30,6 @@ brown = '#A52A2A'
 grey = '#C5C9C7'
 gainsboro='#DCDCDC' #lightGrey
 
-<<<<<<< HEAD
-# Hyperparameters
-tv= 60 # 10 minutes time window for prediction > previous 600
-=======
->>>>>>> timeInMin60secIncrement
 
 '''-1 in violation, 1 safe'''
 def in_violation(time,M1, M2, M3):
@@ -97,21 +93,13 @@ df_Day = pd.read_csv('/Users/grisv/GitHub/Manifest/dataplus.csv')
 # df_Day.to_csv('df_Day_output.csv', index=False)
 ####<< NOT WORKING
 
-<<<<<<< HEAD
-=======
-
->>>>>>> timeInMin60secIncrement
 # ------- Create a nxm grid of subplots
 fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(5.9, 5.5), gridspec_kw={'height_ratios': [4, 2, 1, 1]}, layout='constrained')  # (width, height) in inches
 
 #Set x scale and x labels
 x_ticks = df_Day['time'][::10]  # Set x-ticks at intervals of 10
 # Set x values
-<<<<<<< HEAD
-x_ticks = range(0, max(df_Day['time'])+800, 800)  # Example: Set x-ticks every X units
-=======
 x_ticks = range(0, math.ceil(max(df_Day['time']))+1, xlabel_incr_time)  # Example: Set x-ticks every X units
->>>>>>> timeInMin60secIncrement
 
 # Set x-ticks and labels for all subplots (has to be done in a for to work -- separated causes  problems)
 for ax in [ax1, ax2, ax3, ax4]:
@@ -195,7 +183,7 @@ for i in range(1,len(df['time'])):
         predicted = df['edgeORboundary'][i]
     df.at[i,'edgeORboundary'] = predicted
 #print(df['edgeORboundary'])
-df.to_csv('/Users/grisv/GitHub/Manifest/edgeORboundary.csv', index=False)
+df.to_csv('/Users/grisv/GitHub/Manifest/gen_files/py/edgeORboundary.csv', index=False)
 # plot adaptation line
 adaptTime = -1
 
@@ -352,7 +340,7 @@ _config_data+=[t_first_real_ODD]
 _config_data+=[t_first_pred_ODD]
 
 
-#plt.show()
+plt.show()
 # New file
 if False:
     with open('/Users/grisv/GitHub/Manifest/config.csv', 'w') as f:

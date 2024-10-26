@@ -523,7 +523,7 @@ t_adapt= mintime  #time to perform the adaptation (min)
 
 #############################
 # safe config. data to file (for python code)
-write.csv(c(data_file,len,mintime,sigma1,sigma2), "Rconfig.csv", row.names = FALSE)
+write.csv(c(data_file,len,mintime,sigma1,sigma2), "gen_files\Rconfig.csv", row.names = FALSE)
 #############################
 
 #############################
