@@ -6,3 +6,5 @@
 - gen_files: generated output files and intermidiate files for plots
 - plots: code used for the plots
 - prismModel: model and properties used for the parametric model checking (PMC) warehouse robot scenario
+- 
+![image](https://github.com/user-attachments/assets/426edcc1-6fc1-4ac2-820e-64d784d036c0)
